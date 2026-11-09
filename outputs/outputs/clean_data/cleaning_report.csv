@@ -1,0 +1,43 @@
+table,rule,rows_affected
+application,DAYS_EMPLOYED: placeholder 365243 -> NaN,18242
+application,CODE_GENDER: ['XNA'] -> NaN,1
+application,NAME_FAMILY_STATUS: ['Unknown'] -> NaN,1
+application,ORGANIZATION_TYPE: ['XNA'] -> NaN,18242
+application,AMT_INCOME_TOTAL: > 10 million -> NaN,1
+bureau,DAYS_CREDIT: positive or > 100 years ago -> NaN,0
+bureau,DAYS_ENDDATE_FACT: positive or > 100 years ago -> NaN,1
+bureau,DAYS_CREDIT_UPDATE: positive or > 100 years ago -> NaN,36
+bureau,DAYS_CREDIT_ENDDATE: > 100 years ago -> NaN,40
+bureau,AMT_CREDIT_SUM_DEBT: negative -> 0,2769
+bureau,AMT_CREDIT_SUM_LIMIT: negative -> NaN,103
+bureau_balance,STATUS C/X -> STATUS_DPD NaN (flags added),3242680
+previous_application,DAYS_FIRST_DRAWING: placeholder 365243 -> NaN,259367
+previous_application,DAYS_FIRST_DUE: placeholder 365243 -> NaN,11067
+previous_application,DAYS_LAST_DUE_1ST_VERSION: placeholder 365243 -> NaN,25756
+previous_application,DAYS_LAST_DUE: placeholder 365243 -> NaN,59093
+previous_application,DAYS_TERMINATION: placeholder 365243 -> NaN,63259
+previous_application,"NAME_CONTRACT_TYPE: ['XNA', 'XAP'] -> NaN",96
+previous_application,"NAME_CASH_LOAN_PURPOSE: ['XNA', 'XAP'] -> NaN",439667
+previous_application,"NAME_PAYMENT_TYPE: ['XNA', 'XAP'] -> NaN",169838
+previous_application,"CODE_REJECT_REASON: ['XNA', 'XAP'] -> NaN",373175
+previous_application,"NAME_CLIENT_TYPE: ['XNA', 'XAP'] -> NaN",471
+previous_application,"NAME_GOODS_CATEGORY: ['XNA', 'XAP'] -> NaN",259343
+previous_application,"NAME_PORTFOLIO: ['XNA', 'XAP'] -> NaN",99642
+previous_application,"NAME_PRODUCT_TYPE: ['XNA', 'XAP'] -> NaN",291665
+previous_application,"NAME_SELLER_INDUSTRY: ['XNA', 'XAP'] -> NaN",232592
+previous_application,"NAME_YIELD_GROUP: ['XNA', 'XAP'] -> NaN",139508
+previous_application,SELLERPLACE_AREA: -1 placeholder -> NaN,206857
+previous_application,RATE_DOWN_PAYMENT: negative -> 0,0
+previous_application,AMT_DOWN_PAYMENT: negative -> 0,0
+previous_application,duplicate submissions flagged (kept),2387
+installments,exact duplicate rows dropped,0
+installments,instalments whose split rows disagree on amount due (max kept),0
+installments,split payments merged: rows removed (now one row per instalment),183342
+installments,instalments paid in more than one part (N_PAYMENTS > 1),179842
+installments,instalments with no payment recorded (AMT_PAYMENT kept NaN),856
+pos_cash,NAME_CONTRACT_STATUS: ['XNA'] -> NaN,1
+credit_card,AMT_DRAWINGS_ATM_CURRENT: negative -> NaN,0
+credit_card,AMT_DRAWINGS_CURRENT: negative -> NaN,0
+credit_card,AMT_DRAWINGS_OTHER_CURRENT: negative -> NaN,0
+credit_card,AMT_DRAWINGS_POS_CURRENT: negative -> NaN,0
+credit_card,NAME_CONTRACT_STATUS: ['XNA'] -> NaN,0
