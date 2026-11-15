@@ -1,0 +1,20 @@
+{
+  "application": [
+    "get_applicant_profile"
+  ],
+  "bureau": [
+    "get_credit_bureau_history"
+  ],
+  "previous_application": [
+    "get_previous_applications"
+  ],
+  "installments": [
+    "get_installment_history"
+  ],
+  "credit_card": [
+    "get_credit_card_history"
+  ],
+  "pos_cash": [
+    "get_pos_cash_history"
+  ]
+}

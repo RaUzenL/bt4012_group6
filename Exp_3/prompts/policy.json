@@ -1,0 +1,245 @@
+[
+ {
+  "id": "HIGH_ANNUITY_TO_INCOME",
+  "kind": "red_flag",
+  "tool": "get_applicant_profile",
+  "field": "annuity_to_income",
+  "rule": "is {HIGH_ANNUITY_TO_INCOME} or more (the top 5% of past applicants)",
+  "other_fields": [
+   "annuity_to_income_percentile"
+  ]
+ },
+ {
+  "id": "LOW_EXT_SCORE",
+  "kind": "red_flag",
+  "tool": "get_applicant_profile",
+  "field": "external_score_mean",
+  "rule": "is {LOW_EXT_SCORE} or less (the bottom 10% of past applicants)",
+  "other_fields": [
+   "external_score_percentile"
+  ]
+ },
+ {
+  "id": "RECENT_ID_CHANGE",
+  "kind": "red_flag",
+  "tool": "get_applicant_profile",
+  "field": "years_since_id_change",
+  "rule": "is 1.0 or less"
+ },
+ {
+  "id": "RECENT_PHONE_CHANGE",
+  "kind": "red_flag",
+  "tool": "get_applicant_profile",
+  "field": "days_since_phone_change",
+  "rule": "is 30 or less"
+ },
+ {
+  "id": "SHORT_EMPLOYMENT",
+  "kind": "red_flag",
+  "tool": "get_applicant_profile",
+  "field": "years_employed",
+  "rule": "is below 1.0"
+ },
+ {
+  "id": "MANY_ENQUIRIES",
+  "kind": "red_flag",
+  "tool": "get_applicant_profile",
+  "field": "bureau_enquiries_last_year",
+  "rule": "is {MANY_ENQUIRIES} or more"
+ },
+ {
+  "id": "BUREAU_CURRENT_OVERDUE",
+  "kind": "red_flag",
+  "tool": "get_credit_bureau_history",
+  "field": "bureau_overdue_amount",
+  "rule": "is above 0"
+ },
+ {
+  "id": "BUREAU_SEVERE_DELINQUENCY",
+  "kind": "red_flag",
+  "tool": "get_credit_bureau_history",
+  "field": "bureau_worst_monthly_status",
+  "rule": "is \"31-60 days late\" or worse"
+ },
+ {
+  "id": "BUREAU_HIGH_UTILISATION",
+  "kind": "red_flag",
+  "tool": "get_credit_bureau_history",
+  "field": "bureau_active_debt_to_credit",
+  "rule": "is 0.80 or more"
+ },
+ {
+  "id": "PREV_HIGH_REFUSAL",
+  "kind": "red_flag",
+  "tool": "get_previous_applications",
+  "field": "prev_refusal_rate",
+  "rule": "is 0.50 or more",
+  "other_fields": [
+   "prev_n_refused"
+  ]
+ },
+ {
+  "id": "PREV_LAST_REFUSED",
+  "kind": "red_flag",
+  "tool": "get_previous_applications",
+  "field": "prev_last_status",
+  "rule": "is \"Refused\""
+ },
+ {
+  "id": "PREV_HIGH_FREQUENCY",
+  "kind": "red_flag",
+  "tool": "get_previous_applications",
+  "field": "prev_n_applications_last_year",
+  "rule": "is {PREV_HIGH_FREQUENCY} or more"
+ },
+ {
+  "id": "INST_FREQUENT_LATE",
+  "kind": "red_flag",
+  "tool": "get_installment_history",
+  "field": "inst_late_rate",
+  "rule": "is 0.10 or more"
+ },
+ {
+  "id": "INST_SEVERE_LATE",
+  "kind": "red_flag",
+  "tool": "get_installment_history",
+  "field": "inst_max_days_late",
+  "rule": "is 30 or more"
+ },
+ {
+  "id": "INST_UNDERPAYMENT",
+  "kind": "red_flag",
+  "tool": "get_installment_history",
+  "field": "inst_underpaid_rate",
+  "rule": "is 0.05 or more"
+ },
+ {
+  "id": "INST_WORSENING",
+  "kind": "red_flag",
+  "tool": "get_installment_history",
+  "field": "inst_late_rate_change",
+  "rule": "is above 0.05",
+  "other_fields": [
+   "inst_late_rate_last_year"
+  ]
+ },
+ {
+  "id": "CC_HIGH_UTILISATION",
+  "kind": "red_flag",
+  "tool": "get_credit_card_history",
+  "field": "card_latest_utilisation",
+  "rule": "is 0.90 or more"
+ },
+ {
+  "id": "CC_BELOW_MIN_PAYMENT",
+  "kind": "red_flag",
+  "tool": "get_credit_card_history",
+  "field": "card_months_below_min_payment",
+  "rule": "is 3 or more"
+ },
+ {
+  "id": "CC_CASH_RELIANCE",
+  "kind": "red_flag",
+  "tool": "get_credit_card_history",
+  "field": "card_cash_share_of_drawings",
+  "rule": "is 0.50 or more"
+ },
+ {
+  "id": "POS_DELINQUENT",
+  "kind": "red_flag",
+  "tool": "get_pos_cash_history",
+  "field": "pos_max_days_past_due",
+  "rule": "is 30 or more"
+ },
+ {
+  "id": "POS_DEBT_DEMAND",
+  "kind": "red_flag",
+  "tool": "get_pos_cash_history",
+  "field": "pos_months_in_debt_demand",
+  "rule": "is above 0"
+ },
+ {
+  "id": "RAISE_MOSTLY_REFUSED",
+  "kind": "raises_risk",
+  "tool": "get_previous_applications",
+  "field": "prev_refusal_rate",
+  "rule": "is 0.75 or more"
+ },
+ {
+  "id": "RAISE_HIGH_INTEREST_LOANS",
+  "kind": "raises_risk",
+  "tool": "get_previous_applications",
+  "field": "prev_high_interest_share",
+  "rule": "is 0.75 or more"
+ },
+ {
+  "id": "RAISE_CARD_CASH_WITHDRAWALS",
+  "kind": "raises_risk",
+  "tool": "get_credit_card_history",
+  "field": "card_atm_withdrawals_per_month",
+  "rule": "is 1.0 or more"
+ },
+ {
+  "id": "RAISE_LOAN_ABOVE_GOODS_PRICE",
+  "kind": "raises_risk",
+  "tool": "get_applicant_profile",
+  "field": "credit_to_goods_price",
+  "rule": "is 1.20 or more"
+ },
+ {
+  "id": "RAISE_YOUNG_BUREAU_LOANS",
+  "kind": "raises_risk",
+  "tool": "get_credit_bureau_history",
+  "field": "bureau_mean_loan_age_years",
+  "rule": "is below 1.0"
+ },
+ {
+  "id": "RAISE_MANY_NEW_BUREAU_LOANS",
+  "kind": "raises_risk",
+  "tool": "get_credit_bureau_history",
+  "field": "bureau_n_loans_opened_last_year",
+  "rule": "is 4 or more"
+ },
+ {
+  "id": "LOWER_HIGHER_EDUCATION",
+  "kind": "lowers_risk",
+  "tool": "get_applicant_profile",
+  "field": "education",
+  "rule": "is \"Higher education\" or \"Academic degree\""
+ },
+ {
+  "id": "LOWER_LONG_EMPLOYMENT",
+  "kind": "lowers_risk",
+  "tool": "get_applicant_profile",
+  "field": "years_employed",
+  "rule": "is 10.0 or more"
+ },
+ {
+  "id": "LOWER_OLD_BUREAU_LOANS",
+  "kind": "lowers_risk",
+  "tool": "get_credit_bureau_history",
+  "field": "bureau_mean_loan_age_years",
+  "rule": "is 4.0 or more"
+ },
+ {
+  "id": "LOWER_LOW_CARD_USE",
+  "kind": "lowers_risk",
+  "tool": "get_credit_card_history",
+  "field": "card_latest_utilisation",
+  "rule": "is below 0.30"
+ },
+ {
+  "id": "LOWER_CLEAN_INSTALMENTS",
+  "kind": "lowers_risk",
+  "tool": "get_installment_history",
+  "field": "inst_late_rate",
+  "rule": "is 0, and inst_n_installments is 20 or more"
+ },
+ {
+  "id": "LOWER_LOAN_NEAR_GOODS_PRICE",
+  "kind": "lowers_risk",
+  "tool": "get_applicant_profile",
+  "field": "credit_to_goods_price",
+  "rule": "is 1.10 or less"
+ }
+]

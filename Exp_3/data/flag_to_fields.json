@@ -1,0 +1,111 @@
+{
+  "HIGH_ANNUITY_TO_INCOME": {
+    "fields": [
+      "annuity_to_income",
+      "annuity_to_income_percentile"
+    ]
+  },
+  "LOW_EXT_SCORE": {
+    "fields": [
+      "external_score_mean",
+      "external_score_percentile"
+    ]
+  },
+  "RECENT_ID_CHANGE": {
+    "fields": [
+      "years_since_id_change"
+    ]
+  },
+  "RECENT_PHONE_CHANGE": {
+    "fields": [
+      "days_since_phone_change"
+    ]
+  },
+  "SHORT_EMPLOYMENT": {
+    "fields": [
+      "years_employed"
+    ]
+  },
+  "MANY_ENQUIRIES": {
+    "fields": [
+      "bureau_enquiries_last_year"
+    ]
+  },
+  "BUREAU_CURRENT_OVERDUE": {
+    "fields": [
+      "bureau_overdue_amount"
+    ]
+  },
+  "BUREAU_SEVERE_DELINQUENCY": {
+    "fields": [
+      "bureau_worst_monthly_status"
+    ]
+  },
+  "BUREAU_HIGH_UTILISATION": {
+    "fields": [
+      "bureau_active_debt_to_credit"
+    ]
+  },
+  "PREV_HIGH_REFUSAL": {
+    "fields": [
+      "prev_refusal_rate",
+      "prev_n_refused"
+    ]
+  },
+  "PREV_LAST_REFUSED": {
+    "fields": [
+      "prev_last_status"
+    ]
+  },
+  "PREV_HIGH_FREQUENCY": {
+    "fields": [
+      "prev_n_applications_last_year"
+    ]
+  },
+  "INST_FREQUENT_LATE": {
+    "fields": [
+      "inst_late_rate"
+    ]
+  },
+  "INST_SEVERE_LATE": {
+    "fields": [
+      "inst_max_days_late"
+    ]
+  },
+  "INST_UNDERPAYMENT": {
+    "fields": [
+      "inst_underpaid_rate"
+    ]
+  },
+  "INST_WORSENING": {
+    "fields": [
+      "inst_late_rate_change",
+      "inst_late_rate_last_year"
+    ]
+  },
+  "CC_HIGH_UTILISATION": {
+    "fields": [
+      "card_latest_utilisation"
+    ]
+  },
+  "CC_BELOW_MIN_PAYMENT": {
+    "fields": [
+      "card_months_below_min_payment"
+    ]
+  },
+  "CC_CASH_RELIANCE": {
+    "fields": [
+      "card_cash_share_of_drawings"
+    ]
+  },
+  "POS_DELINQUENT": {
+    "fields": [
+      "pos_max_days_past_due"
+    ]
+  },
+  "POS_DEBT_DEMAND": {
+    "fields": [
+      "pos_months_in_debt_demand"
+    ]
+  }
+}

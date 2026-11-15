@@ -9,3 +9,6 @@ venv/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Secrets (API keys) - never commit
+.env
