@@ -1,23 +1,57 @@
-"""Exp3 evaluation: LLM-agent investigations, scored on faithfulness, completeness, consistency and discrimination.
+"""Exp3 evaluation: LLM-agent investigations, scored on the process (trajectory, faithfulness, completeness,
+uncertainty, consistency), the output (LLM-as-judge rubric) and the outcome (discrimination, calibration, fairness).
 
 Usage
 -----
 1. Pick who to investigate (test applicants only): the riskiest by the Exp1 model plus a random control group.
        python outputs/exp3/eval_exp3.py --make-cohort exp1_test_scores.csv      # writes cohort.csv
-2. Map each red flag to the field names YOUR agent's tools return (done once).
-       python outputs/exp3/eval_exp3.py --flag-map-template                      # writes flag_to_fields.json
+2. Map each red flag to the field names, and each data source to the tool names, YOUR agent uses (done once).
+       python outputs/exp3/eval_exp3.py --flag-map-template --tool-map-template  # writes flag_to_fields.json, tool_map.json
 3. Run the agent (e.g. 3 runs per applicant) and save one JSON object per line (agent_runs.jsonl):
-       {"SK_ID_CURR": 100054, "run": 1, "risk_score": 0.82, "rating": "high",
+       {"SK_ID_CURR": 100054, "run": 1, "risk_score": 0.82, "rating": "high", "escalated": true,
         "citations": [{"tool": "get_installment_history", "field": "late_rate", "value": 0.21}, ...],
-        "tool_outputs": {"get_installment_history": {"late_rate": 0.214, ...}, ...}}
-4. Evaluate:
-       python outputs/exp3/eval_exp3.py agent_runs.jsonl --flag-map flag_to_fields.json --baseline exp1_test_scores.csv
+        "tool_outputs": {"get_installment_history": {"late_rate": 0.214, ...}, ...},
+        "tool_calls": [{"tool": "get_installment_history", "args": {"SK_ID_CURR": 100054}, "status": "ok"}, ...],
+        "source_findings": {"installments": "concern", "credit_card": "no_history", ...},
+        "usage": {"input_tokens": 5200, "output_tokens": 640, "latency_s": 14.2},
+        "report": "Applicant paid 21% of instalments late ..."}
+   tool_calls status: ok | no_history | error.  source_findings: concern | clean | no_history | unknown.
+   Fields after tool_outputs are optional; the metrics that need them are skipped when they are missing.
+   Cite values exactly as the tools return them (fractions such as 0.214, not "21%"), or faithfulness marks them wrong.
+4. (Optional) Grade each report with an LLM judge using JUDGE_RUBRIC / judge_prompt(), have a person grade ~20 of
+   the same reports, and save both as CSV: SK_ID_CURR, run, grounding, hedging, completeness (0-2 each).
+5. Evaluate:
+       python outputs/exp3/eval_exp3.py agent_runs.jsonl --flag-map flag_to_fields.json --tool-map tool_map.json \
+           --judge judge_scores.csv --human human_scores.csv
+   cohort.csv from step 1 is picked up automatically: it gives the flagged/control groups and the Exp1 baseline score.
 
-Metrics
-  faithfulness   share of cited values that match what the tools actually returned
-  completeness   share of the applicant's rule-based red flags (red_flags.parquet) that the agent cited
-  consistency    agreement of rating / risk score / cited evidence across repeated runs
-  discrimination ROC-AUC / PR-AUC of the agent's risk score vs the hidden TARGET (optionally vs a baseline model)
+Metrics (lecture 12: process correct != result correct, so both are measured)
+  Process
+    tool recall          data sources the agent checked successfully / all sources (a source with no records still
+                         has to be checked: that is how the agent learns there is no history)
+    argument accuracy    tool calls made with the applicant's own SK_ID_CURR / calls that pass an SK_ID_CURR
+    gate adherence       runs escalated to a human / runs that had to be (rating 'high' or a failed tool call); target 100%
+    faithfulness         share of cited values that match what the tools actually returned
+    completeness         share of the applicant's rule-based red flags (red_flags.parquet) that the agent cited.
+                         The answer key is rule-based rather than the Exp1 model's SHAP values on purpose: it does
+                         not depend on the model, so the agent cannot score well just by repeating the model
+    uncertainty honesty  sources with no records reported as no_history/unknown (not 'clean'), and failed checks
+                         reported as unknown
+    consistency          agreement of rating / risk score / cited evidence across repeated runs
+  Output
+    judge rubric         grounding (blocking), hedging, completeness on 0-2; pass rate; agreement with human grades
+  Outcome
+    flagged group (MAIN) among the applicants the Exp1 model flagged (top-k): PR-AUC / ROC-AUC of the agent's risk
+                         score and precision / recall of its 'high' rating vs the hidden TARGET, compared with the
+                         group's default rate (= precision of the Exp1 flag) and, paired, with the Exp1 score
+    control group        share of random applicants rated 'high' and false-positive rate (over-flagging check)
+    whole cohort         same discrimination metrics on flagged + control (secondary: the cohort was chosen with the
+                         Exp1 score, which gives Exp1 a head start, and it is enriched with defaulters)
+    calibration          Brier score and a reliability table: is a risk score of 0.8 right 80% of the time?
+                         (descriptive only with ~200 applicants)
+    fairness             flag rate and false-positive rate per gender / age band (audit only; the agent must not
+                         receive these)
+    cost                 tokens and latency per run
 """
 # ============================================================================================
 # COMMON METRICS (identical in eval_exp1.py, eval_exp2.py and eval_exp3.py, so each file runs on its own)
@@ -37,7 +71,7 @@ from sklearn.metrics import (average_precision_score, f1_score, precision_recall
 
 HERE = Path(__file__).resolve().parent
 CLEAN_DIR = HERE.parent / "clean_data"
-SHOW = ["roc_auc", "pr_auc", "precision", "recall", "f1", "precision@top10%", "recall@top10%"]
+SHOW = ["pr_auc", "roc_auc", "precision", "recall", "f1"]
 
 
 def load_splits(clean_dir=CLEAN_DIR):
@@ -59,25 +93,16 @@ def best_f1_threshold(y_val, s_val):
     return float(t[np.nanargmax(f1[:-1])])
 
 
-def _top_k(y, s, frac):
-    k = max(1, int(round(len(s) * frac)))
-    hits = y[np.argsort(-s)[:k]].sum()
-    return hits / k, hits / max(1, y.sum())
-
-
 def _metrics(y, s, thr):
     yhat = (s >= thr).astype(int)
-    out = {"roc_auc": roc_auc_score(y, s), "pr_auc": average_precision_score(y, s),
-           "precision": precision_score(y, yhat, zero_division=0), "recall": recall_score(y, yhat),
-           "f1": f1_score(y, yhat)}
-    for frac in (0.05, 0.10):
-        out[f"precision@top{int(frac * 100)}%"], out[f"recall@top{int(frac * 100)}%"] = _top_k(y, s, frac)
-    return out
+    return {"pr_auc": average_precision_score(y, s), "roc_auc": roc_auc_score(y, s),
+            "precision": precision_score(y, yhat, zero_division=0), "recall": recall_score(y, yhat),
+            "f1": f1_score(y, yhat)}
 
 
 def evaluate(y_test, s_test, y_val=None, s_val=None, threshold=None, n_boot=1000, seed=42):
-    """Test metrics with bootstrap 95% CIs: ROC-AUC, PR-AUC, precision/recall/F1 at the threshold, and
-    precision/recall among the riskiest 5% and 10%. Threshold = max-F1 on validation, or a fixed `threshold`."""
+    """Test metrics with bootstrap 95% CIs: PR-AUC (primary), ROC-AUC, and precision/recall/F1 at the threshold.
+    Threshold = max-F1 on validation, or a fixed `threshold`."""
     if threshold is None:
         if y_val is None:
             raise ValueError("give validation labels/scores (y_val, s_val) or a fixed threshold")
@@ -129,6 +154,24 @@ def compare_models(y, s_a, s_b, metric="pr_auc", n_boot=1000, seed=42):
             "delong_roc_auc": delong_test(y, s_a, s_b)}
 
 
+def holm(p):
+    """Holm-adjusted p-values: keeps the chance of ANY false 'significant' result across a family of tests at 5%."""
+    p = np.asarray(p, dtype=float)
+    order = np.argsort(p)
+    adj = np.minimum(1, np.maximum.accumulate((len(p) - np.arange(len(p))) * p[order]))
+    out = np.empty(len(p))
+    out[order] = adj
+    return out
+
+
+def _add_p_values(comps):
+    """p_value = DeLong for ROC-AUC, paired bootstrap for PR-AUC; p_holm adjusts across every row of comps."""
+    if len(comps):
+        comps["p_value"] = np.where(comps.metric == "roc_auc", comps.p_delong, comps.p_bootstrap)
+        comps["p_holm"] = holm(comps.p_value)
+    return comps
+
+
 def load_predictions(pred, clean_dir=CLEAN_DIR):
     """Predictions as a DataFrame or a CSV path, with columns SK_ID_CURR, score (higher = riskier).
     Returns them with TARGET and split attached."""
@@ -168,12 +211,12 @@ def compare_prediction_files(paths, labels=None, n_boot=1000, clean_dir=CLEAN_DI
     base = labels[0]
     for lab in labels[1:]:
         y = preds[base]["test"]["TARGET"].to_numpy()
-        for metric in ("roc_auc", "pr_auc"):
+        for metric in ("pr_auc", "roc_auc"):
             c = compare_models(y, preds[lab]["test"]["score"], preds[base]["test"]["score"], metric, n_boot)
             comps.append({"model": lab, "vs_baseline": base, "metric": metric, "delta": c["delta"],
                           "ci_low": c["ci_low"], "ci_high": c["ci_high"], "p_bootstrap": c["p_bootstrap"],
                           "p_delong": c["delong_roc_auc"]["p_value"] if metric == "roc_auc" else np.nan})
-    return table, pd.DataFrame(comps), preds
+    return table, _add_p_values(pd.DataFrame(comps)), preds
 
 
 def pretty_metrics(table, metrics=SHOW):
@@ -186,16 +229,16 @@ def pretty_metrics(table, metrics=SHOW):
 
 
 def pretty_comparisons(comps):
-    """Readable comparison table with a plain-language verdict (95% CI of the difference excludes 0)."""
+    """Readable comparison table with a plain-language verdict based on the Holm-adjusted p-value (< 0.05)."""
     if comps.empty:
         return comps
     c = comps.copy()
     c["difference (95% CI)"] = [f"{d:+.4f} ({lo:+.4f} to {hi:+.4f})" for d, lo, hi in zip(c.delta, c.ci_low, c.ci_high)]
-    c["p_value"] = [f"{pd_:.2g}" if metric == "roc_auc" else f"{pb:.2g}"
-                    for pd_, pb, metric in zip(c.p_delong, c.p_bootstrap, c.metric)]
-    c["verdict"] = np.where(c.ci_low > 0, "significantly better", np.where(c.ci_high < 0, "significantly worse",
-                                                                           "no significant difference"))
-    return c[["model", "vs_baseline", "metric", "difference (95% CI)", "p_value", "verdict"]]
+    c["verdict"] = np.where(c.p_holm >= 0.05, "no significant difference",
+                            np.where(c.delta > 0, "significantly better", "significantly worse"))
+    c["p_value"], c["p_holm"] = c.p_value.map("{:.2g}".format), c.p_holm.map("{:.2g}".format)
+    keys = [k for k in ["grouping", "segment"] if k in c]
+    return c[keys + ["model", "vs_baseline", "metric", "difference (95% CI)", "p_value", "p_holm", "verdict"]]
 
 
 def _print_model_table(table, comps):
@@ -341,6 +384,16 @@ def load_red_flags():
 # ============================================================================================
 # EXP3: AGENT METRICS
 # ============================================================================================
+import warnings
+
+from sklearn.metrics import brier_score_loss, cohen_kappa_score
+
+
+def _mean(xs):
+    xs = np.array(xs, dtype=float)
+    return float(np.nanmean(xs)) if np.isfinite(xs).any() else np.nan
+
+
 def _same(cited, actual, rel_tol):
     if actual is None or (isinstance(actual, float) and math.isnan(actual)):
         return cited is None
@@ -393,6 +446,145 @@ def consistency(runs):
             "evidence_jaccard": float(np.mean(jac)) if jac else 1.0}
 
 
+# ============================================================================================
+# EXP3: TRAJECTORY, ESCALATION GATE AND UNCERTAINTY (lecture 12: check the process, not just the final answer)
+# ============================================================================================
+SOURCES = ["application", "bureau", "previous_application", "installments", "pos_cash", "credit_card"]
+TOOL_MAP_TEMPLATE = {"application": ["get_applicant_profile"], "bureau": ["get_credit_bureau_history"],
+                     "previous_application": ["get_previous_applications"], "installments": ["get_installment_history"],
+                     "pos_cash": ["get_pos_cash_history"], "credit_card": ["get_credit_card_history"]}
+FLAG_RATINGS = ("high",)       # ratings that count as 'flagged' and must be escalated to a human
+
+
+def source_coverage(ids, clean_dir=CLEAN_DIR):
+    """True where the applicant has at least one record in that data source (application always does)."""
+    d, ids = Path(clean_dir), pd.Index(ids, name="SK_ID_CURR")
+    cov = pd.DataFrame({"application": True}, index=ids)
+    for s in SOURCES[1:]:
+        cov[s] = ids.isin(pd.read_parquet(d / f"{s}.parquet", columns=["SK_ID_CURR"])["SK_ID_CURR"])
+    return cov
+
+
+def _tool_sources(tool_map):
+    return {t: s for s, tools in (tool_map or {}).items() for t in tools}
+
+
+def trajectory(run, sid, tool_map=None):
+    """One run's tool calls. tool_recall: data sources checked without error / all sources in tool_map
+    (None skips it). argument_accuracy: calls passing this applicant's SK_ID_CURR / calls passing any SK_ID_CURR."""
+    calls = run.get("tool_calls")
+    if calls is None:
+        return {"tool_recall": np.nan, "argument_accuracy": np.nan}
+    src = _tool_sources(tool_map)
+    done = {src.get(c.get("tool")) for c in calls if c.get("status", "ok") != "error"}
+    with_id = [c for c in calls if "SK_ID_CURR" in (c.get("args") or {})]
+    right = [c for c in with_id if int(c["args"]["SK_ID_CURR"]) == sid]
+    return {"tool_recall": len(done & set(tool_map)) / len(tool_map) if tool_map else np.nan,
+            "argument_accuracy": len(right) / len(with_id) if with_id else np.nan}
+
+
+def gate_required(run, flag_ratings=FLAG_RATINGS):
+    """A run must go to human review when it rates the applicant high risk or any tool check failed."""
+    return run.get("rating") in flag_ratings or any(c.get("status") == "error" for c in run.get("tool_calls") or [])
+
+
+def uncertainty_honesty(run, has_records, tool_map=None):
+    """Share of 'nothing to see' sources reported honestly: a source with no records must be reported as no_history
+    or unknown (never 'clean'), and a source whose tool call failed as unknown (needs tool_map). A source with no
+    verdict counts as not honest. NaN when the run has no source_findings or nothing to check."""
+    findings = run.get("source_findings")
+    if findings is None:
+        return np.nan
+    src = _tool_sources(tool_map)
+    failed = {src[c["tool"]] for c in run.get("tool_calls") or [] if c.get("status") == "error" and c.get("tool") in src}
+    checks = [(s, {"unknown"}) for s in failed] + \
+             [(s, {"no_history", "unknown"}) for s in SOURCES if not has_records.get(s, True) and s not in failed]
+    return float(np.mean([findings.get(s) in ok for s, ok in checks])) if checks else np.nan
+
+
+# ============================================================================================
+# EXP3: CALIBRATION AND FAIRNESS (outcome checks)
+# ============================================================================================
+def calibration(y, s, n_bins=5):
+    """Is the risk score a probability? Brier score, expected calibration error, and a reliability table
+    (equal-size score bins: mean risk score vs observed default rate). If not calibrated, read it as a ranking."""
+    y, s = np.asarray(y).astype(int), np.asarray(s, dtype=float)
+    df = pd.DataFrame({"y": y, "s": s, "bin": pd.qcut(s, n_bins, duplicates="drop")})
+    tab = df.groupby("bin", observed=True).agg(n=("y", "size"), mean_risk_score=("s", "mean"), default_rate=("y", "mean"))
+    ece = float((tab.n * (tab.mean_risk_score - tab.default_rate).abs()).sum() / tab.n.sum())
+    return {"brier": float(brier_score_loss(y, s)), "ece": ece}, tab
+
+
+FAIRNESS_GROUPS = ["CODE_GENDER", "AGE_BAND"]   # family status left out: its groups have only ~5-25 of 200 applicants
+
+
+def fairness_table(per_app, flag_col="flagged", clean_dir=CLEAN_DIR):
+    """Audit only (the agent must not receive these attributes). Per group: flag rate and false-positive rate
+    (non-defaulters flagged). Compare false-positive rates across groups, not just overall. With ~200 applicants
+    this is descriptive: report n with every rate."""
+    a = pd.read_parquet(Path(clean_dir) / "application.parquet", columns=["SK_ID_CURR", "CODE_GENDER", "DAYS_BIRTH"])
+    a["AGE_BAND"] = pd.cut(-a.DAYS_BIRTH / 365.25, [0, 30, 45, 60, 200], right=False,
+                           labels=["<30", "30-44", "45-59", "60+"])
+    df = per_app[["SK_ID_CURR", "TARGET", flag_col]].merge(a.drop(columns="DAYS_BIRTH"), on="SK_ID_CURR", how="left")
+    rows = []
+    for g in FAIRNESS_GROUPS:
+        for val, part in df.groupby(df[g].astype(str)):
+            neg = part[part.TARGET == 0]
+            rows.append({"grouping": g, "group": val, "n": len(part), "default_rate": part.TARGET.mean(),
+                         "flag_rate": part[flag_col].mean(),
+                         "false_positive_rate": neg[flag_col].mean() if len(neg) else np.nan})
+    return pd.DataFrame(rows)
+
+
+# ============================================================================================
+# EXP3: LLM-AS-JUDGE RUBRIC (output quality; the judge is a tool, not ground truth)
+# ============================================================================================
+JUDGE_CRITERIA = ["grounding", "hedging", "completeness"]
+JUDGE_RUBRIC = """You are reviewing a credit-risk investigation report written by an AI agent.
+Score the report on each criterion below, using ONLY the tool outputs provided. Quote the evidence for each score.
+Reply as JSON: {"grounding": 0-2, "hedging": 0-2, "completeness": 0-2, "evidence": {"grounding": "...", ...}}
+
+GROUNDING (blocking)
+  2 = every factual claim traces to a value in the tool outputs
+  1 = one claim is unsourced but plausible
+  0 = any claim contradicts the tool outputs, or cites a tool or value that does not exist
+HEDGING
+  2 = missing or failed data is stated as missing/unknown (e.g. "no credit-card history"), never as a clean record
+  1 = hedged vaguely ("may have issues") without saying what is missing
+  0 = states something as fact that the tool outputs do not show
+COMPLETENESS
+  2 = every data source has a verdict, including negative results
+  1 = one data source has no verdict
+  0 = two or more data sources, or a clear red flag in the tool outputs, are not addressed
+Any 0 on GROUNDING fails the report regardless of the other scores."""
+
+
+def judge_prompt(run):
+    """Prompt for the LLM judge: the rubric, the tool outputs the agent saw, and its report."""
+    return (f"{JUDGE_RUBRIC}\n\nTOOL OUTPUTS\n{json.dumps(run.get('tool_outputs', {}), indent=2, default=str)}"
+            f"\n\nREPORT\n{run.get('report', '')}")
+
+
+def evaluate_judge(judge, human=None):
+    """judge / human: DataFrame or CSV with SK_ID_CURR, run, grounding, hedging, completeness (0-2).
+    Mean score per criterion, pass rate (grounding > 0) and, on reports graded by both, agreement with the human
+    grades (exact agreement and quadratic-weighted Cohen's kappa)."""
+    j = judge if isinstance(judge, pd.DataFrame) else pd.read_csv(judge)
+    out = {f"{c}_mean": float(j[c].mean()) for c in JUDGE_CRITERIA}
+    out["pass_rate"] = float((j.grounding > 0).mean())
+    if human is not None:
+        h = human if isinstance(human, pd.DataFrame) else pd.read_csv(human)
+        m = j.merge(h, on=["SK_ID_CURR", "run"], suffixes=("_judge", "_human"))
+        out["vs_human_n"] = len(m)
+        for c in JUDGE_CRITERIA:
+            a, b = m[f"{c}_judge"].astype(int), m[f"{c}_human"].astype(int)
+            out[f"vs_human_{c}_agreement"] = float((a == b).mean())
+            with warnings.catch_warnings():     # kappa is undefined (NaN) when both graders give one score only
+                warnings.simplefilter("ignore")
+                out[f"vs_human_{c}_kappa"] = float(cohen_kappa_score(a, b, labels=[0, 1, 2], weights="quadratic"))
+    return out
+
+
 def select_cohort(scores_csv, k_flagged=100, k_control=100, seed=42, clean_dir=CLEAN_DIR):
     """Investigation cohort from TEST applicants: top-k by model score ('flagged') + random controls.
     Controls are needed so discrimination can be measured. TARGET is deliberately not included."""
@@ -409,69 +601,148 @@ def read_runs(path):
     return json.loads(text) if text.startswith("[") else [json.loads(l) for l in text.splitlines() if l.strip()]
 
 
-def evaluate_agent_runs(runs, flag_map=None, threshold=0.5, baseline_csv=None, n_boot=1000, clean_dir=CLEAN_DIR):
+def _ci(res, metrics):
+    return {m: {"value": float(r.value), "ci_low": float(r.ci_low), "ci_high": float(r.ci_high)}
+            for m, r in res.loc[metrics].iterrows()}
+
+
+def _discrimination(df, n_boot):
+    """PR-AUC / ROC-AUC of the risk score, and precision / recall / F1 of the flagged ('high') rating."""
+    auc = evaluate(df.TARGET, df.risk_score, threshold=0.5, n_boot=n_boot)
+    hi = evaluate(df.TARGET, df.flagged, threshold=1, n_boot=n_boot)
+    return {**_ci(auc, ["pr_auc", "roc_auc"]), **{f"{m} of 'high'": v for m, v in _ci(hi, ["precision", "recall", "f1"]).items()}}
+
+
+def _vs_baseline(df, n_boot):
+    """Paired difference agent risk score - baseline score on the same applicants."""
+    out = {}
+    for metric in ("pr_auc", "roc_auc"):
+        c = compare_models(df.TARGET, df.risk_score, df.baseline_score, metric=metric, n_boot=n_boot)
+        out[metric] = {**{k: c[k] for k in ["delta", "ci_low", "ci_high", "p_bootstrap"]}, "n": len(df)}
+    return out
+
+
+def evaluate_agent_runs(runs, flag_map=None, tool_map=None, flag_ratings=FLAG_RATINGS, baseline_csv=None,
+                        judge=None, human=None, n_boot=1000, cohort=None, clean_dir=CLEAN_DIR):
     """Score every investigated applicant and summarise. Returns (per_applicant table, summary dict).
-    runs: list of run dicts or a .jsonl/.json path.  flag_map: dict or JSON path (None skips completeness)."""
+    runs: list of run dicts or a .jsonl/.json path.  flag_map / tool_map: dict or JSON path (None skips completeness /
+    tool recall).  flag_ratings: ratings that count as flagged.  judge / human: rubric scores (see evaluate_judge).
+    cohort: select_cohort output (DataFrame or CSV; default cohort.csv next to this file if it exists). It gives each
+    applicant's group (flagged / control) and the Exp1 score used as the baseline (baseline_csv overrides the score).
+    Main outcome = the FLAGGED group: among applicants the model already flagged, does the agent separate real
+    defaulters from false alarms? Whole-cohort numbers are secondary: the cohort was chosen with the Exp1 score, which
+    gives Exp1 a built-in head start there. Metrics whose run fields are missing are left out of the summary."""
     if isinstance(runs, (str, Path)):
         runs = read_runs(runs)
+    if cohort is None and (HERE / "cohort.csv").exists():
+        cohort = HERE / "cohort.csv"
+    if cohort is not None and not isinstance(cohort, pd.DataFrame):
+        cohort = pd.read_csv(cohort)
     if isinstance(flag_map, (str, Path)):
         flag_map = json.loads(Path(flag_map).read_text())
+    if isinstance(tool_map, (str, Path)):
+        tool_map = json.loads(Path(tool_map).read_text())
     flags = load_red_flags()
     rule_ids = [r[0] for r in RED_FLAG_RULES]
     by_app = {}
     for r in runs:
         by_app.setdefault(int(r["SK_ID_CURR"]), []).append(r)
+    cov = source_coverage(list(by_app), clean_dir)
     rows, all_cits = [], []
     for sid, rs in by_app.items():
         f = [faithfulness(r.get("citations", []), r.get("tool_outputs", {})) for r in rs]
         all_cits += [d for x in f for d in x["details"].to_dict("records")]
         present = [k for k in rule_ids if sid in flags.index and flags.at[sid, k] == 1]
-        row = {"SK_ID_CURR": sid, "n_runs": len(rs), "risk_score": float(np.mean([r.get("risk_score", np.nan) for r in rs])),
-               "rating": pd.Series([r.get("rating") for r in rs]).mode().iloc[0],
-               "faithfulness": float(np.nanmean([x["faithfulness"] for x in f])), "n_red_flags": len(present)}
+        rating = pd.Series([r.get("rating") for r in rs]).mode().iloc[0]
+        row = {"SK_ID_CURR": sid, "n_runs": len(rs), "risk_score": _mean([r.get("risk_score", np.nan) for r in rs]),
+               "rating": rating, "flagged": int(rating in flag_ratings),
+               "faithfulness": _mean([x["faithfulness"] for x in f]), "n_red_flags": len(present)}
         if flag_map is not None:
             comp = [completeness([c.get("field") for c in r.get("citations", [])], present, flag_map) for r in rs]
-            row["completeness"] = float(np.nanmean([c["completeness"] for c in comp])) if present else np.nan
+            row["completeness"] = _mean([c["completeness"] for c in comp]) if present else np.nan
             row["missed_flags"] = ", ".join(sorted(set.intersection(*[set(c["missed"]) for c in comp]))) if present else ""
+        traj = [trajectory(r, sid, tool_map) for r in rs]
+        row["tool_recall"] = _mean([t["tool_recall"] for t in traj])
+        row["argument_accuracy"] = _mean([t["argument_accuracy"] for t in traj])
+        esc = [bool(r["escalated"]) for r in rs if gate_required(r, flag_ratings) and "escalated" in r]
+        row["gate_required_runs"], row["gate_escalated_runs"] = len(esc), sum(esc)
+        row["uncertainty_honesty"] = _mean([uncertainty_honesty(r, cov.loc[sid].to_dict(), tool_map) for r in rs])
+        for k in ["input_tokens", "output_tokens", "latency_s"]:
+            row[k] = _mean([(r.get("usage") or {}).get(k, np.nan) for r in rs])
         if len(rs) > 1:
             row.update(consistency(rs))
         rows.append(row)
     per_app = attach_split(pd.DataFrame(rows), clean_dir=clean_dir)
+    if cohort is not None:
+        per_app = per_app.merge(cohort[["SK_ID_CURR", "group", "score"]].rename(columns={"score": "baseline_score"}),
+                                on="SK_ID_CURR", how="left")
+    if baseline_csv:
+        base = load_predictions(baseline_csv, clean_dir)[["SK_ID_CURR", "score"]].rename(columns={"score": "baseline_score"})
+        per_app = per_app.drop(columns="baseline_score", errors="ignore").merge(base, on="SK_ID_CURR", how="left")
     cits = pd.DataFrame(all_cits)
-    summary = {"applicants": len(per_app), "runs": len(runs),
-               "faithfulness_mean": float(per_app.faithfulness.mean()),
-               "citations_not_found_share": float((cits.status == "not_found").mean()) if len(cits) else np.nan,
-               "citations_mismatch_share": float((cits.status == "mismatch").mean()) if len(cits) else np.nan}
-    if "completeness" in per_app:
-        summary["completeness_mean"] = float(per_app.completeness.mean())
+
+    def means(cols):
+        return {c: float(per_app[c].mean()) for c in cols if c in per_app and per_app[c].notna().any()}
+
+    process = means(["tool_recall", "argument_accuracy"])
+    if per_app.gate_required_runs.sum():
+        process["gate_adherence"] = float(per_app.gate_escalated_runs.sum() / per_app.gate_required_runs.sum())
+    process.update(means(["faithfulness"]))
+    if len(cits):
+        process["citations_not_found_share"] = float((cits.status == "not_found").mean())
+        process["citations_mismatch_share"] = float((cits.status == "mismatch").mean())
+    process.update(means(["completeness", "uncertainty_honesty"]))
     if "same_rating_all_runs" in per_app:
-        summary["same_rating_all_runs_share"] = float(per_app.same_rating_all_runs.mean())
-        summary["evidence_jaccard_mean"] = float(per_app.evidence_jaccard.mean())
-        summary["risk_score_std_mean"] = float(per_app.risk_score_std.mean())
+        process["same_rating_all_runs_share"] = float(per_app.same_rating_all_runs.mean())
+        process.update(means(["evidence_jaccard", "risk_score_std"]))
+    summary = {"cohort": {"applicants": len(per_app), "runs": len(runs),
+                          "default_rate": float(per_app.TARGET.mean()), "flagged_share": float(per_app.flagged.mean())},
+               "process": process}
+    if judge is not None:
+        summary["output (judge)"] = evaluate_judge(judge, human)
+    outcome = {}
+    has_base = "baseline_score" in per_app and per_app.baseline_score.notna().any()
+    flagged = per_app[per_app.group == "flagged"] if "group" in per_app else per_app.iloc[:0]
+    if flagged.TARGET.nunique() == 2:
+        outcome["flagged group (main)"] = {"applicants": len(flagged),
+                                           "default_rate": float(flagged.TARGET.mean()),
+                                           **_discrimination(flagged, n_boot)}
+        if has_base:
+            outcome["flagged group (main)"]["agent vs Exp1"] = _vs_baseline(flagged.dropna(subset=["baseline_score"]), n_boot)
+    if "group" in per_app and (per_app.group == "control").any():
+        ctrl = per_app[per_app.group == "control"]
+        outcome["control group"] = {
+            "applicants": len(ctrl), "default_rate": float(ctrl.TARGET.mean()), "rated_high_share": float(ctrl.flagged.mean()),
+            "false_positive_rate": float(ctrl.loc[ctrl.TARGET == 0, "flagged"].mean())}
     if per_app.TARGET.nunique() == 2:
-        res = evaluate(per_app.TARGET, per_app.risk_score, threshold=threshold, n_boot=n_boot)
-        summary["discrimination"] = {m: {"value": float(r.value), "ci_low": float(r.ci_low), "ci_high": float(r.ci_high)}
-                                     for m, r in res.loc[["roc_auc", "pr_auc", "precision", "recall"]].iterrows()}
-        if baseline_csv:
-            base = load_predictions(baseline_csv, clean_dir)[["SK_ID_CURR", "score"]]
-            m = per_app.merge(base, on="SK_ID_CURR", how="inner")
-            c = compare_models(m.TARGET, m.risk_score, m.score, metric="roc_auc", n_boot=n_boot)
-            summary["agent_vs_baseline_roc_auc"] = {k: c[k] for k in ["delta", "ci_low", "ci_high", "p_bootstrap"]}
-            summary["agent_vs_baseline_roc_auc"]["n"] = len(m)
+        whole = _discrimination(per_app, n_boot)
+        if has_base and not outcome.get("flagged group (main)"):     # no groups known: whole cohort is all we have
+            whole["agent vs baseline"] = _vs_baseline(per_app.dropna(subset=["baseline_score"]), n_boot)
+        outcome["whole cohort (secondary)"] = whole
+        if per_app.risk_score.between(0, 1).all():
+            outcome["calibration"] = calibration(per_app.TARGET, per_app.risk_score)[0]
+    outcome["cost per run"] = means(["input_tokens", "output_tokens", "latency_s"])
+    summary["outcome"] = {k: v for k, v in outcome.items() if v}
     return per_app, summary
 
 
 def summary_table(summary):
     """The evaluate_agent_runs summary as a two-column table (metric, value with 95% CI where available)."""
     rows = []
-    for k, v in summary.items():
-        if isinstance(v, dict) and "value" not in v and all(isinstance(x, dict) for x in v.values()):
-            for m, r in v.items():
-                rows.append((f"{k}: {m}", f"{r['value']:.3f} ({r['ci_low']:.3f}-{r['ci_high']:.3f})"))
+
+    def walk(name, v):
+        if isinstance(v, dict) and "value" in v:
+            rows.append((name, f"{v['value']:.3f} ({v['ci_low']:.3f}-{v['ci_high']:.3f})"))
+        elif isinstance(v, dict) and "delta" in v:
+            rows.append((name, f"{v['delta']:+.3f} ({v['ci_low']:+.3f} to {v['ci_high']:+.3f}), "
+                               f"p={v['p_bootstrap']:.2g}, n={v['n']}"))
         elif isinstance(v, dict):
-            rows.append((k, f"{v['delta']:+.3f} ({v['ci_low']:+.3f} to {v['ci_high']:+.3f}), p={v['p_bootstrap']:.2g}, n={v['n']}"))
+            for k, x in v.items():
+                walk(f"{name}: {k}" if name else k, x)
         else:
-            rows.append((k, f"{v:.3f}" if isinstance(v, float) else v))
+            rows.append((name, f"{v:.3f}" if isinstance(v, float) else v))
+
+    walk("", summary)
     return pd.DataFrame(rows, columns=["metric", "value"]).set_index("metric")
 
 
@@ -482,13 +753,20 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("runs", nargs="?", help="agent runs: .jsonl (one JSON per line) or .json list")
     ap.add_argument("--flag-map", help="JSON mapping red-flag id -> agent field names (needed for completeness)")
-    ap.add_argument("--baseline", help="CSV SK_ID_CURR, score of a model to compare the agent's risk score with")
-    ap.add_argument("--threshold", type=float, default=0.5, help="risk score above which the agent 'flags' (default 0.5)")
+    ap.add_argument("--tool-map", help="JSON mapping data source -> agent tool names (needed for tool recall)")
+    ap.add_argument("--flag-ratings", nargs="+", default=list(FLAG_RATINGS),
+                    help="ratings that count as flagged and must be escalated (default: high)")
+    ap.add_argument("--cohort", help="cohort.csv from --make-cohort (default: cohort.csv next to this file if present)")
+    ap.add_argument("--baseline", help="CSV SK_ID_CURR, score of a model to compare the agent's risk score with "
+                                       "(default: the Exp1 score stored in the cohort)")
+    ap.add_argument("--judge", help="CSV of LLM-judge rubric scores: SK_ID_CURR, run, grounding, hedging, completeness")
+    ap.add_argument("--human", help="CSV of human rubric scores for some of the same reports (judge agreement)")
     ap.add_argument("--n-boot", type=int, default=1000)
     ap.add_argument("--make-cohort", metavar="SCORES_CSV", help="write cohort.csv from a model's test scores")
     ap.add_argument("--k-flagged", type=int, default=100)
     ap.add_argument("--k-control", type=int, default=100)
     ap.add_argument("--flag-map-template", action="store_true", help="write flag_to_fields.json to fill in")
+    ap.add_argument("--tool-map-template", action="store_true", help="write tool_map.json to fill in")
     ap.add_argument("--out", default=str(HERE / "exp3"), help="output file prefix (default outputs/exp3/exp3)")
     a = ap.parse_args(argv)
 
@@ -500,16 +778,30 @@ def main(argv=None):
         tpl = {r: {"concept": c, "rule": d, "fields": []} for r, _, c, d in RED_FLAG_RULES}
         (HERE / "flag_to_fields.json").write_text(json.dumps(tpl, indent=2))
         print(f"Wrote {HERE / 'flag_to_fields.json'}: fill each 'fields' list with your tool field names")
+    if a.tool_map_template:
+        (HERE / "tool_map.json").write_text(json.dumps(TOOL_MAP_TEMPLATE, indent=2))
+        print(f"Wrote {HERE / 'tool_map.json'}: replace the example tool names with your agent's tool names")
     if a.runs:
         flag_map = json.loads(Path(a.flag_map).read_text()) if a.flag_map else None
+        tool_map = json.loads(Path(a.tool_map).read_text()) if a.tool_map else None
         if flag_map is None:
             print("No --flag-map given: completeness is skipped.")
-        per_app, summary = evaluate_agent_runs(read_runs(a.runs), flag_map, a.threshold, a.baseline, a.n_boot)
-        print(json.dumps(summary, indent=2))
+        if tool_map is None:
+            print("No --tool-map given: tool recall is skipped.")
+        per_app, summary = evaluate_agent_runs(read_runs(a.runs), flag_map, tool_map, tuple(a.flag_ratings), a.baseline,
+                                               a.judge, a.human, a.n_boot, a.cohort)
+        print(summary_table(summary).to_string())
         per_app.to_csv(f"{a.out}_per_applicant.csv", index=False)
         Path(f"{a.out}_summary.json").write_text(json.dumps(summary, indent=2))
-        print(f"\nSaved {a.out}_per_applicant.csv and {a.out}_summary.json")
-    if not (a.make_cohort or a.flag_map_template or a.runs):
+        saved = [f"{a.out}_per_applicant.csv", f"{a.out}_summary.json"]
+        if per_app.TARGET.nunique() == 2:
+            if per_app.risk_score.between(0, 1).all():
+                calibration(per_app.TARGET, per_app.risk_score)[1].to_csv(f"{a.out}_calibration.csv")
+                saved.append(f"{a.out}_calibration.csv")
+            fairness_table(per_app).to_csv(f"{a.out}_fairness.csv", index=False)
+            saved.append(f"{a.out}_fairness.csv")
+        print("\nSaved " + ", ".join(saved))
+    if not (a.make_cohort or a.flag_map_template or a.tool_map_template or a.runs):
         ap.print_help()
 
 

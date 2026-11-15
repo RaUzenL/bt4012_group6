@@ -29,7 +29,7 @@ from sklearn.metrics import (average_precision_score, f1_score, precision_recall
 
 HERE = Path(__file__).resolve().parent
 CLEAN_DIR = HERE.parent / "clean_data"
-SHOW = ["roc_auc", "pr_auc", "precision", "recall", "f1", "precision@top10%", "recall@top10%"]
+SHOW = ["pr_auc", "roc_auc", "precision", "recall", "f1"]
 
 
 def load_splits(clean_dir=CLEAN_DIR):
@@ -51,25 +51,16 @@ def best_f1_threshold(y_val, s_val):
     return float(t[np.nanargmax(f1[:-1])])
 
 
-def _top_k(y, s, frac):
-    k = max(1, int(round(len(s) * frac)))
-    hits = y[np.argsort(-s)[:k]].sum()
-    return hits / k, hits / max(1, y.sum())
-
-
 def _metrics(y, s, thr):
     yhat = (s >= thr).astype(int)
-    out = {"roc_auc": roc_auc_score(y, s), "pr_auc": average_precision_score(y, s),
-           "precision": precision_score(y, yhat, zero_division=0), "recall": recall_score(y, yhat),
-           "f1": f1_score(y, yhat)}
-    for frac in (0.05, 0.10):
-        out[f"precision@top{int(frac * 100)}%"], out[f"recall@top{int(frac * 100)}%"] = _top_k(y, s, frac)
-    return out
+    return {"pr_auc": average_precision_score(y, s), "roc_auc": roc_auc_score(y, s),
+            "precision": precision_score(y, yhat, zero_division=0), "recall": recall_score(y, yhat),
+            "f1": f1_score(y, yhat)}
 
 
 def evaluate(y_test, s_test, y_val=None, s_val=None, threshold=None, n_boot=1000, seed=42):
-    """Test metrics with bootstrap 95% CIs: ROC-AUC, PR-AUC, precision/recall/F1 at the threshold, and
-    precision/recall among the riskiest 5% and 10%. Threshold = max-F1 on validation, or a fixed `threshold`."""
+    """Test metrics with bootstrap 95% CIs: PR-AUC (primary), ROC-AUC, and precision/recall/F1 at the threshold.
+    Threshold = max-F1 on validation, or a fixed `threshold`."""
     if threshold is None:
         if y_val is None:
             raise ValueError("give validation labels/scores (y_val, s_val) or a fixed threshold")
@@ -121,6 +112,24 @@ def compare_models(y, s_a, s_b, metric="pr_auc", n_boot=1000, seed=42):
             "delong_roc_auc": delong_test(y, s_a, s_b)}
 
 
+def holm(p):
+    """Holm-adjusted p-values: keeps the chance of ANY false 'significant' result across a family of tests at 5%."""
+    p = np.asarray(p, dtype=float)
+    order = np.argsort(p)
+    adj = np.minimum(1, np.maximum.accumulate((len(p) - np.arange(len(p))) * p[order]))
+    out = np.empty(len(p))
+    out[order] = adj
+    return out
+
+
+def _add_p_values(comps):
+    """p_value = DeLong for ROC-AUC, paired bootstrap for PR-AUC; p_holm adjusts across every row of comps."""
+    if len(comps):
+        comps["p_value"] = np.where(comps.metric == "roc_auc", comps.p_delong, comps.p_bootstrap)
+        comps["p_holm"] = holm(comps.p_value)
+    return comps
+
+
 def load_predictions(pred, clean_dir=CLEAN_DIR):
     """Predictions as a DataFrame or a CSV path, with columns SK_ID_CURR, score (higher = riskier).
     Returns them with TARGET and split attached."""
@@ -160,12 +169,12 @@ def compare_prediction_files(paths, labels=None, n_boot=1000, clean_dir=CLEAN_DI
     base = labels[0]
     for lab in labels[1:]:
         y = preds[base]["test"]["TARGET"].to_numpy()
-        for metric in ("roc_auc", "pr_auc"):
+        for metric in ("pr_auc", "roc_auc"):
             c = compare_models(y, preds[lab]["test"]["score"], preds[base]["test"]["score"], metric, n_boot)
             comps.append({"model": lab, "vs_baseline": base, "metric": metric, "delta": c["delta"],
                           "ci_low": c["ci_low"], "ci_high": c["ci_high"], "p_bootstrap": c["p_bootstrap"],
                           "p_delong": c["delong_roc_auc"]["p_value"] if metric == "roc_auc" else np.nan})
-    return table, pd.DataFrame(comps), preds
+    return table, _add_p_values(pd.DataFrame(comps)), preds
 
 
 def pretty_metrics(table, metrics=SHOW):
@@ -178,16 +187,16 @@ def pretty_metrics(table, metrics=SHOW):
 
 
 def pretty_comparisons(comps):
-    """Readable comparison table with a plain-language verdict (95% CI of the difference excludes 0)."""
+    """Readable comparison table with a plain-language verdict based on the Holm-adjusted p-value (< 0.05)."""
     if comps.empty:
         return comps
     c = comps.copy()
     c["difference (95% CI)"] = [f"{d:+.4f} ({lo:+.4f} to {hi:+.4f})" for d, lo, hi in zip(c.delta, c.ci_low, c.ci_high)]
-    c["p_value"] = [f"{pd_:.2g}" if metric == "roc_auc" else f"{pb:.2g}"
-                    for pd_, pb, metric in zip(c.p_delong, c.p_bootstrap, c.metric)]
-    c["verdict"] = np.where(c.ci_low > 0, "significantly better", np.where(c.ci_high < 0, "significantly worse",
-                                                                           "no significant difference"))
-    return c[["model", "vs_baseline", "metric", "difference (95% CI)", "p_value", "verdict"]]
+    c["verdict"] = np.where(c.p_holm >= 0.05, "no significant difference",
+                            np.where(c.delta > 0, "significantly better", "significantly worse"))
+    c["p_value"], c["p_holm"] = c.p_value.map("{:.2g}".format), c.p_holm.map("{:.2g}".format)
+    keys = [k for k in ["grouping", "segment"] if k in c]
+    return c[keys + ["model", "vs_baseline", "metric", "difference (95% CI)", "p_value", "p_holm", "verdict"]]
 
 
 def _print_model_table(table, comps):

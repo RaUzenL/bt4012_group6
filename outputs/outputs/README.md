@@ -59,14 +59,54 @@ Leave `MODELS` empty to see a demo first.
 ```
 python outputs/exp1/eval_exp1.py app_only.csv app_bureau.csv app_prev.csv app_repay.csv all.csv --labels App +Bureau +Prev +Repay All
 ```
-**Exp2** (adds per-segment results for RQ2.2; `--segments my_groups.csv` to use your own groups)
+**Exp2** (adds per-segment results and per-segment paired tests for RQ2.2; `--segments my_groups.csv` to use your own groups)
 ```
 python outputs/exp2/eval_exp2.py aggregated.csv sequence.csv --labels Aggregated Sequence
 ```
-**Exp3**
+**Exp3** (`cohort.csv` from the first command is picked up automatically: groups + Exp1 baseline score)
 ```
 python outputs/exp3/eval_exp3.py --make-cohort exp1_test_scores.csv     # who to investigate (test split only)
-python outputs/exp3/eval_exp3.py --flag-map-template                     # map red flags to your tool fields
-python outputs/exp3/eval_exp3.py agent_runs.jsonl --flag-map outputs/exp3/flag_to_fields.json --baseline exp1_test_scores.csv
+python outputs/exp3/eval_exp3.py --flag-map-template --tool-map-template # map red flags / data sources to your tools
+python outputs/exp3/eval_exp3.py agent_runs.jsonl --flag-map outputs/exp3/flag_to_fields.json \
+    --tool-map outputs/exp3/tool_map.json [--judge judge.csv --human human.csv]
 ```
 Run any file with `--help` for details. Each file can also be imported, e.g. `ev.evaluate(y_test, p_test, y_val=y_val, s_val=p_val)`.
+
+## Evaluation metrics
+**Exp1 and Exp2** (same metrics, same test applicants)
+| Metric | Role | Why |
+|---|---|---|
+| PR-AUC | **primary** | only ~8% of applicants default; PR-AUC shows how many flagged applicants really default (8% = random) |
+| ROC-AUC | secondary | ranking quality; unaffected by the default rate, so it compares fairly across Exp2 segments; standard in credit scoring |
+| Precision / recall / F1 | operating point | at one threshold per model, chosen on **val** by max F1. Depends on where each threshold lands, so do not use it to compare models |
+| Paired tests vs the baseline | significance | bootstrap 95% CI of the difference; DeLong p-value for ROC-AUC, bootstrap p-value for PR-AUC. The verdict uses the **Holm-adjusted** p-value (`p_holm`) because several models and metrics are tested at once |
+
+Exp2 also reports every metric per history segment and, for RQ2.2, a paired test vs the baseline **inside each
+segment** (Holm-adjusted across all segment tests). Segments use the model's single threshold; do not tune one per segment.
+
+**Exp3** (LLM agent; lecture 12: a correct process does not guarantee a correct result, so both are measured)
+| Level | Metrics |
+|---|---|
+| Process | tool recall, argument accuracy, gate adherence (must be 100%), faithfulness, completeness vs the rule-based red flags, uncertainty honesty, consistency across runs |
+| Output | LLM-as-judge rubric (grounding is blocking, hedging, completeness), checked against ~20 human grades |
+| Outcome | **main:** PR-AUC / ROC-AUC of the risk score and precision / recall of the `high` rating **within the flagged group** (top 100 by Exp1), vs its default rate and paired vs the Exp1 score; over-flagging in the control group; whole cohort (secondary); calibration and fairness (descriptive); cost per run |
+
+The cohort was chosen with the Exp1 score and is enriched with defaulters, so whole-cohort AUCs are not comparable
+with Exp1/Exp2 and give Exp1 a head start; that is why the flagged group is the main result. Completeness uses the
+rule-based red flags (`red_flag_rules.json`), not SHAP, so the agent is not rewarded for repeating the model.
+
+## To do for each experiment (after the evaluation update)
+Run your experiment through **this folder's** evaluation notebook, not a copy of the `.py` files elsewhere, so all
+three experiments are scored the same way. Older saved tables (e.g. with `precision@top10%` columns) are outdated.
+* **Exp1:** put each model's val + test predictions (`SK_ID_CURR, score`) in `MODELS` in `exp1/evaluate_exp1.ipynb`
+  and Run All. Use the new tables in the report.
+* **Exp2:** do the same in `exp2/evaluate_exp2.ipynb`, baseline (aggregated) model first. Use the per-segment paired
+  test for RQ2.2 and only claim a segment effect where the verdict is significant (this cell takes a few minutes).
+* **Exp3:**
+  1. Build the cohort from the best Exp1 model's test scores (section 1 of `exp3/evaluate_exp3.ipynb`).
+  2. Fill in `FLAG_MAP` (red flag -> your tool fields) and `TOOL_MAP` (data source -> your tool names).
+  3. Log these in every agent run: `tool_calls`, `source_findings`, `escalated`, `usage`, `report` (format in
+     section 3). Cite values exactly as the tools return them (fractions such as `0.214`, not "21%").
+  4. Optional: grade the reports with the judge rubric (`ev.JUDGE_RUBRIC`) and have a teammate grade ~20 of them.
+* **Team decision:** the proposal says Exp3 is compared against SHAP evidence; the evaluation uses rule-based red flags
+  instead (see above). Agree on this and update the proposal wording.
