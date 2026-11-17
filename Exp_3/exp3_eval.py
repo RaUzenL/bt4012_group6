@@ -400,6 +400,63 @@ def threshold_table(scored, thresholds):
     return pd.DataFrame(rows).set_index("flag_if_score_at_least")
 
 
+def model_failures(runs_file):
+    """Runs that failed because of the model itself, for example it kept calling tools instead of answering.
+    Runs that failed because the service was busy were run again, so they are not counted."""
+    runs_file = Path(runs_file)
+    failed = agent.read_runs(runs_file.with_name(runs_file.stem + "_failed.jsonl"))
+    return len(set((f["SK_ID_CURR"], f["run"]) for f in failed if not agent.server_error(f["error"])))
+
+
+def with_interval(numbers):
+    """'0.536 (0.418 to 0.645)' from one entry of the team's summary."""
+    return "{0:.3f} ({1:.3f} to {2:.3f})".format(numbers["value"], numbers["ci_low"], numbers["ci_high"])
+
+
+def model_comparison(models, evaluate, cohort, flag_map, tool_map, answer_key, runs_per_applicant, n_boot=1000):
+    """The same agent with different LLMs, measured the same way. models is {label: runs file}.
+    evaluate is eval_exp3.evaluate_agent_runs, so the main numbers are the team's.
+    Only runs 1 to runs_per_applicant are used, so every model is measured on the same runs."""
+    columns = {}
+    for label, runs_file in models.items():
+        runs = [run for run in agent.read_runs(runs_file) if run["run"] <= runs_per_applicant]
+        expected = len(cohort) * runs_per_applicant
+        table, summary = evaluate(runs, flag_map=flag_map, tool_map=tool_map, n_boot=n_boot, cohort=cohort)
+        _, verdicts = policy_verdict_table(runs)
+        flags = flag_precision_recall(runs, flag_map, answer_key)
+        words = [len(run["report"].split()) for run in runs]
+        process = summary["process"]
+        flagged = summary["outcome"]["flagged group (main)"]
+        whole = summary["outcome"]["whole cohort (secondary)"]
+        column = {
+            "runs finished (of {0})".format(expected): len(runs),
+            "runs that failed because of the model": model_failures(runs_file),
+            "tool recall": round(process["tool_recall"], 3),
+            "faithfulness": round(process["faithfulness"], 3),
+            "completeness (red flags cited)": round(process["completeness"], 3),
+            "policy verdicts: recall": round(verdicts["recall"], 3),
+            "policy verdicts: precision": round(verdicts["precision"], 3),
+            "red flags: precision against the key": round(flags["precision"], 3),
+            "first drafts rejected": sum(len(run["problems_first_draft"]) > 0 for run in runs),
+            "notes that name all six sources": sum(len(sources_named(run["report"])) == 6 for run in runs),
+            "notes with a number not in the facts": sum(len(unsupported_numbers(run["report"], run["report_input"])) > 0
+                                                        for run in runs),
+            "words per note (mean)": round(float(np.mean(words))),
+            "ROC-AUC, flagged group (main)": with_interval(flagged["roc_auc"]),
+            "PR-AUC, flagged group": with_interval(flagged["pr_auc"]),
+            "ROC-AUC, whole cohort": with_interval(whole["roc_auc"]),
+            "precision of 'high', whole cohort": round(whole["precision of 'high'"]["value"], 3),
+            "recall of 'high', whole cohort": round(whole["recall of 'high'"]["value"], 3),
+            "seconds per run (median)": round(float(np.median([run["seconds"] for run in runs])), 1),
+            "input tokens per run": round(float(np.mean([run["tokens_in"] for run in runs]))),
+            "output tokens per run": round(float(np.mean([run["tokens_out"] for run in runs]))),
+        }
+        if runs_per_applicant > 1:
+            column["same rating in every run"] = round(process["same_rating_all_runs_share"], 3)
+        columns[label] = column
+    return pd.DataFrame(columns)
+
+
 def score_rule_table(applicant_ids, shared_folder=None):
     """Apply the policy and the scoring rule in code to many applicants. No model is called.
     This shows how well the score would rank applicants if the agent judged every policy line correctly."""
@@ -610,6 +667,24 @@ def unsupported_numbers(note, facts):
         if not supported and number not in missing:
             missing.append(number)
     return missing
+
+
+# Words that show a case note talks about a data source. A rough check: it shows that a source is
+# named, not that what is said about it is right (that is the judge's and the person's job).
+SOURCE_WORDS = {
+    "application": ["external score"],
+    "bureau": ["bureau"],
+    "previous_application": ["previous", "prior application"],
+    "installments": ["instalment", "installment"],
+    "credit_card": ["card"],
+    "pos_cash": ["pos ", "pos-", "point-of-sale", "point of sale", "cash loan"],
+}
+
+
+def sources_named(note):
+    """The data sources a case note talks about (the team's rubric asks for a verdict on all six)."""
+    text = note.lower()
+    return [source for source, words in SOURCE_WORDS.items() if any(word in text for word in words)]
 
 
 def plant_wrong_number(note):

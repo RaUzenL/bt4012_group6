@@ -233,6 +233,14 @@ second = agent.run_batch([100047], HalfBroken([]), 1, folder / "runs.jsonl", wor
 check("a failed run goes to the failed file", first == {"saved": 1, "failed": 1} and (folder / "runs_failed.jsonl").exists())
 check("a finished run is not repeated", second == {"saved": 0, "failed": 0})
 
+# A run that failed because of the model is kept as a failure when asked; a busy service is retried
+(folder / "runs_failed.jsonl").write_text(
+    json.dumps({"SK_ID_CURR": 100048, "run": 1, "error": "RuntimeError: kept calling tools"}) + "\n"
+    + json.dumps({"SK_ID_CURR": 100049, "run": 1, "error": "OpenAIAPIError: Error code: 503"}) + "\n")
+third = agent.run_batch([100047, 100048, 100049], HalfBroken([]), 1, folder / "runs.jsonl", workers=1,
+                        retry_model_failures=False)
+check("a model failure is not retried, a service failure is", third == {"saved": 1, "failed": 0})
+
 # 14. Runs from another version are never mixed into the same file
 record = json.loads((folder / "runs.jsonl").read_text().splitlines()[0])
 record["code_version"] = "older"
@@ -290,6 +298,26 @@ check("the team's file measures faithfulness and cost on a saved run",
 view = grading.judge_view(run)
 check("the judge is shown the six tool outputs and the score calculated by code",
       len(view["tool_outputs"]) == 7 and view["tool_outputs"]["given_to_the_writer_by_the_system"]["risk_score"] == run["risk_score"])
+
+# 19. The case note is given a verdict for every source, also the clean ones
+run = agent.investigate(APPLICANT, ScriptedModel([tool_calls(ALL_TOOLS), findings(), REPORT]))
+per_source = run["report_input"].split("Result per source:\n")[1].split("\n\nScore calculation")[0].split("\n")
+check("the case note is given one line for each of the six sources", len(per_source) == 6)
+no_record_lines = [line for line in per_source if "no record" in line]
+check("a source with no record is given as missing, never as clean",
+      len(no_record_lines) == len(run["no_record_sources"]) and all("No red flag" not in line for line in no_record_lines))
+concern_tools = set(c["tool"] for c in run["citations"] if c["signal"] == "risk")
+check("a source with a red flag is given as a concern",
+      sum("Concern:" in line for line in per_source) == len(concern_tools))
+check("the score calculation can still be read from the facts", grading.score_sentences(run).startswith("Past applicants"))
+
+check("the source check finds every source named in a note",
+      len(grading.sources_named("External score low. Bureau clean. Two previous applications. Instalments on time. "
+                                "No credit card record. POS and cash loans: none late.")) == 6)
+check("the source check sees a source that is left out", "pos_cash" not in grading.sources_named("Bureau and card only."))
+
+run = agent.investigate(APPLICANT, ScriptedModel([tool_calls(ALL_TOOLS[:3])] + [AIMessage(content="DONE")] * 3 + [findings(), REPORT]))
+check("a source that was not checked is named as not checked in the facts", run["report_input"].count(": not checked.") == 3)
 
 failed = [name for name, passed in results if not passed]
 print()

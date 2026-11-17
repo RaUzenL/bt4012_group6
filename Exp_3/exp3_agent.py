@@ -51,7 +51,7 @@ TEMPERATURE = 0
 MAX_EVIDENCE_TURNS = 4         # budget of model calls in step 1 (evidence)
 MAX_FINDINGS_ATTEMPTS = 2      # first draft + one repair
 MAX_EXTRA_TOOL_TURNS = 2       # if the agent asks for a tool again in step 2 or 3, it gets this many extra turns
-CODE_VERSION = "exp3-v3"
+CODE_VERSION = "exp3-v3.1"
 
 # The risk score is an estimated default rate. The average applicant is at about 0.08.
 MEDIUM_FROM = 0.08             # at or above the average applicant
@@ -73,6 +73,24 @@ SOURCE_OF_TOOL = {
     "get_installment_history": "installments",
     "get_credit_card_history": "credit_card",
     "get_pos_cash_history": "pos_cash",
+}
+
+# The case note gives every data source a verdict, also the sources where nothing is wrong (the team's
+# rubric asks for that). Code hands the note one line per source: its name, how much history it holds
+# (these fields, read from the tool output) and the verdict worked out from the verified findings.
+SOURCE_SUMMARY = {
+    "get_applicant_profile": ("Applicant profile", "external score percentile: {0}, loan to yearly income: {1}",
+                              ["external_score_percentile", "credit_to_income"]),
+    "get_credit_bureau_history": ("Credit bureau", "loans on file: {0}, active: {1}, overdue amount: {2}",
+                                  ["bureau_n_loans", "bureau_n_active_loans", "bureau_overdue_amount"]),
+    "get_previous_applications": ("Previous Home Credit applications", "total: {0}, approved: {1}, refused: {2}",
+                                  ["prev_n_applications", "prev_n_approved", "prev_n_refused"]),
+    "get_installment_history": ("Instalment payments", "instalments: {0}, late rate: {1}",
+                                ["inst_n_installments", "inst_late_rate"]),
+    "get_credit_card_history": ("Credit card", "months of history: {0}, latest utilisation: {1}",
+                                ["card_months_of_history", "card_latest_utilisation"]),
+    "get_pos_cash_history": ("POS and cash loans", "contracts: {0}, worst days past due: {1}",
+                             ["pos_n_contracts", "pos_max_days_past_due"]),
 }
 
 # The written policy: 21 red-flag rules, 6 facts that raise the risk and 6 that lower it.
@@ -147,9 +165,10 @@ FINDINGS_MESSAGE = ("Step 1 is finished.\nSources with no record: {no_record}\nS
                     "Step 2: reply with your findings as one JSON object, with one check for every policy line.")
 REPAIR_MESSAGE = "The automatic check rejected the findings:\n- {problems}\nReturn the corrected JSON object only."
 REPORT_MESSAGE = ("Your findings are accepted. This is what the case note may use:\n\n{facts}\n\n"
-                  "Step 3: write the case note for the underwriter now. Use only the facts in this message, "
-                  "not the earlier tool results. Copy every number exactly as it is written here "
-                  "(write 0.7073, not 70.73 percent).")
+                  "Step 3: write the case note for the underwriter now. Give each of the six sources in "
+                  "\"Result per source\" its verdict, also the sources where nothing is wrong. "
+                  "Use only the facts in this message, not the earlier tool results. Copy every number exactly "
+                  "as it is written here (write 0.7073, not 70.73 percent).")
 
 # Changing the prompt (or a policy line or cut-off in it) changes this version, so runs from different prompts are never mixed.
 PROMPT_VERSION = hashlib.sha1((AGENT_PROMPT + CASE_MESSAGE + GATE_MESSAGE + FINDINGS_MESSAGE
@@ -560,8 +579,53 @@ def score_case(state):
 # ----------------------------------------------------------------------------------------------
 # Step 3: case note
 # ----------------------------------------------------------------------------------------------
+def size_of_source(tool_name, output):
+    """A few plain facts that say how much history a source holds, from the tool output."""
+    label, template, fields = SOURCE_SUMMARY[tool_name]
+    values = []
+    for field in fields:
+        value = output.get(field)
+        values.append("not on file" if value is None else value)
+    return template.format(*values)
+
+
+def source_results(state):
+    """One line per data source for the case note: what the source holds and the verdict on it.
+    The verdict is worked out by code from the verified findings, so a source where nothing
+    applies is named as such, and a missing history is never called clean."""
+    counts = {tool_name: {"red_flag": 0, "raises_risk": 0, "lowers_risk": 0} for tool_name in SOURCE_SUMMARY}
+    for citation in state["citations"]:
+        if citation["check"] == "match" and citation["kind"] in counts.get(citation["tool"], {}):
+            counts[citation["tool"]][citation["kind"]] += 1
+
+    lines = []
+    for tool_name, (label, template, fields) in SOURCE_SUMMARY.items():
+        output = state["evidence"].get(tool_name)
+        if output is None:
+            lines.append("- {0}: not checked.".format(label))
+            continue
+        if output.get("has_record") is False:
+            lines.append("- {0}: no record. This is missing history, not a clean history.".format(label))
+            continue
+        found = counts[tool_name]
+        parts = []
+        for kind, one, many in [("red_flag", "red flag", "red flags"),
+                                ("raises_risk", "fact that raises the risk", "facts that raise the risk"),
+                                ("lowers_risk", "fact that lowers the risk", "facts that lower the risk")]:
+            if found[kind] > 0:
+                parts.append("{0} {1}".format(found[kind], one if found[kind] == 1 else many))
+        if found["red_flag"] + found["raises_risk"] > 0:
+            verdict = "Concern: {0} (see the findings).".format(", ".join(parts))
+        elif found["lowers_risk"] > 0:
+            verdict = "No red flag. {0} (see the findings).".format(", ".join(parts))
+        else:
+            verdict = "No red flag, and no other policy line applies."
+        lines.append("- {0}: {1}. {2}".format(label, size_of_source(tool_name, output), verdict))
+    return "\n".join(lines)
+
+
 def describe_findings(state):
-    """The facts the case note may use: verified findings, the score calculation and the gaps."""
+    """The facts the case note may use: verified findings, the result per source, the score calculation and the gaps."""
     findings = []
     for citation in state["citations"]:
         if citation["check"] == "match":            # an unverified value is never offered to the case note
@@ -574,9 +638,9 @@ def describe_findings(state):
                        len(basis["red_flags_counted"]), basis["base_rate"], basis["adjustment_steps"],
                        len(basis["facts_raising_risk"]), len(basis["facts_lowering_risk"]),
                        state["risk_score"], basis["average_applicant"], state["rating"]))
-    return ("Applicant ID: {0}\n\nFindings:\n{1}\n\nScore calculation: {2}\n\n"
-            "Sources with no record: {3}\nSources not checked: {4}".format(
-                state["SK_ID_CURR"], json.dumps(findings, indent=1), calculation,
+    return ("Applicant ID: {0}\n\nFindings:\n{1}\n\nResult per source:\n{2}\n\nScore calculation: {3}\n\n"
+            "Sources with no record: {4}\nSources not checked: {5}".format(
+                state["SK_ID_CURR"], json.dumps(findings, indent=1), source_results(state), calculation,
                 state["no_record_sources"] if state["no_record_sources"] else "none",
                 state["not_checked"] if state["not_checked"] else "none"))
 
@@ -749,9 +813,17 @@ def read_runs(path):
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
-def run_batch(applicant_ids, llm, runs_per_applicant, output_file, workers=4):
+def server_error(error_text):
+    """True when a run failed because of the LLM service (busy, timed out, unreachable), not because of the model."""
+    return error_text.startswith("OpenAI")
+
+
+def run_batch(applicant_ids, llm, runs_per_applicant, output_file, workers=4, retry_model_failures=True):
     """Investigate every applicant several times. Each finished run is appended to output_file at once,
-    so the batch can be stopped and started again: finished (applicant, run) pairs are skipped."""
+    so the batch can be stopped and started again: finished (applicant, run) pairs are skipped.
+    With retry_model_failures=False, a run that failed because of the model itself (for example it kept
+    calling tools instead of answering) is not tried again, so that failure stays in the results.
+    A run that failed because the service was busy is always tried again."""
     output_file = Path(output_file)
     failed_file = output_file.with_name(output_file.stem + "_failed.jsonl")
     saved = read_runs(output_file)
@@ -761,6 +833,10 @@ def run_batch(applicant_ids, llm, runs_per_applicant, output_file, workers=4):
             raise RuntimeError("{0} holds runs made with another prompt, code version or model. "
                                "Use a new file name so that versions are not mixed.".format(output_file.name))
     done = {(record["SK_ID_CURR"], record["run"]) for record in saved}
+    if not retry_model_failures:
+        for failure in read_runs(failed_file):
+            if not server_error(failure["error"]):
+                done.add((failure["SK_ID_CURR"], failure["run"]))
     todo = []
     for run in range(1, runs_per_applicant + 1):        # run 1 for everyone first, then run 2, ...
         for applicant_id in applicant_ids:

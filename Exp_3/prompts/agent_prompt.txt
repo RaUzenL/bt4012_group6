@@ -49,9 +49,10 @@ Rule for "own_estimate":
 - Your own estimate, from 0 to 1, of the chance that this applicant will have serious trouble repaying. The average applicant is at 0.08. It is recorded for comparison only and does not change the score.
 
 STEP 3 - CASE NOTE
-When the system has accepted your findings, it gives you the verified findings and the score calculation, and asks for the case note for the underwriter.
-- At most 150 words, plain text, one paragraph. No headings, no lists.
-- Start with the rating. Then give the main reasons for it (the red flags and the facts that raise the risk), then what lowers the risk, then what could not be assessed.
+When the system has accepted your findings, it gives you the verified findings, the result per data source and the score calculation, and asks for the case note for the underwriter.
+- At most 200 words, plain text, one paragraph. No headings, no lists.
+- Start with the rating and the estimated risk score. Then go through the six data sources in the order of "Result per source", one short sentence each. For a source with a concern, give the red flags and the facts that raise the risk. For a source where no policy line applies, say so and give what it holds (for example "Two previous applications, both approved, none refused."). Name what lowers the risk with the source it comes from. A source with no record must be said to be missing.
+- Every one of the six sources must be named, also the ones where nothing is wrong.
 - Write in plain words. Do not use rule names in capital letters or field names with underscores.
 - Use only the verified findings and the score calculation the system gives you in this step. Every number you write must be one of their values. Do not add up, average or convert numbers.
 - The risk score is an estimate from past applicants, not a certainty. Say "estimated".

@@ -15,14 +15,21 @@
     "completeness": 1.0,
     "uncertainty_honesty": 1.0,
     "same_rating_all_runs_share": 1.0,
-    "evidence_jaccard": 0.9739379971879972,
+    "evidence_jaccard": 0.9824656084656084,
     "risk_score_std": 5.872038966181492e-18
   },
   "output (judge)": {
-    "grounding_mean": 1.325,
-    "hedging_mean": 1.605,
-    "completeness_mean": 1.275,
-    "pass_rate": 0.88
+    "grounding_mean": 1.27,
+    "hedging_mean": 1.475,
+    "completeness_mean": 1.295,
+    "pass_rate": 0.89,
+    "vs_human_n": 20,
+    "vs_human_grounding_agreement": 0.2,
+    "vs_human_grounding_kappa": 0.0,
+    "vs_human_hedging_agreement": 0.2,
+    "vs_human_hedging_kappa": -0.18518518518518512,
+    "vs_human_completeness_agreement": 0.2,
+    "vs_human_completeness_kappa": 0.11214953271028028
   },
   "outcome": {
     "flagged group (main)": {
@@ -30,42 +37,42 @@
       "default_rate": 0.52,
       "pr_auc": {
         "value": 0.5636553808464367,
-        "ci_low": 0.43498490863589506,
-        "ci_high": 0.7006556278523921
+        "ci_low": 0.4394061337435871,
+        "ci_high": 0.7017841247182623
       },
       "roc_auc": {
         "value": 0.5360576923076923,
-        "ci_low": 0.41849813992236795,
-        "ci_high": 0.6448685085406397
+        "ci_low": 0.4173921130952381,
+        "ci_high": 0.6491256868131866
       },
       "precision of 'high'": {
         "value": 0.5204081632653061,
         "ci_low": 0.41836734693877553,
-        "ci_high": 0.6162575757575757
+        "ci_high": 0.6161616161616161
       },
       "recall of 'high'": {
         "value": 0.9807692307692307,
-        "ci_low": 0.9387755102040817,
+        "ci_low": 0.9361355226641999,
         "ci_high": 1.0
       },
       "f1 of 'high'": {
         "value": 0.68,
-        "ci_low": 0.5857142857142857,
+        "ci_low": 0.5815602836879432,
         "ci_high": 0.7625
       },
       "agent vs Exp1": {
         "pr_auc": {
           "delta": -0.14666503173807133,
-          "ci_low": -0.2761033270633759,
-          "ci_high": -0.010604855689962294,
-          "p_bootstrap": 0.036,
+          "ci_low": -0.2714978316594883,
+          "ci_high": -0.01609875196688078,
+          "p_bootstrap": 0.02,
           "n": 100
         },
         "roc_auc": {
           "delta": -0.11378205128205143,
-          "ci_low": -0.2670356882042903,
-          "ci_high": 0.040249336609385275,
-          "p_bootstrap": 0.154,
+          "ci_low": -0.2645662299444064,
+          "ci_high": 0.03462499999999994,
+          "p_bootstrap": 0.156,
           "n": 100
         }
       }
@@ -79,28 +86,28 @@
     "whole cohort (secondary)": {
       "pr_auc": {
         "value": 0.5430919123411739,
-        "ci_low": 0.42081000039589495,
-        "ci_high": 0.6667146741042322
+        "ci_low": 0.41271735857408176,
+        "ci_high": 0.6604895583500755
       },
       "roc_auc": {
         "value": 0.795301190038032,
-        "ci_low": 0.7302079499447921,
-        "ci_high": 0.8579518147889152
+        "ci_low": 0.7302715366826954,
+        "ci_high": 0.8553863359913503
       },
       "precision of 'high'": {
         "value": 0.49056603773584906,
-        "ci_low": 0.39600703491401773,
-        "ci_high": 0.5825444983818769
+        "ci_low": 0.3854142775229358,
+        "ci_high": 0.5833333333333334
       },
       "recall of 'high'": {
         "value": 0.9122807017543859,
-        "ci_low": 0.8371807091117042,
-        "ci_high": 0.9814814814814815
+        "ci_low": 0.8305084745762712,
+        "ci_high": 0.9811408106219427
       },
       "f1 of 'high'": {
         "value": 0.6380368098159509,
-        "ci_low": 0.5479132420091324,
-        "ci_high": 0.7195121951219512
+        "ci_low": 0.5362318840579711,
+        "ci_high": 0.7142857142857143
       }
     },
     "calibration": {
@@ -108,9 +115,9 @@
       "ece": 0.10064449999999997
     },
     "cost per run": {
-      "input_tokens": 14615.666666666664,
-      "output_tokens": 1723.5433333333335,
-      "latency_s": 35.420716666666664
+      "input_tokens": 15040.91,
+      "output_tokens": 1766.2883333333332,
+      "latency_s": 108.52590000000001
     }
   }
 }
