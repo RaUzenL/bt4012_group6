@@ -16,134 +16,28 @@ COMPLETENESS
   0 = two or more data sources, or a clear red flag in the tool outputs, are not addressed
 Any 0 on GROUNDING fails the report regardless of the other scores.
 
+The cohort was changed to Experiment 1's final scores. 8 of the 20 notes graded earlier are still in it and keep
+their grades (the first 8 rows of agent_human_grades.csv). The 12 notes below are new: grade them blind and fill in
+the empty rows.
+
 Grade each note below and type the three scores into agent_human_grades.csv.
 
 ====================================================================================================
-NOTE 1 of 20     SK_ID_CURR 407940, run 1
+NOTE 1 of 12     SK_ID_CURR 450292, run 1
 ====================================================================================================
 TOOL OUTPUTS
 {
   "get_applicant_profile": {
-    "applicant_id": 407940,
+    "applicant_id": 450292,
     "contract_type": "Cash loans",
-    "credit_amount": 258710,
-    "goods_price": 234000,
-    "annuity": 30834,
-    "income_total": 202500,
-    "annuity_to_income": 0.1523,
-    "annuity_to_income_percentile": 45,
-    "credit_to_income": 1.28,
-    "credit_to_goods_price": 1.11,
-    "income_type": "Commercial associate",
-    "education": "Secondary / secondary special",
-    "occupation": "Drivers",
-    "organization_type": "Self-employed",
-    "housing_type": "House / apartment",
-    "owns_car": true,
-    "owns_realty": true,
-    "years_employed": 7.805,
-    "years_since_id_change": 7.332,
-    "years_since_registration_change": 11.986,
-    "days_since_phone_change": 560,
-    "external_score_mean": 0.6206,
-    "external_score_percentile": 74,
-    "n_external_scores": 1,
-    "bureau_enquiries_last_year": null,
-    "region_rating": 2,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 407940,
-    "has_record": false,
-    "note": "No credit bureau loans at other lenders on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 407940,
-    "has_record": true,
-    "prev_n_applications": 1,
-    "prev_n_approved": 1,
-    "prev_n_refused": 0,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.0,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 560,
-    "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 407940,
-    "has_record": true,
-    "inst_n_loans": 1,
-    "inst_n_installments": 14,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.5,
-    "inst_max_days_late": 26,
-    "inst_mean_days_late": 7.3,
-    "inst_mean_days_early": 3.5,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 8,
-    "inst_late_rate_last_year": 0.75,
-    "inst_late_rate_change": 0.25,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 407940,
-    "has_record": false,
-    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 407940,
-    "has_record": true,
-    "pos_n_contracts": 1,
-    "pos_n_active_contracts": 0,
-    "pos_months_of_history": 13,
-    "pos_max_days_past_due": 21,
-    "pos_months_past_due": 1,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.0389,
-    "rating": "low",
-    "score_calculation": "Past applicants with a similar external score and 2 other red flags defaulted at a rate of 0.0389. Adjustment: 0 steps (0 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0389 (the average applicant is at 0.0807). Rating: low.",
-    "policy_lines_that_apply": [
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line INST_WORSENING: inst_late_rate_change is above 0.05."
-    ],
-    "sources_with_no_record": [
-      "get_credit_bureau_history",
-      "get_credit_card_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.0389, which is low. The applicant profile shows an external score percentile of 74 and a loan to yearly income ratio of 1.28, with no red flags. The credit bureau source has no record, meaning this history is missing and could not be assessed. The previous Home Credit applications show one total application, one approved, and zero refused, with no red flags. The instalment payments source presents a concern with two red flags: a late rate of 0.5 and a late rate change of 0.25. The credit card source has no record, meaning this history is missing and could not be assessed. The POS and cash loans source shows one contract with a worst days past due of 21, with no red flags. The score calculation is based on past applicants with a similar external score and two other red flags defaulting at a rate of 0.0389, with no adjustment steps applied.
-
-====================================================================================================
-NOTE 2 of 20     SK_ID_CURR 141574, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 141574,
-    "contract_type": "Revolving loans",
-    "credit_amount": 202500,
-    "goods_price": 202500,
-    "annuity": 10125,
-    "income_total": 67500,
-    "annuity_to_income": 0.15,
-    "annuity_to_income_percentile": 44,
-    "credit_to_income": 3.0,
-    "credit_to_goods_price": 1.0,
+    "credit_amount": 371246,
+    "goods_price": 261000,
+    "annuity": 13995,
+    "income_total": 225000,
+    "annuity_to_income": 0.0622,
+    "annuity_to_income_percentile": 5,
+    "credit_to_income": 1.65,
+    "credit_to_goods_price": 1.42,
     "income_type": "Pensioner",
     "education": "Secondary / secondary special",
     "occupation": null,
@@ -152,161 +46,33 @@ TOOL OUTPUTS
     "owns_car": false,
     "owns_realty": true,
     "years_employed": null,
-    "years_since_id_change": 12.307,
-    "years_since_registration_change": 18.488,
-    "days_since_phone_change": 241,
-    "external_score_mean": 0.2894,
-    "external_score_percentile": 9,
-    "n_external_scores": 3,
+    "years_since_id_change": 10.827,
+    "years_since_registration_change": 35.91,
+    "days_since_phone_change": 710,
+    "external_score_mean": 0.2115,
+    "external_score_percentile": 4,
+    "n_external_scores": 2,
     "bureau_enquiries_last_year": 3,
     "region_rating": 2,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": null,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 141574,
-    "has_record": true,
-    "bureau_n_loans": 1,
-    "bureau_n_active_loans": 0,
-    "bureau_n_closed_loans": 0,
-    "bureau_active_credit": 0,
-    "bureau_active_debt": 0,
-    "bureau_active_debt_to_credit": null,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": 10562,
-    "bureau_n_loans_opened_last_year": 0,
-    "bureau_days_since_last_loan_opened": 1893,
-    "bureau_mean_loan_age_years": 5.19,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 0,
-    "bureau_months_late": null,
-    "bureau_months_late_last_year": null,
-    "bureau_worst_monthly_status": null,
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 141574,
-    "has_record": true,
-    "prev_n_applications": 6,
-    "prev_n_approved": 2,
-    "prev_n_refused": 4,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.6667,
-    "prev_last_status": "Refused",
-    "prev_days_since_last_decision": 183,
-    "prev_n_applications_last_year": 4,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 141574,
-    "has_record": true,
-    "inst_n_loans": 2,
-    "inst_n_installments": 24,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.0417,
-    "inst_max_days_late": 1,
-    "inst_mean_days_late": 0.0,
-    "inst_mean_days_early": 10.2,
-    "inst_underpaid_rate": 0.0417,
-    "inst_paid_to_due_ratio": 0.9995,
-    "inst_n_installments_last_year": 12,
-    "inst_late_rate_last_year": 0.0,
-    "inst_late_rate_change": -0.0417,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 141574,
-    "has_record": false,
-    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 141574,
-    "has_record": true,
-    "pos_n_contracts": 2,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 24,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.1327,
-    "rating": "medium",
-    "score_calculation": "Past applicants with a similar external score and 2 other red flags defaulted at a rate of 0.2074. Adjustment: -2 steps (0 facts raise the risk, 2 lower it; one step changes the rate by a quarter). Estimated risk score: 0.1327 (the average applicant is at 0.0807). Rating: medium.",
-    "policy_lines_that_apply": [
-      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
-      "Policy line PREV_HIGH_REFUSAL: prev_refusal_rate is 0.50 or more.",
-      "Policy line PREV_LAST_REFUSED: prev_last_status is \"Refused\".",
-      "Policy line LOWER_OLD_BUREAU_LOANS: bureau_mean_loan_age_years is 4.0 or more.",
-      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
-    ],
-    "sources_with_no_record": [
-      "get_credit_card_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.1327, rated as medium. The applicant profile shows a low external score percentile of 9 and a loan to yearly income ratio of 3.0, with one red flag regarding the low external score and one fact lowering risk. The credit bureau history includes one loan with zero active loans and no overdue amount, presenting one fact that lowers risk due to older bureau loans. Previous Home Credit applications reveal six total applications with two approved and four refused, triggering two red flags for high refusal rate and a last refusal. Instalment payments cover 24 instalments with a late rate of 0.0417, showing no red flags or other policy concerns. The credit card source has no record, meaning this history is missing and could not be assessed. POS and cash loans involve two contracts with zero worst days past due, showing no red flags or other policy concerns. The score calculation indicates that past applicants with a similar external score and two other red flags defaulted at a rate of 0.2074, adjusted by two steps for zero facts raising risk and two lowering it.
-
-====================================================================================================
-NOTE 3 of 20     SK_ID_CURR 102848, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 102848,
-    "contract_type": "Cash loans",
-    "credit_amount": 414792,
-    "goods_price": 315000,
-    "annuity": 21848,
-    "income_total": 103500,
-    "annuity_to_income": 0.2111,
-    "annuity_to_income_percentile": 70,
-    "credit_to_income": 4.01,
-    "credit_to_goods_price": 1.32,
-    "income_type": "Working",
-    "education": "Secondary / secondary special",
-    "occupation": "Laborers",
-    "organization_type": "Business Entity Type 3",
-    "housing_type": "With parents",
-    "owns_car": false,
-    "owns_realty": false,
-    "years_employed": 1.573,
-    "years_since_id_change": 6.685,
-    "years_since_registration_change": 7.836,
-    "days_since_phone_change": 468,
-    "external_score_mean": 0.3011,
-    "external_score_percentile": 10,
-    "n_external_scores": 3,
-    "bureau_enquiries_last_year": 7,
-    "region_rating": 3,
     "address_mismatch_count": 0,
     "social_circle_defaults": 0,
     "truncated": false
   },
   "get_credit_bureau_history": {
-    "applicant_id": 102848,
+    "applicant_id": 450292,
     "has_record": true,
-    "bureau_n_loans": 3,
-    "bureau_n_active_loans": 1,
-    "bureau_n_closed_loans": 2,
-    "bureau_active_credit": 146881,
-    "bureau_active_debt": 140553,
-    "bureau_active_debt_to_credit": 0.9569,
+    "bureau_n_loans": 9,
+    "bureau_n_active_loans": 5,
+    "bureau_n_closed_loans": 4,
+    "bureau_active_credit": 438540,
+    "bureau_active_debt": 142911,
+    "bureau_active_debt_to_credit": 0.3259,
     "bureau_overdue_amount": 0,
     "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": 16065,
-    "bureau_n_loans_opened_last_year": 2,
-    "bureau_days_since_last_loan_opened": 24,
-    "bureau_mean_loan_age_years": 2.26,
+    "bureau_max_overdue_amount_ever": 0,
+    "bureau_n_loans_opened_last_year": 3,
+    "bureau_days_since_last_loan_opened": 99,
+    "bureau_mean_loan_age_years": 2.83,
     "bureau_n_prolonged": 0,
     "bureau_months_reported": 0,
     "bureau_months_late": null,
@@ -315,750 +81,101 @@ TOOL OUTPUTS
     "truncated": false
   },
   "get_previous_applications": {
-    "applicant_id": 102848,
+    "applicant_id": 450292,
     "has_record": true,
-    "prev_n_applications": 4,
-    "prev_n_approved": 2,
-    "prev_n_refused": 2,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.5,
-    "prev_last_status": "Refused",
-    "prev_days_since_last_decision": 139,
-    "prev_n_applications_last_year": 3,
-    "prev_high_interest_share": 0.5,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 102848,
-    "has_record": true,
-    "inst_n_loans": 2,
-    "inst_n_installments": 28,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.0,
-    "inst_max_days_late": 0,
-    "inst_mean_days_late": 0.0,
-    "inst_mean_days_early": 3.8,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 25,
-    "inst_late_rate_last_year": 0.0,
-    "inst_late_rate_change": 0.0,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 102848,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 7,
-    "card_latest_balance": 141299,
-    "card_latest_limit": 135000,
-    "card_latest_utilisation": 1.0467,
-    "card_mean_utilisation": 0.6079,
-    "card_months_below_min_payment": 4,
-    "card_cash_share_of_drawings": 0.1855,
-    "card_atm_withdrawals_per_month": 1.14,
-    "card_max_days_past_due": 0,
-    "card_months_past_due": 0,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 102848,
-    "has_record": true,
-    "pos_n_contracts": 1,
-    "pos_n_active_contracts": 0,
-    "pos_months_of_history": 11,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.3431,
-    "rating": "high",
-    "score_calculation": "Past applicants with a similar external score and 6 other red flags defaulted at a rate of 0.2745. Adjustment: 1 steps (2 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.3431 (the average applicant is at 0.0807). Rating: high.",
-    "policy_lines_that_apply": [
-      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
-      "Policy line MANY_ENQUIRIES: bureau_enquiries_last_year is 6 or more.",
-      "Policy line BUREAU_HIGH_UTILISATION: bureau_active_debt_to_credit is 0.80 or more.",
-      "Policy line PREV_HIGH_REFUSAL: prev_refusal_rate is 0.50 or more.",
-      "Policy line PREV_LAST_REFUSED: prev_last_status is \"Refused\".",
-      "Policy line CC_HIGH_UTILISATION: card_latest_utilisation is 0.90 or more.",
-      "Policy line CC_BELOW_MIN_PAYMENT: card_months_below_min_payment is 3 or more.",
-      "Policy line RAISE_CARD_CASH_WITHDRAWALS: card_atm_withdrawals_per_month is 1.0 or more.",
-      "Policy line RAISE_LOAN_ABOVE_GOODS_PRICE: credit_to_goods_price is 1.20 or more.",
-      "Policy line LOWER_CLEAN_INSTALMENTS: inst_late_rate is 0, and inst_n_installments is 20 or more."
-    ],
-    "sources_with_no_record": [],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.3431, which is high. The applicant profile shows a low external score percentile of 10 and a loan to yearly income ratio of 4.01, with red flags for low external score and many enquiries, plus a raised risk due to the loan amount exceeding the goods price. The credit bureau history includes three loans with one active and no overdue amount, but presents a red flag for high utilisation of active credit. Previous Home Credit applications total four with two approved and two refused, resulting in two red flags for high refusal rate and a last refusal status. Instalment payments cover twenty-eight instalments with a zero late rate, showing no red flags but one fact that lowers the risk due to clean instalments. The credit card history spans seven months with a latest utilisation of 1.0467, containing two red flags for high utilisation and months below minimum payment, along with a raised risk fact for frequent cash withdrawals. POS and cash loans involve one contract with zero worst days past due, showing no red flags and no other policy line applies.
-
-====================================================================================================
-NOTE 4 of 20     SK_ID_CURR 435459, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 435459,
-    "contract_type": "Cash loans",
-    "credit_amount": 417024,
-    "goods_price": 360000,
-    "annuity": 15453,
-    "income_total": 270000,
-    "annuity_to_income": 0.0572,
-    "annuity_to_income_percentile": 4,
-    "credit_to_income": 1.54,
-    "credit_to_goods_price": 1.16,
-    "income_type": "Working",
-    "education": "Higher education",
-    "occupation": "Core staff",
-    "organization_type": "School",
-    "housing_type": "House / apartment",
-    "owns_car": true,
-    "owns_realty": true,
-    "years_employed": 23.307,
-    "years_since_id_change": 11.093,
-    "years_since_registration_change": 17.348,
-    "days_since_phone_change": 764,
-    "external_score_mean": 0.5841,
-    "external_score_percentile": 65,
-    "n_external_scores": 3,
-    "bureau_enquiries_last_year": 6,
-    "region_rating": 2,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 1,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 435459,
-    "has_record": true,
-    "bureau_n_loans": 3,
-    "bureau_n_active_loans": 2,
-    "bureau_n_closed_loans": 1,
-    "bureau_active_credit": 3762000,
-    "bureau_active_debt": 1515348,
-    "bureau_active_debt_to_credit": 0.4028,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": null,
-    "bureau_n_loans_opened_last_year": 0,
-    "bureau_days_since_last_loan_opened": 495,
-    "bureau_mean_loan_age_years": 3.75,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 0,
-    "bureau_months_late": null,
-    "bureau_months_late_last_year": null,
-    "bureau_worst_monthly_status": null,
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 435459,
-    "has_record": true,
-    "prev_n_applications": 4,
+    "prev_n_applications": 3,
     "prev_n_approved": 2,
     "prev_n_refused": 0,
-    "prev_n_canceled_or_unused": 2,
+    "prev_n_canceled_or_unused": 1,
     "prev_refusal_rate": 0.0,
-    "prev_last_status": "Canceled",
-    "prev_days_since_last_decision": 158,
+    "prev_last_status": "Approved",
+    "prev_days_since_last_decision": 207,
     "prev_n_applications_last_year": 2,
     "prev_high_interest_share": 0.0,
     "prev_n_duplicate_submissions": 0,
     "truncated": false
   },
   "get_installment_history": {
-    "applicant_id": 435459,
+    "applicant_id": 450292,
     "has_record": true,
-    "inst_n_loans": 1,
-    "inst_n_installments": 17,
+    "inst_n_loans": 2,
+    "inst_n_installments": 18,
     "inst_n_unpaid": 0,
     "inst_late_rate": 0.0,
     "inst_max_days_late": 0,
     "inst_mean_days_late": 0.0,
-    "inst_mean_days_early": 29.4,
+    "inst_mean_days_early": 13.9,
     "inst_underpaid_rate": 0.0,
     "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 4,
+    "inst_n_installments_last_year": 7,
     "inst_late_rate_last_year": 0.0,
     "inst_late_rate_change": 0.0,
     "truncated": false
   },
   "get_credit_card_history": {
-    "applicant_id": 435459,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 15,
-    "card_latest_balance": 0,
-    "card_latest_limit": 765000,
-    "card_latest_utilisation": 0.0,
-    "card_mean_utilisation": 0.0,
-    "card_months_below_min_payment": 0,
-    "card_cash_share_of_drawings": null,
-    "card_atm_withdrawals_per_month": null,
-    "card_max_days_past_due": 0,
-    "card_months_past_due": 0,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 435459,
-    "has_record": true,
-    "pos_n_contracts": 1,
-    "pos_n_active_contracts": 0,
-    "pos_months_of_history": 18,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.0233,
-    "rating": "low",
-    "score_calculation": "Past applicants with a similar external score and 1 other red flags defaulted at a rate of 0.0364. Adjustment: -2 steps (0 facts raise the risk, 3 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0233 (the average applicant is at 0.0807). Rating: low.",
-    "policy_lines_that_apply": [
-      "Policy line MANY_ENQUIRIES: bureau_enquiries_last_year is 6 or more.",
-      "Policy line LOWER_HIGHER_EDUCATION: education is \"Higher education\" or \"Academic degree\".",
-      "Policy line LOWER_LONG_EMPLOYMENT: years_employed is 10.0 or more.",
-      "Policy line LOWER_LOW_CARD_USE: card_latest_utilisation is below 0.30."
-    ],
-    "sources_with_no_record": [],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.0233, which is a low rating. The applicant profile shows an external score percentile of 65 and a loan to yearly income ratio of 1.54, with one red flag for six bureau enquiries in the last year, while higher education and long employment of 23.307 years lower the risk. The credit bureau history includes three loans with two active and zero overdue amount, presenting no red flags. Previous Home Credit applications total four with two approved and zero refused, showing no red flags. Instalment payments cover seventeen instalments with a late rate of 0.0, indicating no red flags. The credit card history spans fifteen months with a latest utilisation of 0.0, lowering the risk with no red flags. POS and cash loans involve one contract with zero worst days past due, showing no red flags. The score calculation is based on past applicants with a similar external score and one other red flag defaulting at a rate of 0.0364, adjusted by two steps due to three facts lowering the risk and none raising it.
-
-====================================================================================================
-NOTE 5 of 20     SK_ID_CURR 214864, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 214864,
-    "contract_type": "Cash loans",
-    "credit_amount": 521280,
-    "goods_price": 450000,
-    "annuity": 31806,
-    "income_total": 135000,
-    "annuity_to_income": 0.2356,
-    "annuity_to_income_percentile": 77,
-    "credit_to_income": 3.86,
-    "credit_to_goods_price": 1.16,
-    "income_type": "Working",
-    "education": "Secondary / secondary special",
-    "occupation": null,
-    "organization_type": "Business Entity Type 3",
-    "housing_type": "House / apartment",
-    "owns_car": true,
-    "owns_realty": true,
-    "years_employed": 5.063,
-    "years_since_id_change": 0.419,
-    "years_since_registration_change": 0.444,
-    "days_since_phone_change": 2345,
-    "external_score_mean": 0.1152,
-    "external_score_percentile": 1,
-    "n_external_scores": 2,
-    "bureau_enquiries_last_year": null,
-    "region_rating": 2,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 1,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 214864,
-    "has_record": false,
-    "note": "No credit bureau loans at other lenders on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 214864,
-    "has_record": true,
-    "prev_n_applications": 6,
-    "prev_n_approved": 4,
-    "prev_n_refused": 2,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.3333,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 737,
-    "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 0.75,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 214864,
-    "has_record": true,
-    "inst_n_loans": 4,
-    "inst_n_installments": 40,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.275,
-    "inst_max_days_late": 8,
-    "inst_mean_days_late": 1.3,
-    "inst_mean_days_early": 7.3,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 0,
-    "inst_late_rate_last_year": null,
-    "inst_late_rate_change": null,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 214864,
+    "applicant_id": 450292,
     "has_record": false,
     "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
     "truncated": false
   },
   "get_pos_cash_history": {
-    "applicant_id": 214864,
-    "has_record": true,
-    "pos_n_contracts": 4,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 39,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.3252,
-    "rating": "high",
-    "score_calculation": "Past applicants with a similar external score and 2 other red flags defaulted at a rate of 0.2602. Adjustment: 1 steps (1 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.3252 (the average applicant is at 0.0807). Rating: high.",
-    "policy_lines_that_apply": [
-      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
-      "Policy line RECENT_ID_CHANGE: years_since_id_change is 1.0 or less.",
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line RAISE_HIGH_INTEREST_LOANS: prev_high_interest_share is 0.75 or more."
-    ],
-    "sources_with_no_record": [
-      "get_credit_bureau_history",
-      "get_credit_card_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.3252, which is high. The applicant profile shows a low external score percentile of 1 and a loan to yearly income ratio of 3.86, with red flags for a low external score and a recent ID change. The credit bureau history is missing, so it could not be assessed. Previous Home Credit applications show 6 total applications with 4 approved and 2 refused, and a fact that raises risk due to a high share of high-interest loans at 0.75. Instalment payments cover 40 installments with a late rate of 0.275, triggering a red flag for frequent late payments. The credit card history is missing, so it could not be assessed. POS and cash loans include 4 contracts with a worst days past due of 0, and no policy line applies. The score calculation indicates that past applicants with a similar external score and 2 other red flags defaulted at a rate of 0.2602, with an adjustment of 1 step resulting in the estimated risk score of 0.3252.
-
-====================================================================================================
-NOTE 6 of 20     SK_ID_CURR 200626, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 200626,
-    "contract_type": "Cash loans",
-    "credit_amount": 679500,
-    "goods_price": 679500,
-    "annuity": 28917,
-    "income_total": 90000,
-    "annuity_to_income": 0.3213,
-    "annuity_to_income_percentile": 92,
-    "credit_to_income": 7.55,
-    "credit_to_goods_price": 1.0,
-    "income_type": "Pensioner",
-    "education": "Secondary / secondary special",
-    "occupation": null,
-    "organization_type": null,
-    "housing_type": "House / apartment",
-    "owns_car": false,
-    "owns_realty": false,
-    "years_employed": null,
-    "years_since_id_change": 8.833,
-    "years_since_registration_change": 1.786,
-    "days_since_phone_change": 680,
-    "external_score_mean": 0.6866,
-    "external_score_percentile": 89,
-    "n_external_scores": 2,
-    "bureau_enquiries_last_year": 2,
-    "region_rating": 2,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 200626,
-    "has_record": true,
-    "bureau_n_loans": 1,
-    "bureau_n_active_loans": 0,
-    "bureau_n_closed_loans": 1,
-    "bureau_active_credit": 0,
-    "bureau_active_debt": 0,
-    "bureau_active_debt_to_credit": null,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": 0,
-    "bureau_n_loans_opened_last_year": 0,
-    "bureau_days_since_last_loan_opened": 1064,
-    "bureau_mean_loan_age_years": 2.92,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 9,
-    "bureau_months_late": 0,
-    "bureau_months_late_last_year": 0,
-    "bureau_worst_monthly_status": "never late",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 200626,
-    "has_record": true,
-    "prev_n_applications": 1,
-    "prev_n_approved": 1,
-    "prev_n_refused": 0,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.0,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 680,
-    "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 200626,
-    "has_record": true,
-    "inst_n_loans": 1,
-    "inst_n_installments": 22,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.0,
-    "inst_max_days_late": 0,
-    "inst_mean_days_late": 0.0,
-    "inst_mean_days_early": 11.2,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 12,
-    "inst_late_rate_last_year": 0.0,
-    "inst_late_rate_change": 0.0,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 200626,
-    "has_record": false,
-    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 200626,
-    "has_record": true,
-    "pos_n_contracts": 1,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 22,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.0142,
-    "rating": "low",
-    "score_calculation": "Past applicants with a similar external score and 0 other red flags defaulted at a rate of 0.0222. Adjustment: -2 steps (0 facts raise the risk, 2 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0142 (the average applicant is at 0.0807). Rating: low.",
-    "policy_lines_that_apply": [
-      "Policy line LOWER_CLEAN_INSTALMENTS: inst_late_rate is 0, and inst_n_installments is 20 or more.",
-      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
-    ],
-    "sources_with_no_record": [
-      "get_credit_card_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.0142, which is a low rating. The applicant profile shows an external score percentile of 89 and a loan to yearly income ratio of 7.55, with no red flags and one fact that lowers the risk. The credit bureau history includes one loan on file with zero active loans and no overdue amount, presenting no red flags or other policy line applications. Previous Home Credit applications consist of one total application, one approved, and zero refused, with no red flags or other policy line applications. Instalment payments cover 22 instalments with a late rate of 0.0, showing no red flags and one fact that lowers the risk. The credit card source has no record, meaning this is missing history rather than a clean history, so it could not be assessed. POS and cash loans involve one contract with zero worst days past due, showing no red flags or other policy line applications. The score calculation is based on past applicants with a similar external score and zero other red flags defaulting at a rate of 0.0222, adjusted by two steps for zero facts raising the risk and two lowering it, resulting in an estimated risk score of 0.0142.
-
-====================================================================================================
-NOTE 7 of 20     SK_ID_CURR 190318, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 190318,
-    "contract_type": "Cash loans",
-    "credit_amount": 225000,
-    "goods_price": 225000,
-    "annuity": 12204,
-    "income_total": 135000,
-    "annuity_to_income": 0.0904,
-    "annuity_to_income_percentile": 14,
-    "credit_to_income": 1.67,
-    "credit_to_goods_price": 1.0,
-    "income_type": "Working",
-    "education": "Secondary / secondary special",
-    "occupation": "Managers",
-    "organization_type": "Business Entity Type 3",
-    "housing_type": "House / apartment",
-    "owns_car": false,
-    "owns_realty": true,
-    "years_employed": 2.518,
-    "years_since_id_change": 11.151,
-    "years_since_registration_change": 16.436,
-    "days_since_phone_change": 156,
-    "external_score_mean": 0.2858,
-    "external_score_percentile": 8,
-    "n_external_scores": 3,
-    "bureau_enquiries_last_year": 4,
-    "region_rating": 3,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 190318,
-    "has_record": true,
-    "bureau_n_loans": 6,
-    "bureau_n_active_loans": 1,
-    "bureau_n_closed_loans": 5,
-    "bureau_active_credit": 225000,
-    "bureau_active_debt": 234364,
-    "bureau_active_debt_to_credit": 1.0416,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": 9152,
-    "bureau_n_loans_opened_last_year": 4,
-    "bureau_days_since_last_loan_opened": 227,
-    "bureau_mean_loan_age_years": 1.21,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 28,
-    "bureau_months_late": 6,
-    "bureau_months_late_last_year": 5,
-    "bureau_worst_monthly_status": "over 120 days late or written off",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 190318,
-    "has_record": true,
-    "prev_n_applications": 14,
-    "prev_n_approved": 6,
-    "prev_n_refused": 6,
-    "prev_n_canceled_or_unused": 2,
-    "prev_refusal_rate": 0.4286,
-    "prev_last_status": "Canceled",
-    "prev_days_since_last_decision": 55,
-    "prev_n_applications_last_year": 9,
-    "prev_high_interest_share": 0.33,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 190318,
-    "has_record": true,
-    "inst_n_loans": 6,
-    "inst_n_installments": 58,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.1724,
-    "inst_max_days_late": 10,
-    "inst_mean_days_late": 0.6,
-    "inst_mean_days_early": 2.7,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 46,
-    "inst_late_rate_last_year": 0.1739,
-    "inst_late_rate_change": 0.0015,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 190318,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 8,
-    "card_latest_balance": 165241,
-    "card_latest_limit": 180000,
-    "card_latest_utilisation": 0.918,
-    "card_mean_utilisation": 0.9249,
-    "card_months_below_min_payment": 3,
-    "card_cash_share_of_drawings": 0.0812,
-    "card_atm_withdrawals_per_month": 0.62,
-    "card_max_days_past_due": 0,
-    "card_months_past_due": 0,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 190318,
-    "has_record": true,
-    "pos_n_contracts": 5,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 25,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.2745,
-    "rating": "high",
-    "score_calculation": "Past applicants with a similar external score and 6 other red flags defaulted at a rate of 0.2745. Adjustment: 0 steps (1 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.2745 (the average applicant is at 0.0807). Rating: high.",
-    "policy_lines_that_apply": [
-      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
-      "Policy line BUREAU_SEVERE_DELINQUENCY: bureau_worst_monthly_status is \"31-60 days late\" or worse.",
-      "Policy line BUREAU_HIGH_UTILISATION: bureau_active_debt_to_credit is 0.80 or more.",
-      "Policy line PREV_HIGH_FREQUENCY: prev_n_applications_last_year is 7 or more.",
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line CC_HIGH_UTILISATION: card_latest_utilisation is 0.90 or more.",
-      "Policy line CC_BELOW_MIN_PAYMENT: card_months_below_min_payment is 3 or more.",
-      "Policy line RAISE_MANY_NEW_BUREAU_LOANS: bureau_n_loans_opened_last_year is 4 or more.",
-      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
-    ],
-    "sources_with_no_record": [],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.2745, which is high. The applicant profile shows an external score percentile of 8 and a loan to yearly income of 1.67, with one red flag for low external score and one fact lowering risk as the loan is near the goods price. The credit bureau history includes six loans with one active and zero overdue amount, but presents two red flags for severe delinquency and high utilisation, plus one fact raising risk due to many new bureau loans. Previous Home Credit applications total 14 with 6 approved and 6 refused, showing one red flag for high application frequency. Instalment payments cover 58 instalments with a late rate of 0.1724, presenting one red flag for frequent late payments. The credit card has 8 months of history with a latest utilisation of 0.918, presenting two red flags for high utilisation and months below minimum payment. POS and cash loans include 5 contracts with zero worst days past due, presenting no red flag and no other policy line applies.
-
-====================================================================================================
-NOTE 8 of 20     SK_ID_CURR 147036, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 147036,
-    "contract_type": "Cash loans",
-    "credit_amount": 254700,
-    "goods_price": 225000,
-    "annuity": 20250,
-    "income_total": 94500,
-    "annuity_to_income": 0.2143,
-    "annuity_to_income_percentile": 71,
-    "credit_to_income": 2.7,
-    "credit_to_goods_price": 1.13,
-    "income_type": "Working",
-    "education": "Secondary / secondary special",
-    "occupation": "High skill tech staff",
-    "organization_type": "Self-employed",
-    "housing_type": "House / apartment",
-    "owns_car": false,
-    "owns_realty": false,
-    "years_employed": 3.523,
-    "years_since_id_change": 0.252,
-    "years_since_registration_change": 13.271,
-    "days_since_phone_change": 1097,
-    "external_score_mean": 0.0048,
-    "external_score_percentile": 0,
-    "n_external_scores": 1,
-    "bureau_enquiries_last_year": null,
-    "region_rating": 2,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 147036,
-    "has_record": false,
-    "note": "No credit bureau loans at other lenders on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 147036,
-    "has_record": true,
-    "prev_n_applications": 3,
-    "prev_n_approved": 3,
-    "prev_n_refused": 0,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.0,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 616,
-    "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 0.67,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 147036,
-    "has_record": true,
-    "inst_n_loans": 3,
-    "inst_n_installments": 78,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.0897,
-    "inst_max_days_late": 7,
-    "inst_mean_days_late": 0.2,
-    "inst_mean_days_early": 5.2,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 36,
-    "inst_late_rate_last_year": 0.1111,
-    "inst_late_rate_change": 0.0214,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 147036,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 23,
-    "card_latest_balance": 140743,
-    "card_latest_limit": 135000,
-    "card_latest_utilisation": 1.0425,
-    "card_mean_utilisation": 0.9716,
-    "card_months_below_min_payment": 0,
-    "card_cash_share_of_drawings": 1.0,
-    "card_atm_withdrawals_per_month": 0.95,
-    "card_max_days_past_due": 0,
-    "card_months_past_due": 0,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 147036,
+    "applicant_id": 450292,
     "has_record": true,
     "pos_n_contracts": 2,
     "pos_n_active_contracts": 1,
-    "pos_months_of_history": 35,
+    "pos_months_of_history": 19,
     "pos_max_days_past_due": 0,
     "pos_months_past_due": 0,
     "pos_months_in_debt_demand": 0,
     "truncated": false
   },
   "given_to_the_writer_by_the_system": {
-    "risk_score": 0.2602,
+    "risk_score": 0.2749,
     "rating": "high",
-    "score_calculation": "Past applicants with a similar external score and 3 other red flags defaulted at a rate of 0.2602. Adjustment: 0 steps (0 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.2602 (the average applicant is at 0.0807). Rating: high.",
+    "score_calculation": "Past applicants with a similar external score and 0 other red flags defaulted at a rate of 0.2199. Adjustment: 1 steps (1 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.2749 (the average applicant is at 0.0807). Rating: high.",
     "policy_lines_that_apply": [
       "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
-      "Policy line RECENT_ID_CHANGE: years_since_id_change is 1.0 or less.",
-      "Policy line CC_HIGH_UTILISATION: card_latest_utilisation is 0.90 or more.",
-      "Policy line CC_CASH_RELIANCE: card_cash_share_of_drawings is 0.50 or more."
+      "Policy line RAISE_LOAN_ABOVE_GOODS_PRICE: credit_to_goods_price is 1.20 or more."
     ],
     "sources_with_no_record": [
-      "get_credit_bureau_history"
+      "get_credit_card_history"
     ],
     "sources_not_checked": []
   }
 }
 
 REPORT
-The estimated risk score is 0.2602, which is high. The applicant profile shows an external score percentile of 0 and a loan to yearly income ratio of 2.7, with two red flags: a very low external score and a recent ID change. The credit bureau source has no record, meaning this history is missing and could not be assessed. Previous Home Credit applications show a total of 3, all approved with 0 refused, presenting no red flag and no other policy line applies. Instalment payments cover 78 instalments with a late rate of 0.0897, showing no red flag and no other policy line applies. The credit card history spans 23 months with a latest utilisation of 1.0425, triggering two red flags for high utilisation and cash reliance. POS and cash loans include 2 contracts with a worst days past due of 0, presenting no red flag and no other policy line applies. The score calculation indicates that past applicants with a similar external score and 3 other red flags defaulted at a rate of 0.2602, with an adjustment of 0 steps as no facts raise or lower the risk.
+The estimated risk score is 0.2749, which is high. The applicant profile shows a low external score percentile of 4 and a loan to yearly income ratio of 1.65, with one red flag and one fact that raises the risk due to the loan amount exceeding the goods price. The credit bureau history includes 9 loans with 5 active and an overdue amount of 0, showing no red flags or other policy concerns. Previous Home Credit applications total 3 with 2 approved and 0 refused, presenting no red flags or other policy issues. Instalment payments cover 18 instalments with a late rate of 0.0, indicating no red flags or other policy problems. The credit card source has no record, meaning this history is missing and could not be assessed. POS and cash loans involve 2 contracts with a worst days past due of 0, showing no red flags or other policy lines apply.
 
 ====================================================================================================
-NOTE 9 of 20     SK_ID_CURR 432968, run 1
+NOTE 2 of 12     SK_ID_CURR 147051, run 1
 ====================================================================================================
 TOOL OUTPUTS
 {
   "get_applicant_profile": {
-    "applicant_id": 432968,
+    "applicant_id": 147051,
     "contract_type": "Cash loans",
     "credit_amount": 640080,
     "goods_price": 450000,
-    "annuity": 24260,
-    "income_total": 292500,
-    "annuity_to_income": 0.0829,
-    "annuity_to_income_percentile": 11,
-    "credit_to_income": 2.19,
+    "annuity": 31262,
+    "income_total": 135000,
+    "annuity_to_income": 0.2316,
+    "annuity_to_income_percentile": 76,
+    "credit_to_income": 4.74,
     "credit_to_goods_price": 1.42,
     "income_type": "Working",
     "education": "Secondary / secondary special",
     "occupation": "Laborers",
-    "organization_type": "Industry: type 11",
-    "housing_type": "House / apartment",
-    "owns_car": true,
-    "owns_realty": true,
-    "years_employed": 2.589,
-    "years_since_id_change": 12.4,
-    "years_since_registration_change": 20.666,
-    "days_since_phone_change": 1002,
-    "external_score_mean": 0.4834,
-    "external_score_percentile": 40,
+    "organization_type": "Business Entity Type 2",
+    "housing_type": "With parents",
+    "owns_car": false,
+    "owns_realty": false,
+    "years_employed": 0.907,
+    "years_since_id_change": 3.926,
+    "years_since_registration_change": 24.225,
+    "days_since_phone_change": 159,
+    "external_score_mean": 0.1176,
+    "external_score_percentile": 1,
     "n_external_scores": 3,
     "bureau_enquiries_last_year": 1,
     "region_rating": 2,
@@ -1067,20 +184,20 @@ TOOL OUTPUTS
     "truncated": false
   },
   "get_credit_bureau_history": {
-    "applicant_id": 432968,
+    "applicant_id": 147051,
     "has_record": true,
-    "bureau_n_loans": 5,
-    "bureau_n_active_loans": 2,
-    "bureau_n_closed_loans": 3,
-    "bureau_active_credit": 805500,
-    "bureau_active_debt": 468000,
-    "bureau_active_debt_to_credit": 0.581,
+    "bureau_n_loans": 1,
+    "bureau_n_active_loans": 1,
+    "bureau_n_closed_loans": 0,
+    "bureau_active_credit": 47039,
+    "bureau_active_debt": 40424,
+    "bureau_active_debt_to_credit": 0.8594,
     "bureau_overdue_amount": 0,
     "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": 9990,
-    "bureau_n_loans_opened_last_year": 0,
-    "bureau_days_since_last_loan_opened": 780,
-    "bureau_mean_loan_age_years": 4.78,
+    "bureau_max_overdue_amount_ever": 0,
+    "bureau_n_loans_opened_last_year": 1,
+    "bureau_days_since_last_loan_opened": 55,
+    "bureau_mean_loan_age_years": 0.15,
     "bureau_n_prolonged": 0,
     "bureau_months_reported": 0,
     "bureau_months_late": null,
@@ -1089,30 +206,30 @@ TOOL OUTPUTS
     "truncated": false
   },
   "get_previous_applications": {
-    "applicant_id": 432968,
+    "applicant_id": 147051,
     "has_record": true,
-    "prev_n_applications": 3,
-    "prev_n_approved": 3,
-    "prev_n_refused": 0,
+    "prev_n_applications": 2,
+    "prev_n_approved": 1,
+    "prev_n_refused": 1,
     "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.0,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 1002,
-    "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 0.33,
+    "prev_refusal_rate": 0.5,
+    "prev_last_status": "Refused",
+    "prev_days_since_last_decision": 159,
+    "prev_n_applications_last_year": 1,
+    "prev_high_interest_share": 1.0,
     "prev_n_duplicate_submissions": 0,
     "truncated": false
   },
   "get_installment_history": {
-    "applicant_id": 432968,
+    "applicant_id": 147051,
     "has_record": true,
-    "inst_n_loans": 3,
-    "inst_n_installments": 60,
+    "inst_n_loans": 1,
+    "inst_n_installments": 12,
     "inst_n_unpaid": 0,
-    "inst_late_rate": 0.3833,
-    "inst_max_days_late": 14,
-    "inst_mean_days_late": 2.3,
-    "inst_mean_days_early": 4.3,
+    "inst_late_rate": 0.0,
+    "inst_max_days_late": 0,
+    "inst_mean_days_late": 0.0,
+    "inst_mean_days_early": 4.5,
     "inst_underpaid_rate": 0.0,
     "inst_paid_to_due_ratio": 1.0,
     "inst_n_installments_last_year": 0,
@@ -1121,1054 +238,17 @@ TOOL OUTPUTS
     "truncated": false
   },
   "get_credit_card_history": {
-    "applicant_id": 432968,
+    "applicant_id": 147051,
     "has_record": false,
     "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
     "truncated": false
   },
   "get_pos_cash_history": {
-    "applicant_id": 432968,
-    "has_record": true,
-    "pos_n_contracts": 3,
-    "pos_n_active_contracts": 2,
-    "pos_months_of_history": 40,
-    "pos_max_days_past_due": 5,
-    "pos_months_past_due": 12,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.0532,
-    "rating": "low",
-    "score_calculation": "Past applicants with a similar external score and 1 other red flags defaulted at a rate of 0.0532. Adjustment: 0 steps (1 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0532 (the average applicant is at 0.0807). Rating: low.",
-    "policy_lines_that_apply": [
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line RAISE_LOAN_ABOVE_GOODS_PRICE: credit_to_goods_price is 1.20 or more.",
-      "Policy line LOWER_OLD_BUREAU_LOANS: bureau_mean_loan_age_years is 4.0 or more."
-    ],
-    "sources_with_no_record": [
-      "get_credit_card_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-Estimated risk score is 0.0532, rated low. The applicant profile shows an external score percentile of 40 and a loan to yearly income ratio of 2.19, with one fact raising risk as the loan amount exceeds the goods price. The credit bureau history includes five loans with two active and zero overdue, lowering risk due to older bureau loans averaging 4.78 years. Previous Home Credit applications show three total applications, all approved with none refused, presenting no red flags. Instalment payments cover sixty installments with a late rate of 0.3833, triggering a red flag for frequent lateness. Credit card history is missing as there is no record on file. POS and cash loans involve three contracts with a worst days past due of 5, showing no red flags. The score calculation indicates that past applicants with a similar external score and one other red flag defaulted at a rate of 0.0532, with adjustments for one fact raising risk and one lowering it resulting in the final estimated risk score.
-
-====================================================================================================
-NOTE 10 of 20     SK_ID_CURR 137238, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 137238,
-    "contract_type": "Cash loans",
-    "credit_amount": 976500,
-    "goods_price": 976500,
-    "annuity": 27819,
-    "income_total": 58500,
-    "annuity_to_income": 0.4755,
-    "annuity_to_income_percentile": 99,
-    "credit_to_income": 16.69,
-    "credit_to_goods_price": 1.0,
-    "income_type": "Pensioner",
-    "education": "Secondary / secondary special",
-    "occupation": null,
-    "organization_type": null,
-    "housing_type": "House / apartment",
-    "owns_car": false,
-    "owns_realty": true,
-    "years_employed": null,
-    "years_since_id_change": 11.696,
-    "years_since_registration_change": 18.142,
-    "days_since_phone_change": 1716,
-    "external_score_mean": 0.0776,
-    "external_score_percentile": 1,
-    "n_external_scores": 1,
-    "bureau_enquiries_last_year": null,
-    "region_rating": 3,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 1,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 137238,
-    "has_record": false,
-    "note": "No credit bureau loans at other lenders on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 137238,
-    "has_record": true,
-    "prev_n_applications": 10,
-    "prev_n_approved": 9,
-    "prev_n_refused": 1,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.1,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 404,
-    "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 137238,
-    "has_record": true,
-    "inst_n_loans": 9,
-    "inst_n_installments": 113,
-    "inst_n_unpaid": 11,
-    "inst_late_rate": 0.1681,
-    "inst_max_days_late": 36,
-    "inst_mean_days_late": 1.7,
-    "inst_mean_days_early": 5.1,
-    "inst_underpaid_rate": 0.115,
-    "inst_paid_to_due_ratio": 0.919,
-    "inst_n_installments_last_year": 44,
-    "inst_late_rate_last_year": 0.3636,
-    "inst_late_rate_change": 0.1955,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 137238,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 12,
-    "card_latest_balance": 169618,
-    "card_latest_limit": 157500,
-    "card_latest_utilisation": 1.0769,
-    "card_mean_utilisation": 0.8228,
-    "card_months_below_min_payment": 4,
-    "card_cash_share_of_drawings": 0.7506,
-    "card_atm_withdrawals_per_month": 0.42,
-    "card_max_days_past_due": 49,
-    "card_months_past_due": 2,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 137238,
-    "has_record": true,
-    "pos_n_contracts": 8,
-    "pos_n_active_contracts": 2,
-    "pos_months_of_history": 60,
-    "pos_max_days_past_due": 92,
-    "pos_months_past_due": 7,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.3053,
-    "rating": "high",
-    "score_calculation": "Past applicants with a similar external score and 9 other red flags defaulted at a rate of 0.3816. Adjustment: -1 steps (0 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.3053 (the average applicant is at 0.0807). Rating: high.",
-    "policy_lines_that_apply": [
-      "Policy line HIGH_ANNUITY_TO_INCOME: annuity_to_income is 0.3540 or more (the top 5% of past applicants).",
-      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line INST_SEVERE_LATE: inst_max_days_late is 30 or more.",
-      "Policy line INST_UNDERPAYMENT: inst_underpaid_rate is 0.05 or more.",
-      "Policy line INST_WORSENING: inst_late_rate_change is above 0.05.",
-      "Policy line CC_HIGH_UTILISATION: card_latest_utilisation is 0.90 or more.",
-      "Policy line CC_BELOW_MIN_PAYMENT: card_months_below_min_payment is 3 or more.",
-      "Policy line CC_CASH_RELIANCE: card_cash_share_of_drawings is 0.50 or more.",
-      "Policy line POS_DELINQUENT: pos_max_days_past_due is 30 or more.",
-      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
-    ],
-    "sources_with_no_record": [
-      "get_credit_bureau_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The applicant is rated high risk with an estimated risk score of 0.3053. The applicant profile shows a very low external score percentile of 1 and a loan to yearly income ratio of 16.69, with two red flags regarding high annuity to income and low external score, while the loan amount being near the goods price lowers the risk slightly. The credit bureau source has no record, meaning this history is missing and could not be assessed. Previous Home Credit applications show a total of 10 applications with 9 approved and 1 refused, presenting no red flags or other policy concerns. Instalment payments reveal 113 installments with a late rate of 0.1681, triggering four red flags for frequent late payments, severe lateness, underpayment, and worsening repayment behavior. The credit card history covers 12 months with a latest utilization of 1.0769, resulting in three red flags for high utilization, months below minimum payment, and cash reliance. POS and cash loans include 8 contracts with a worst days past due of 92, creating one red flag for delinquency. The score calculation indicates that past applicants with a similar external score and 9 other red flags defaulted at a rate of 0.3816, adjusted by one step due to one fact lowering the risk, resulting in the estimated risk score of 0.3053.
-
-====================================================================================================
-NOTE 11 of 20     SK_ID_CURR 418079, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 418079,
-    "contract_type": "Cash loans",
-    "credit_amount": 360000,
-    "goods_price": 360000,
-    "annuity": 28570,
-    "income_total": 220500,
-    "annuity_to_income": 0.1296,
-    "annuity_to_income_percentile": 33,
-    "credit_to_income": 1.63,
-    "credit_to_goods_price": 1.0,
-    "income_type": "Pensioner",
-    "education": "Secondary / secondary special",
-    "occupation": null,
-    "organization_type": null,
-    "housing_type": "House / apartment",
-    "owns_car": true,
-    "owns_realty": false,
-    "years_employed": null,
-    "years_since_id_change": 10.096,
-    "years_since_registration_change": 18.26,
-    "days_since_phone_change": 1463,
-    "external_score_mean": 0.3819,
-    "external_score_percentile": 20,
-    "n_external_scores": 2,
-    "bureau_enquiries_last_year": 1,
-    "region_rating": 2,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 418079,
-    "has_record": true,
-    "bureau_n_loans": 13,
-    "bureau_n_active_loans": 7,
-    "bureau_n_closed_loans": 6,
-    "bureau_active_credit": 1789083,
-    "bureau_active_debt": 754618,
-    "bureau_active_debt_to_credit": 0.4218,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": 19908,
-    "bureau_n_loans_opened_last_year": 4,
-    "bureau_days_since_last_loan_opened": 22,
-    "bureau_mean_loan_age_years": 1.91,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 113,
-    "bureau_months_late": 4,
-    "bureau_months_late_last_year": 0,
-    "bureau_worst_monthly_status": "1-30 days late",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 418079,
-    "has_record": true,
-    "prev_n_applications": 10,
-    "prev_n_approved": 6,
-    "prev_n_refused": 2,
-    "prev_n_canceled_or_unused": 2,
-    "prev_refusal_rate": 0.2,
-    "prev_last_status": "Canceled",
-    "prev_days_since_last_decision": 121,
-    "prev_n_applications_last_year": 1,
-    "prev_high_interest_share": 0.83,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 418079,
-    "has_record": true,
-    "inst_n_loans": 7,
-    "inst_n_installments": 193,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.1036,
-    "inst_max_days_late": 17,
-    "inst_mean_days_late": 0.4,
-    "inst_mean_days_early": 3.5,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 12,
-    "inst_late_rate_last_year": 0.0,
-    "inst_late_rate_change": -0.1036,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 418079,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 96,
-    "card_latest_balance": 0,
-    "card_latest_limit": 0,
-    "card_latest_utilisation": null,
-    "card_mean_utilisation": 0.506,
-    "card_months_below_min_payment": 1,
-    "card_cash_share_of_drawings": null,
-    "card_atm_withdrawals_per_month": 0.0,
-    "card_max_days_past_due": 0,
-    "card_months_past_due": 0,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 418079,
-    "has_record": true,
-    "pos_n_contracts": 6,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 54,
-    "pos_max_days_past_due": 16,
-    "pos_months_past_due": 1,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.1454,
-    "rating": "medium",
-    "score_calculation": "Past applicants with a similar external score and 1 other red flags defaulted at a rate of 0.1163. Adjustment: 1 steps (2 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.1454 (the average applicant is at 0.0807). Rating: medium.",
-    "policy_lines_that_apply": [
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line RAISE_HIGH_INTEREST_LOANS: prev_high_interest_share is 0.75 or more.",
-      "Policy line RAISE_MANY_NEW_BUREAU_LOANS: bureau_n_loans_opened_last_year is 4 or more.",
-      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
-    ],
-    "sources_with_no_record": [],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.1454, rated as medium. The applicant profile shows an external score percentile of 20 and a loan to yearly income ratio of 1.63, with no red flags but one fact lowering the risk as the credit to goods price is 1.0. The credit bureau history includes 13 loans with 7 active and an overdue amount of 0, but one fact raises the risk because 4 bureau loans were opened last year. Previous Home Credit applications total 10 with 6 approved and 2 refused, where one fact raises the risk as the high interest share is 0.83. Instalment payments cover 193 installments with a late rate of 0.1036, triggering a red flag for frequent late payments. The credit card history spans 96 months with no latest utilisation on file, showing no red flags or other policy concerns. POS and cash loans involve 6 contracts with a worst days past due of 16, presenting no red flags or other policy concerns. The score calculation indicates that past applicants with a similar external score and 1 other red flag defaulted at a rate of 0.1163, adjusted by one step due to 2 facts raising the risk and 1 lowering it.
-
-====================================================================================================
-NOTE 12 of 20     SK_ID_CURR 352989, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 352989,
-    "contract_type": "Cash loans",
-    "credit_amount": 315000,
-    "goods_price": 315000,
-    "annuity": 21182,
-    "income_total": 67500,
-    "annuity_to_income": 0.3138,
-    "annuity_to_income_percentile": 91,
-    "credit_to_income": 4.67,
-    "credit_to_goods_price": 1.0,
-    "income_type": "Working",
-    "education": "Secondary / secondary special",
-    "occupation": "Cooking staff",
-    "organization_type": "Restaurant",
-    "housing_type": "House / apartment",
-    "owns_car": false,
-    "owns_realty": true,
-    "years_employed": 3.077,
-    "years_since_id_change": 12.192,
-    "years_since_registration_change": 5.438,
-    "days_since_phone_change": 0,
-    "external_score_mean": 0.2097,
-    "external_score_percentile": 4,
-    "n_external_scores": 1,
-    "bureau_enquiries_last_year": 6,
-    "region_rating": 2,
-    "address_mismatch_count": 2,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 352989,
-    "has_record": false,
-    "note": "No credit bureau loans at other lenders on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 352989,
-    "has_record": true,
-    "prev_n_applications": 5,
-    "prev_n_approved": 2,
-    "prev_n_refused": 2,
-    "prev_n_canceled_or_unused": 1,
-    "prev_refusal_rate": 0.4,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 279,
-    "prev_n_applications_last_year": 2,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 352989,
-    "has_record": true,
-    "inst_n_loans": 2,
-    "inst_n_installments": 25,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.24,
-    "inst_max_days_late": 42,
-    "inst_mean_days_late": 3.0,
-    "inst_mean_days_early": 3.8,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 14,
-    "inst_late_rate_last_year": 0.4286,
-    "inst_late_rate_change": 0.1886,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 352989,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 9,
-    "card_latest_balance": 141374,
-    "card_latest_limit": 135000,
-    "card_latest_utilisation": 1.0472,
-    "card_mean_utilisation": 0.9189,
-    "card_months_below_min_payment": 2,
-    "card_cash_share_of_drawings": 0.6225,
-    "card_atm_withdrawals_per_month": 0.78,
-    "card_max_days_past_due": 28,
-    "card_months_past_due": 1,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 352989,
+    "applicant_id": 147051,
     "has_record": true,
     "pos_n_contracts": 1,
     "pos_n_active_contracts": 0,
-    "pos_months_of_history": 22,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.3053,
-    "rating": "high",
-    "score_calculation": "Past applicants with a similar external score and 7 other red flags defaulted at a rate of 0.3816. Adjustment: -1 steps (0 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.3053 (the average applicant is at 0.0807). Rating: high.",
-    "policy_lines_that_apply": [
-      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
-      "Policy line RECENT_PHONE_CHANGE: days_since_phone_change is 30 or less.",
-      "Policy line MANY_ENQUIRIES: bureau_enquiries_last_year is 6 or more.",
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line INST_SEVERE_LATE: inst_max_days_late is 30 or more.",
-      "Policy line INST_WORSENING: inst_late_rate_change is above 0.05.",
-      "Policy line CC_HIGH_UTILISATION: card_latest_utilisation is 0.90 or more.",
-      "Policy line CC_CASH_RELIANCE: card_cash_share_of_drawings is 0.50 or more.",
-      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
-    ],
-    "sources_with_no_record": [
-      "get_credit_bureau_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.3053, rated high. The applicant profile shows a low external score percentile of 4, a loan to yearly income ratio of 4.67, and three red flags including a recent phone change and six bureau enquiries, while the loan amount being equal to the goods price lowers the risk. The credit bureau source has no record, meaning this history is missing and could not be assessed. Previous Home Credit applications show a total of 5 applications with 2 approved and 2 refused, with no red flag and no other policy line applying. Instalment payments reveal 25 instalments with a late rate of 0.24, raising concerns with three red flags for frequent late payments, severe lateness of 42 days, and worsening repayment behavior. The credit card history covers 9 months with a latest utilisation of 1.0472, triggering two red flags for high utilisation and cash reliance on drawings. POS and cash loans include 1 contract with a worst days past due of 0, showing no red flag and no other policy line applying.
-
-====================================================================================================
-NOTE 13 of 20     SK_ID_CURR 128963, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 128963,
-    "contract_type": "Cash loans",
-    "credit_amount": 344043,
-    "goods_price": 297000,
-    "annuity": 23274,
-    "income_total": 112500,
-    "annuity_to_income": 0.2069,
-    "annuity_to_income_percentile": 68,
-    "credit_to_income": 3.06,
-    "credit_to_goods_price": 1.16,
-    "income_type": "Working",
-    "education": "Higher education",
-    "occupation": "Sales staff",
-    "organization_type": "Self-employed",
-    "housing_type": "House / apartment",
-    "owns_car": false,
-    "owns_realty": false,
-    "years_employed": 3.638,
-    "years_since_id_change": 2.227,
-    "years_since_registration_change": 11.814,
-    "days_since_phone_change": 459,
-    "external_score_mean": 0.2059,
-    "external_score_percentile": 4,
-    "n_external_scores": 3,
-    "bureau_enquiries_last_year": 1,
-    "region_rating": 2,
-    "address_mismatch_count": 2,
-    "social_circle_defaults": 1,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 128963,
-    "has_record": true,
-    "bureau_n_loans": 3,
-    "bureau_n_active_loans": 2,
-    "bureau_n_closed_loans": 1,
-    "bureau_active_credit": 999450,
-    "bureau_active_debt": 958967,
-    "bureau_active_debt_to_credit": 0.9595,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": null,
-    "bureau_n_loans_opened_last_year": 2,
-    "bureau_days_since_last_loan_opened": 91,
-    "bureau_mean_loan_age_years": 0.74,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 0,
-    "bureau_months_late": null,
-    "bureau_months_late_last_year": null,
-    "bureau_worst_monthly_status": null,
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 128963,
-    "has_record": true,
-    "prev_n_applications": 5,
-    "prev_n_approved": 4,
-    "prev_n_refused": 0,
-    "prev_n_canceled_or_unused": 1,
-    "prev_refusal_rate": 0.0,
-    "prev_last_status": "Canceled",
-    "prev_days_since_last_decision": 458,
-    "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 0.5,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 128963,
-    "has_record": true,
-    "inst_n_loans": 2,
-    "inst_n_installments": 33,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.4545,
-    "inst_max_days_late": 9,
-    "inst_mean_days_late": 1.8,
-    "inst_mean_days_early": 0.1,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 24,
-    "inst_late_rate_last_year": 0.5,
-    "inst_late_rate_change": 0.0455,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 128963,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 15,
-    "card_latest_balance": 0,
-    "card_latest_limit": 0,
-    "card_latest_utilisation": null,
-    "card_mean_utilisation": null,
-    "card_months_below_min_payment": 1,
-    "card_cash_share_of_drawings": 1.0,
-    "card_atm_withdrawals_per_month": 0.53,
-    "card_max_days_past_due": 0,
-    "card_months_past_due": 0,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 128963,
-    "has_record": true,
-    "pos_n_contracts": 1,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 15,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.2602,
-    "rating": "high",
-    "score_calculation": "Past applicants with a similar external score and 3 other red flags defaulted at a rate of 0.2602. Adjustment: 0 steps (1 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.2602 (the average applicant is at 0.0807). Rating: high.",
-    "policy_lines_that_apply": [
-      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
-      "Policy line BUREAU_HIGH_UTILISATION: bureau_active_debt_to_credit is 0.80 or more.",
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line CC_CASH_RELIANCE: card_cash_share_of_drawings is 0.50 or more.",
-      "Policy line RAISE_YOUNG_BUREAU_LOANS: bureau_mean_loan_age_years is below 1.0.",
-      "Policy line LOWER_HIGHER_EDUCATION: education is \"Higher education\" or \"Academic degree\"."
-    ],
-    "sources_with_no_record": [],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.2602, which is high. The applicant profile shows a low external score percentile of 4 and a loan to yearly income ratio of 3.06, with one red flag regarding the low external score and one fact lowering risk due to higher education. The credit bureau history includes three loans with two active, zero overdue amount, but presents one red flag for high utilization of 0.9595 and one fact raising risk due to young bureau loans averaging 0.74 years. Previous Home Credit applications total five with four approved and zero refused, showing no red flags and no other policy lines applying. Instalment payments cover thirty-three installments with a late rate of 0.4545, presenting one red flag for frequent late payments. The credit card history spans fifteen months with no latest utilisation on file, presenting one red flag for cash reliance of 1.0. POS and cash loans include one contract with zero worst days past due, showing no red flags and no other policy lines applying. The score calculation indicates that past applicants with a similar external score and three other red flags defaulted at a rate of 0.2602, with an adjustment of zero steps due to one fact raising the risk and one lowering it.
-
-====================================================================================================
-NOTE 14 of 20     SK_ID_CURR 377000, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 377000,
-    "contract_type": "Cash loans",
-    "credit_amount": 254700,
-    "goods_price": 225000,
-    "annuity": 16713,
-    "income_total": 54000,
-    "annuity_to_income": 0.3095,
-    "annuity_to_income_percentile": 91,
-    "credit_to_income": 4.72,
-    "credit_to_goods_price": 1.13,
-    "income_type": "Working",
-    "education": "Secondary / secondary special",
-    "occupation": null,
-    "organization_type": "Self-employed",
-    "housing_type": "House / apartment",
-    "owns_car": false,
-    "owns_realty": true,
-    "years_employed": 2.679,
-    "years_since_id_change": 1.296,
-    "years_since_registration_change": 0.814,
-    "days_since_phone_change": 550,
-    "external_score_mean": 0.3864,
-    "external_score_percentile": 20,
-    "n_external_scores": 3,
-    "bureau_enquiries_last_year": 1,
-    "region_rating": 2,
-    "address_mismatch_count": 2,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 377000,
-    "has_record": true,
-    "bureau_n_loans": 1,
-    "bureau_n_active_loans": 0,
-    "bureau_n_closed_loans": 1,
-    "bureau_active_credit": 0,
-    "bureau_active_debt": 0,
-    "bureau_active_debt_to_credit": null,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": null,
-    "bureau_n_loans_opened_last_year": 0,
-    "bureau_days_since_last_loan_opened": 965,
-    "bureau_mean_loan_age_years": 2.64,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 0,
-    "bureau_months_late": null,
-    "bureau_months_late_last_year": null,
-    "bureau_worst_monthly_status": null,
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 377000,
-    "has_record": true,
-    "prev_n_applications": 1,
-    "prev_n_approved": 1,
-    "prev_n_refused": 0,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.0,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 550,
-    "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 377000,
-    "has_record": true,
-    "inst_n_loans": 1,
-    "inst_n_installments": 8,
-    "inst_n_unpaid": 1,
-    "inst_late_rate": 0.75,
-    "inst_max_days_late": 37,
-    "inst_mean_days_late": 26.1,
-    "inst_mean_days_early": 1.6,
-    "inst_underpaid_rate": 0.25,
-    "inst_paid_to_due_ratio": 0.9901,
-    "inst_n_installments_last_year": 1,
-    "inst_late_rate_last_year": 0.0,
-    "inst_late_rate_change": -0.75,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 377000,
-    "has_record": false,
-    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 377000,
-    "has_record": true,
-    "pos_n_contracts": 1,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 17,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.1438,
-    "rating": "medium",
-    "score_calculation": "Past applicants with a similar external score and 3 other red flags defaulted at a rate of 0.1438. Adjustment: 0 steps (0 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.1438 (the average applicant is at 0.0807). Rating: medium.",
-    "policy_lines_that_apply": [
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line INST_SEVERE_LATE: inst_max_days_late is 30 or more.",
-      "Policy line INST_UNDERPAYMENT: inst_underpaid_rate is 0.05 or more."
-    ],
-    "sources_with_no_record": [
-      "get_credit_card_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.1438, rated as medium. The applicant profile shows an external score percentile of 20 and a loan to yearly income ratio of 4.72, with no red flags. The credit bureau history includes one loan with zero active loans and no overdue amount, presenting no red flags. Previous Home Credit applications consist of one total application, one approved, and zero refused, with no red flags. Instalment payments reveal eight instalments with a late rate of 0.75, triggering three red flags for frequent late payments, severe lateness of 37 days, and underpayment. Credit card history is missing as there is no record. POS and cash loans show one contract with zero worst days past due, presenting no red flags. The score calculation indicates that past applicants with a similar external score and three other red flags defaulted at a rate of 0.1438, with no adjustment steps applied.
-
-====================================================================================================
-NOTE 15 of 20     SK_ID_CURR 294534, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 294534,
-    "contract_type": "Cash loans",
-    "credit_amount": 675000,
-    "goods_price": 675000,
-    "annuity": 19868,
-    "income_total": 202500,
-    "annuity_to_income": 0.0981,
-    "annuity_to_income_percentile": 17,
-    "credit_to_income": 3.33,
-    "credit_to_goods_price": 1.0,
-    "income_type": "Pensioner",
-    "education": "Secondary / secondary special",
-    "occupation": null,
-    "organization_type": null,
-    "housing_type": "Rented apartment",
-    "owns_car": false,
-    "owns_realty": false,
-    "years_employed": null,
-    "years_since_id_change": 11.016,
-    "years_since_registration_change": 33.052,
-    "days_since_phone_change": 804,
-    "external_score_mean": 0.5891,
-    "external_score_percentile": 67,
-    "n_external_scores": 3,
-    "bureau_enquiries_last_year": 9,
-    "region_rating": 2,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 294534,
-    "has_record": true,
-    "bureau_n_loans": 3,
-    "bureau_n_active_loans": 2,
-    "bureau_n_closed_loans": 1,
-    "bureau_active_credit": 151371,
-    "bureau_active_debt": 27288,
-    "bureau_active_debt_to_credit": 0.1803,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": 9140,
-    "bureau_n_loans_opened_last_year": 2,
-    "bureau_days_since_last_loan_opened": 349,
-    "bureau_mean_loan_age_years": 3.23,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 0,
-    "bureau_months_late": null,
-    "bureau_months_late_last_year": null,
-    "bureau_worst_monthly_status": null,
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 294534,
-    "has_record": true,
-    "prev_n_applications": 10,
-    "prev_n_approved": 4,
-    "prev_n_refused": 2,
-    "prev_n_canceled_or_unused": 4,
-    "prev_refusal_rate": 0.2,
-    "prev_last_status": "Refused",
-    "prev_days_since_last_decision": 154,
-    "prev_n_applications_last_year": 7,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 294534,
-    "has_record": true,
-    "inst_n_loans": 3,
-    "inst_n_installments": 36,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.0833,
-    "inst_max_days_late": 27,
-    "inst_mean_days_late": 0.9,
-    "inst_mean_days_early": 6.6,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 19,
-    "inst_late_rate_last_year": 0.0,
-    "inst_late_rate_change": -0.0833,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 294534,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 9,
-    "card_latest_balance": 772065,
-    "card_latest_limit": 900000,
-    "card_latest_utilisation": 0.8578,
-    "card_mean_utilisation": 0.6152,
-    "card_months_below_min_payment": 0,
-    "card_cash_share_of_drawings": 0.2146,
-    "card_atm_withdrawals_per_month": 0.56,
-    "card_max_days_past_due": 0,
-    "card_months_past_due": 0,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 294534,
-    "has_record": true,
-    "pos_n_contracts": 2,
-    "pos_n_active_contracts": 0,
-    "pos_months_of_history": 16,
-    "pos_max_days_past_due": 23,
-    "pos_months_past_due": 1,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.0416,
-    "rating": "low",
-    "score_calculation": "Past applicants with a similar external score and 3 other red flags defaulted at a rate of 0.052. Adjustment: -1 steps (0 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0416 (the average applicant is at 0.0807). Rating: low.",
-    "policy_lines_that_apply": [
-      "Policy line MANY_ENQUIRIES: bureau_enquiries_last_year is 6 or more.",
-      "Policy line PREV_LAST_REFUSED: prev_last_status is \"Refused\".",
-      "Policy line PREV_HIGH_FREQUENCY: prev_n_applications_last_year is 7 or more.",
-      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
-    ],
-    "sources_with_no_record": [],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.0416, which is a low rating. The applicant profile shows an external score percentile of 67 and a loan to yearly income ratio of 3.33, with one red flag for many enquiries and one fact lowering risk as the loan is near the goods price. The credit bureau history includes three loans with two active and zero overdue amount, presenting no red flags. Previous Home Credit applications total ten with four approved and two refused, showing two red flags for a last refusal and high frequency. Instalment payments cover thirty-six instalments with a late rate of 0.0833, containing no red flags. The credit card has nine months of history with a latest utilisation of 0.8578, also with no red flags. POS and cash loans involve two contracts with a worst days past due of 23, having no red flags. The score calculation indicates that past applicants with a similar external score and three other red flags defaulted at a rate of 0.052, adjusted by one step due to one fact lowering risk, resulting in the estimated risk score of 0.0416.
-
-====================================================================================================
-NOTE 16 of 20     SK_ID_CURR 106540, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 106540,
-    "contract_type": "Cash loans",
-    "credit_amount": 254700,
-    "goods_price": 225000,
-    "annuity": 25322,
-    "income_total": 209250,
-    "annuity_to_income": 0.121,
-    "annuity_to_income_percentile": 28,
-    "credit_to_income": 1.22,
-    "credit_to_goods_price": 1.13,
-    "income_type": "Working",
-    "education": "Secondary / secondary special",
-    "occupation": "Cooking staff",
-    "organization_type": "Business Entity Type 3",
-    "housing_type": "House / apartment",
-    "owns_car": false,
-    "owns_realty": false,
-    "years_employed": 4.679,
-    "years_since_id_change": 2.384,
-    "years_since_registration_change": 20.556,
-    "days_since_phone_change": 1570,
-    "external_score_mean": 0.7146,
-    "external_score_percentile": 94,
-    "n_external_scores": 2,
-    "bureau_enquiries_last_year": 1,
-    "region_rating": 3,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 106540,
-    "has_record": true,
-    "bureau_n_loans": 3,
-    "bureau_n_active_loans": 0,
-    "bureau_n_closed_loans": 3,
-    "bureau_active_credit": 0,
-    "bureau_active_debt": 0,
-    "bureau_active_debt_to_credit": null,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": null,
-    "bureau_n_loans_opened_last_year": 0,
-    "bureau_days_since_last_loan_opened": 794,
-    "bureau_mean_loan_age_years": 3.83,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 6,
-    "bureau_months_late": 3,
-    "bureau_months_late_last_year": 0,
-    "bureau_worst_monthly_status": "1-30 days late",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 106540,
-    "has_record": true,
-    "prev_n_applications": 4,
-    "prev_n_approved": 2,
-    "prev_n_refused": 1,
-    "prev_n_canceled_or_unused": 1,
-    "prev_refusal_rate": 0.25,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 176,
-    "prev_n_applications_last_year": 2,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 106540,
-    "has_record": true,
-    "inst_n_loans": 2,
-    "inst_n_installments": 28,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.1071,
-    "inst_max_days_late": 1,
-    "inst_mean_days_late": 0.1,
-    "inst_mean_days_early": 3.8,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 4,
-    "inst_late_rate_last_year": 0.0,
-    "inst_late_rate_change": -0.1071,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 106540,
-    "has_record": false,
-    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 106540,
-    "has_record": true,
-    "pos_n_contracts": 2,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 30,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.0222,
-    "rating": "low",
-    "score_calculation": "Past applicants with a similar external score and 1 other red flags defaulted at a rate of 0.0222. Adjustment: 0 steps (0 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0222 (the average applicant is at 0.0807). Rating: low.",
-    "policy_lines_that_apply": [
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more."
-    ],
-    "sources_with_no_record": [
-      "get_credit_card_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.0222, which is a low rating. The applicant profile shows a strong external credit score at the 94th percentile and a loan-to-income ratio of 1.22, with no other policy lines applying. The credit bureau history includes three loans, none active, with zero overdue amount and no red flags. Previous Home Credit applications show four total applications with two approved and one refused, resulting in no red flags. The instalment payment history covers 28 instalments with a late rate of 0.1071, triggering a red flag for frequent late payments. The credit card source has no record, meaning this history is missing and could not be assessed. The POS and cash loans source shows two contracts with zero days past due and no red flags. The score calculation indicates that past applicants with a similar external score and one other red flag defaulted at a rate of 0.0222, with no adjustments for facts raising or lowering the risk.
-
-====================================================================================================
-NOTE 17 of 20     SK_ID_CURR 105247, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 105247,
-    "contract_type": "Cash loans",
-    "credit_amount": 612612,
-    "goods_price": 495000,
-    "annuity": 29601,
-    "income_total": 90000,
-    "annuity_to_income": 0.3289,
-    "annuity_to_income_percentile": 93,
-    "credit_to_income": 6.81,
-    "credit_to_goods_price": 1.24,
-    "income_type": "Working",
-    "education": "Secondary / secondary special",
-    "occupation": null,
-    "organization_type": "Business Entity Type 2",
-    "housing_type": "Municipal apartment",
-    "owns_car": false,
-    "owns_realty": false,
-    "years_employed": 0.967,
-    "years_since_id_change": 2.975,
-    "years_since_registration_change": 7.8,
-    "days_since_phone_change": 645,
-    "external_score_mean": 0.1259,
-    "external_score_percentile": 1,
-    "n_external_scores": 2,
-    "bureau_enquiries_last_year": 1,
-    "region_rating": 2,
-    "address_mismatch_count": 0,
-    "social_circle_defaults": 2,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 105247,
-    "has_record": true,
-    "bureau_n_loans": 4,
-    "bureau_n_active_loans": 2,
-    "bureau_n_closed_loans": 2,
-    "bureau_active_credit": 319500,
-    "bureau_active_debt": 268110,
-    "bureau_active_debt_to_credit": 0.8392,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": 0,
-    "bureau_n_loans_opened_last_year": 4,
-    "bureau_days_since_last_loan_opened": 60,
-    "bureau_mean_loan_age_years": 0.3,
-    "bureau_n_prolonged": 0,
-    "bureau_months_reported": 8,
-    "bureau_months_late": 0,
-    "bureau_months_late_last_year": 0,
-    "bureau_worst_monthly_status": "never late",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 105247,
-    "has_record": true,
-    "prev_n_applications": 5,
-    "prev_n_approved": 2,
-    "prev_n_refused": 3,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.6,
-    "prev_last_status": "Refused",
-    "prev_days_since_last_decision": 28,
-    "prev_n_applications_last_year": 4,
-    "prev_high_interest_share": 0.5,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 105247,
-    "has_record": true,
-    "inst_n_loans": 2,
-    "inst_n_installments": 14,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.2143,
-    "inst_max_days_late": 2,
-    "inst_mean_days_late": 0.3,
-    "inst_mean_days_early": 3.6,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 5,
-    "inst_late_rate_last_year": 0.0,
-    "inst_late_rate_change": -0.2143,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 105247,
-    "has_record": false,
-    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 105247,
-    "has_record": true,
-    "pos_n_contracts": 2,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 15,
+    "pos_months_of_history": 13,
     "pos_max_days_past_due": 0,
     "pos_months_past_due": 0,
     "pos_months_in_debt_demand": 0,
@@ -2177,17 +257,16 @@ TOOL OUTPUTS
   "given_to_the_writer_by_the_system": {
     "risk_score": 0.5962,
     "rating": "high",
-    "score_calculation": "Past applicants with a similar external score and 5 other red flags defaulted at a rate of 0.3816. Adjustment: 2 steps (3 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.5962 (the average applicant is at 0.0807). Rating: high.",
+    "score_calculation": "Past applicants with a similar external score and 4 other red flags defaulted at a rate of 0.3816. Adjustment: 2 steps (3 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.5962 (the average applicant is at 0.0807). Rating: high.",
     "policy_lines_that_apply": [
       "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
       "Policy line SHORT_EMPLOYMENT: years_employed is below 1.0.",
       "Policy line BUREAU_HIGH_UTILISATION: bureau_active_debt_to_credit is 0.80 or more.",
       "Policy line PREV_HIGH_REFUSAL: prev_refusal_rate is 0.50 or more.",
       "Policy line PREV_LAST_REFUSED: prev_last_status is \"Refused\".",
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
+      "Policy line RAISE_HIGH_INTEREST_LOANS: prev_high_interest_share is 0.75 or more.",
       "Policy line RAISE_LOAN_ABOVE_GOODS_PRICE: credit_to_goods_price is 1.20 or more.",
-      "Policy line RAISE_YOUNG_BUREAU_LOANS: bureau_mean_loan_age_years is below 1.0.",
-      "Policy line RAISE_MANY_NEW_BUREAU_LOANS: bureau_n_loans_opened_last_year is 4 or more."
+      "Policy line RAISE_YOUNG_BUREAU_LOANS: bureau_mean_loan_age_years is below 1.0."
     ],
     "sources_with_no_record": [
       "get_credit_card_history"
@@ -2197,287 +276,37 @@ TOOL OUTPUTS
 }
 
 REPORT
-The applicant is rated high with an estimated risk score of 0.5962. The applicant profile shows a very low external score percentile of 1 and a loan to yearly income ratio of 6.81, with red flags for low external score and short employment, plus the risk-raising fact of a loan above goods price. The credit bureau history includes 4 loans with 2 active and zero overdue amount, but presents a red flag for high utilisation and two risk-raising facts regarding young bureau loans and many new bureau loans. Previous Home Credit applications total 5 with 2 approved and 3 refused, showing red flags for high refusal rate and a last status of Refused. Instalment payments cover 14 instalments with a late rate of 0.2143, triggering a red flag for frequent late payments. Credit card history is missing as there is no record. POS and cash loans involve 2 contracts with zero worst days past due, showing no red flags or other policy concerns. The score calculation indicates that past applicants with a similar external score and 5 other red flags defaulted at a rate of 0.3816, adjusted by 2 steps for 3 facts raising the risk and 0 lowering it.
+The estimated risk score is 0.5962, which is rated high. The applicant profile shows a very low external score percentile of 1 and a high loan to yearly income ratio of 4.74, with red flags for low external score and short employment, plus a raised risk fact for the loan exceeding the goods price. The credit bureau history includes one active loan with no overdue amount but triggers a red flag for high utilization and a raised risk fact for young bureau loans. Previous Home Credit applications show two total applications with one approved and one refused, resulting in red flags for high refusal rate and a last refusal, along with a raised risk fact for high interest loans. Instalment payments cover twelve installments with a zero late rate, presenting no red flags or other policy concerns. Credit card history is missing as there is no record. POS and cash loans involve one contract with zero days past due, showing no red flags or other policy concerns. The score calculation indicates that past applicants with a similar external score and four other red flags defaulted at a rate of 0.3816, adjusted by two steps due to three facts raising the risk and none lowering it.
 
 ====================================================================================================
-NOTE 18 of 20     SK_ID_CURR 129867, run 1
+NOTE 3 of 12     SK_ID_CURR 115902, run 1
 ====================================================================================================
 TOOL OUTPUTS
 {
   "get_applicant_profile": {
-    "applicant_id": 129867,
+    "applicant_id": 115902,
     "contract_type": "Cash loans",
-    "credit_amount": 225000,
-    "goods_price": 225000,
-    "annuity": 15034,
-    "income_total": 112500,
-    "annuity_to_income": 0.1336,
-    "annuity_to_income_percentile": 35,
-    "credit_to_income": 2.0,
-    "credit_to_goods_price": 1.0,
-    "income_type": "Working",
-    "education": "Higher education",
-    "occupation": "Core staff",
-    "organization_type": "Trade: type 2",
-    "housing_type": "With parents",
-    "owns_car": false,
-    "owns_realty": false,
-    "years_employed": 2.575,
-    "years_since_id_change": 5.022,
-    "years_since_registration_change": 10.66,
-    "days_since_phone_change": 711,
-    "external_score_mean": 0.3753,
-    "external_score_percentile": 19,
-    "n_external_scores": 2,
-    "bureau_enquiries_last_year": 1,
-    "region_rating": 3,
-    "address_mismatch_count": 2,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 129867,
-    "has_record": true,
-    "bureau_n_loans": 4,
-    "bureau_n_active_loans": 2,
-    "bureau_n_closed_loans": 2,
-    "bureau_active_credit": 297000,
-    "bureau_active_debt": 281436,
-    "bureau_active_debt_to_credit": 0.9476,
-    "bureau_overdue_amount": 0,
-    "bureau_max_days_overdue_now": 0,
-    "bureau_max_overdue_amount_ever": 12,
-    "bureau_n_loans_opened_last_year": 0,
-    "bureau_days_since_last_loan_opened": 450,
-    "bureau_mean_loan_age_years": 1.73,
-    "bureau_n_prolonged": 1,
-    "bureau_months_reported": 50,
-    "bureau_months_late": 5,
-    "bureau_months_late_last_year": 3,
-    "bureau_worst_monthly_status": "1-30 days late",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 129867,
-    "has_record": true,
-    "prev_n_applications": 4,
-    "prev_n_approved": 3,
-    "prev_n_refused": 1,
-    "prev_n_canceled_or_unused": 0,
-    "prev_refusal_rate": 0.25,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 392,
-    "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 129867,
-    "has_record": true,
-    "inst_n_loans": 3,
-    "inst_n_installments": 23,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.0,
-    "inst_max_days_late": 0,
-    "inst_mean_days_late": 0.0,
-    "inst_mean_days_early": 27.1,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 11,
-    "inst_late_rate_last_year": 0.0,
-    "inst_late_rate_change": 0.0,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 129867,
-    "has_record": false,
-    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 129867,
-    "has_record": true,
-    "pos_n_contracts": 3,
-    "pos_n_active_contracts": 0,
-    "pos_months_of_history": 21,
-    "pos_max_days_past_due": 0,
-    "pos_months_past_due": 0,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.0744,
-    "rating": "low",
-    "score_calculation": "Past applicants with a similar external score and 1 other red flags defaulted at a rate of 0.1163. Adjustment: -2 steps (0 facts raise the risk, 3 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0744 (the average applicant is at 0.0807). Rating: low.",
-    "policy_lines_that_apply": [
-      "Policy line BUREAU_HIGH_UTILISATION: bureau_active_debt_to_credit is 0.80 or more.",
-      "Policy line LOWER_HIGHER_EDUCATION: education is \"Higher education\" or \"Academic degree\".",
-      "Policy line LOWER_CLEAN_INSTALMENTS: inst_late_rate is 0, and inst_n_installments is 20 or more.",
-      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
-    ],
-    "sources_with_no_record": [
-      "get_credit_card_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.0744, rated as low. The applicant profile shows an external score percentile of 19 and a loan to yearly income ratio of 2.0, with no red flags but two facts that lower the risk. The credit bureau history includes four loans with two active and zero overdue amount, but presents one red flag regarding high utilization. Previous Home Credit applications total four with three approved and one refused, showing no red flags and no other policy line applies. Instalment payments cover 23 installments with a late rate of 0.0, presenting no red flag and one fact that lowers the risk. The credit card source has no record, which is missing history and not a clean history, so it could not be assessed. POS and cash loans involve three contracts with zero worst days past due, showing no red flags and no other policy line applies. The score calculation is based on past applicants with a similar external score and one other red flag defaulting at a rate of 0.1163, adjusted by negative two steps due to zero facts raising the risk and three lowering it, resulting in an estimated risk score of 0.0744.
-
-====================================================================================================
-NOTE 19 of 20     SK_ID_CURR 189306, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 189306,
-    "contract_type": "Cash loans",
-    "credit_amount": 440784,
-    "goods_price": 360000,
-    "annuity": 34956,
-    "income_total": 225000,
-    "annuity_to_income": 0.1554,
-    "annuity_to_income_percentile": 47,
-    "credit_to_income": 1.96,
-    "credit_to_goods_price": 1.22,
-    "income_type": "Working",
-    "education": "Incomplete higher",
-    "occupation": "Laborers",
-    "organization_type": "Construction",
-    "housing_type": "House / apartment",
-    "owns_car": true,
-    "owns_realty": false,
-    "years_employed": 2.578,
-    "years_since_id_change": 7.94,
-    "years_since_registration_change": 7.94,
-    "days_since_phone_change": 0,
-    "external_score_mean": 0.0928,
-    "external_score_percentile": 1,
-    "n_external_scores": 1,
-    "bureau_enquiries_last_year": null,
-    "region_rating": 2,
-    "address_mismatch_count": 2,
-    "social_circle_defaults": 0,
-    "truncated": false
-  },
-  "get_credit_bureau_history": {
-    "applicant_id": 189306,
-    "has_record": false,
-    "note": "No credit bureau loans at other lenders on file. This is missing history, not a clean history.",
-    "truncated": false
-  },
-  "get_previous_applications": {
-    "applicant_id": 189306,
-    "has_record": true,
-    "prev_n_applications": 4,
-    "prev_n_approved": 3,
-    "prev_n_refused": 0,
-    "prev_n_canceled_or_unused": 1,
-    "prev_refusal_rate": 0.0,
-    "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 353,
-    "prev_n_applications_last_year": 3,
-    "prev_high_interest_share": 0.0,
-    "prev_n_duplicate_submissions": 0,
-    "truncated": false
-  },
-  "get_installment_history": {
-    "applicant_id": 189306,
-    "has_record": true,
-    "inst_n_loans": 2,
-    "inst_n_installments": 22,
-    "inst_n_unpaid": 0,
-    "inst_late_rate": 0.1818,
-    "inst_max_days_late": 32,
-    "inst_mean_days_late": 1.9,
-    "inst_mean_days_early": 14.9,
-    "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.1662,
-    "inst_n_installments_last_year": 11,
-    "inst_late_rate_last_year": 0.1818,
-    "inst_late_rate_change": 0.0,
-    "truncated": false
-  },
-  "get_credit_card_history": {
-    "applicant_id": 189306,
-    "has_record": true,
-    "card_n_cards": 1,
-    "card_months_of_history": 10,
-    "card_latest_balance": 0,
-    "card_latest_limit": 13500,
-    "card_latest_utilisation": 0.0,
-    "card_mean_utilisation": 0.0,
-    "card_months_below_min_payment": 0,
-    "card_cash_share_of_drawings": null,
-    "card_atm_withdrawals_per_month": null,
-    "card_max_days_past_due": 0,
-    "card_months_past_due": 0,
-    "truncated": false
-  },
-  "get_pos_cash_history": {
-    "applicant_id": 189306,
-    "has_record": true,
-    "pos_n_contracts": 2,
-    "pos_n_active_contracts": 1,
-    "pos_months_of_history": 21,
-    "pos_max_days_past_due": 6,
-    "pos_months_past_due": 1,
-    "pos_months_in_debt_demand": 0,
-    "truncated": false
-  },
-  "given_to_the_writer_by_the_system": {
-    "risk_score": 0.2602,
-    "rating": "high",
-    "score_calculation": "Past applicants with a similar external score and 3 other red flags defaulted at a rate of 0.2602. Adjustment: 0 steps (1 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.2602 (the average applicant is at 0.0807). Rating: high.",
-    "policy_lines_that_apply": [
-      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
-      "Policy line RECENT_PHONE_CHANGE: days_since_phone_change is 30 or less.",
-      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
-      "Policy line INST_SEVERE_LATE: inst_max_days_late is 30 or more.",
-      "Policy line RAISE_LOAN_ABOVE_GOODS_PRICE: credit_to_goods_price is 1.20 or more.",
-      "Policy line LOWER_LOW_CARD_USE: card_latest_utilisation is below 0.30."
-    ],
-    "sources_with_no_record": [
-      "get_credit_bureau_history"
-    ],
-    "sources_not_checked": []
-  }
-}
-
-REPORT
-The estimated risk score is 0.2602, which is high. The applicant profile shows a very low external score percentile of 1 and a loan to yearly income ratio of 1.96, with red flags for the low external score and recent phone change, plus a raised risk due to the loan amount exceeding the goods price. The credit bureau source has no record, meaning this history is missing and could not be assessed. Previous Home Credit applications show a clean record with four total applications, three approved, and zero refused, with no red flags or other policy lines applying. Instalment payments reveal a late rate of 0.1818 across 22 instalments, triggering red flags for frequent and severe lateness. The credit card history spans 10 months with a latest utilisation of 0.0, presenting no red flags but lowering risk due to low card use. POS and cash loans include two contracts with a worst days past due of 6, showing no red flags or other policy lines applying.
-
-====================================================================================================
-NOTE 20 of 20     SK_ID_CURR 192725, run 1
-====================================================================================================
-TOOL OUTPUTS
-{
-  "get_applicant_profile": {
-    "applicant_id": 192725,
-    "contract_type": "Cash loans",
-    "credit_amount": 900000,
-    "goods_price": 900000,
-    "annuity": 23742,
+    "credit_amount": 351000,
+    "goods_price": 351000,
+    "annuity": 14998,
     "income_total": 90000,
-    "annuity_to_income": 0.2638,
-    "annuity_to_income_percentile": 84,
-    "credit_to_income": 10.0,
+    "annuity_to_income": 0.1666,
+    "annuity_to_income_percentile": 52,
+    "credit_to_income": 3.9,
     "credit_to_goods_price": 1.0,
-    "income_type": "Working",
-    "education": "Incomplete higher",
-    "occupation": "Drivers",
-    "organization_type": "Electricity",
+    "income_type": "Commercial associate",
+    "education": "Secondary / secondary special",
+    "occupation": "Laborers",
+    "organization_type": "Business Entity Type 3",
     "housing_type": "House / apartment",
     "owns_car": false,
-    "owns_realty": false,
-    "years_employed": 2.373,
-    "years_since_id_change": 0.066,
-    "years_since_registration_change": 24.375,
-    "days_since_phone_change": 4,
-    "external_score_mean": 0.5737,
-    "external_score_percentile": 63,
+    "owns_realty": true,
+    "years_employed": 10.008,
+    "years_since_id_change": 7.488,
+    "years_since_registration_change": 26.019,
+    "days_since_phone_change": 484,
+    "external_score_mean": 0.5518,
+    "external_score_percentile": 57,
     "n_external_scores": 2,
     "bureau_enquiries_last_year": null,
     "region_rating": 2,
@@ -2486,68 +315,67 @@ TOOL OUTPUTS
     "truncated": false
   },
   "get_credit_bureau_history": {
-    "applicant_id": 192725,
+    "applicant_id": 115902,
     "has_record": false,
     "note": "No credit bureau loans at other lenders on file. This is missing history, not a clean history.",
     "truncated": false
   },
   "get_previous_applications": {
-    "applicant_id": 192725,
+    "applicant_id": 115902,
     "has_record": true,
-    "prev_n_applications": 2,
+    "prev_n_applications": 4,
     "prev_n_approved": 2,
     "prev_n_refused": 0,
-    "prev_n_canceled_or_unused": 0,
+    "prev_n_canceled_or_unused": 2,
     "prev_refusal_rate": 0.0,
     "prev_last_status": "Approved",
-    "prev_days_since_last_decision": 404,
+    "prev_days_since_last_decision": 382,
     "prev_n_applications_last_year": 0,
-    "prev_high_interest_share": 1.0,
+    "prev_high_interest_share": 0.0,
     "prev_n_duplicate_submissions": 0,
     "truncated": false
   },
   "get_installment_history": {
-    "applicant_id": 192725,
+    "applicant_id": 115902,
     "has_record": true,
-    "inst_n_loans": 2,
-    "inst_n_installments": 10,
+    "inst_n_loans": 3,
+    "inst_n_installments": 22,
     "inst_n_unpaid": 0,
     "inst_late_rate": 0.0,
     "inst_max_days_late": 0,
     "inst_mean_days_late": 0.0,
-    "inst_mean_days_early": 12.4,
+    "inst_mean_days_early": 17.1,
     "inst_underpaid_rate": 0.0,
-    "inst_paid_to_due_ratio": 1.0,
-    "inst_n_installments_last_year": 3,
+    "inst_paid_to_due_ratio": 1.2278,
+    "inst_n_installments_last_year": 16,
     "inst_late_rate_last_year": 0.0,
     "inst_late_rate_change": 0.0,
     "truncated": false
   },
   "get_credit_card_history": {
-    "applicant_id": 192725,
+    "applicant_id": 115902,
     "has_record": false,
     "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
     "truncated": false
   },
   "get_pos_cash_history": {
-    "applicant_id": 192725,
+    "applicant_id": 115902,
     "has_record": true,
-    "pos_n_contracts": 2,
-    "pos_n_active_contracts": 0,
-    "pos_months_of_history": 12,
+    "pos_n_contracts": 3,
+    "pos_n_active_contracts": 1,
+    "pos_months_of_history": 20,
     "pos_max_days_past_due": 0,
     "pos_months_past_due": 0,
     "pos_months_in_debt_demand": 0,
     "truncated": false
   },
   "given_to_the_writer_by_the_system": {
-    "risk_score": 0.052,
+    "risk_score": 0.0233,
     "rating": "low",
-    "score_calculation": "Past applicants with a similar external score and 2 other red flags defaulted at a rate of 0.052. Adjustment: 0 steps (1 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.052 (the average applicant is at 0.0807). Rating: low.",
+    "score_calculation": "Past applicants with a similar external score and 0 other red flags defaulted at a rate of 0.0364. Adjustment: -2 steps (0 facts raise the risk, 3 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0233 (the average applicant is at 0.0807). Rating: low.",
     "policy_lines_that_apply": [
-      "Policy line RECENT_ID_CHANGE: years_since_id_change is 1.0 or less.",
-      "Policy line RECENT_PHONE_CHANGE: days_since_phone_change is 30 or less.",
-      "Policy line RAISE_HIGH_INTEREST_LOANS: prev_high_interest_share is 0.75 or more.",
+      "Policy line LOWER_LONG_EMPLOYMENT: years_employed is 10.0 or more.",
+      "Policy line LOWER_CLEAN_INSTALMENTS: inst_late_rate is 0, and inst_n_installments is 20 or more.",
       "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
     ],
     "sources_with_no_record": [
@@ -2559,4 +387,1149 @@ TOOL OUTPUTS
 }
 
 REPORT
-The estimated risk score is 0.052, which is a low rating compared to the average applicant at 0.0807. The applicant profile shows an external score percentile of 63 and a loan to yearly income ratio of 10.0, with two red flags for recent ID and phone changes, while one fact lowers the risk as the loan price matches the goods price. The credit bureau source has no record, meaning this history is missing and could not be assessed. Previous Home Credit applications show two total applications, both approved with zero refused, but one fact raises the risk due to a high interest share of 1.0. Instalment payments cover ten installments with a late rate of 0.0, presenting no red flag and no other policy line applies. The credit card source has no record, meaning this history is missing and could not be assessed. POS and cash loans involve two contracts with zero worst days past due, presenting no red flag and no other policy line applies. The score calculation is based on past applicants with a similar external score and two other red flags who defaulted at a rate of 0.052, with an adjustment of zero steps because one fact raises the risk and one lowers it.
+The estimated risk score is 0.0233, which is low. The applicant profile shows an external score percentile of 57 and a loan to yearly income ratio of 3.9, with no red flags and two facts that lower the risk. The credit bureau source has no record, meaning this is missing history rather than a clean history. Previous Home Credit applications show a total of 4 with 2 approved and 0 refused, presenting no red flag and no other policy line applies. Instalment payments cover 22 instalments with a late rate of 0.0, showing no red flag and one fact that lowers the risk. The credit card source has no record, indicating missing history. POS and cash loans include 3 contracts with a worst days past due of 0, showing no red flag and no other policy line applies. The score calculation is based on past applicants with a similar external score and 0 other red flags who defaulted at a rate of 0.0364, adjusted by -2 steps due to 0 facts raising the risk and 3 lowering it.
+
+====================================================================================================
+NOTE 4 of 12     SK_ID_CURR 190049, run 1
+====================================================================================================
+TOOL OUTPUTS
+{
+  "get_applicant_profile": {
+    "applicant_id": 190049,
+    "contract_type": "Cash loans",
+    "credit_amount": 781920,
+    "goods_price": 675000,
+    "annuity": 47966,
+    "income_total": 355500,
+    "annuity_to_income": 0.1349,
+    "annuity_to_income_percentile": 35,
+    "credit_to_income": 2.2,
+    "credit_to_goods_price": 1.16,
+    "income_type": "State servant",
+    "education": "Secondary / secondary special",
+    "occupation": "Sales staff",
+    "organization_type": "Other",
+    "housing_type": "House / apartment",
+    "owns_car": true,
+    "owns_realty": true,
+    "years_employed": 3.759,
+    "years_since_id_change": 0.044,
+    "years_since_registration_change": 11.556,
+    "days_since_phone_change": 0,
+    "external_score_mean": 0.6637,
+    "external_score_percentile": 84,
+    "n_external_scores": 2,
+    "bureau_enquiries_last_year": 1,
+    "region_rating": 2,
+    "address_mismatch_count": 0,
+    "social_circle_defaults": 0,
+    "truncated": false
+  },
+  "get_credit_bureau_history": {
+    "applicant_id": 190049,
+    "has_record": true,
+    "bureau_n_loans": 8,
+    "bureau_n_active_loans": 1,
+    "bureau_n_closed_loans": 7,
+    "bureau_active_credit": 112500,
+    "bureau_active_debt": 84132,
+    "bureau_active_debt_to_credit": 0.7478,
+    "bureau_overdue_amount": 0,
+    "bureau_max_days_overdue_now": 0,
+    "bureau_max_overdue_amount_ever": 0,
+    "bureau_n_loans_opened_last_year": 1,
+    "bureau_days_since_last_loan_opened": 313,
+    "bureau_mean_loan_age_years": 3.5,
+    "bureau_n_prolonged": 0,
+    "bureau_months_reported": 48,
+    "bureau_months_late": 0,
+    "bureau_months_late_last_year": 0,
+    "bureau_worst_monthly_status": "never late",
+    "truncated": false
+  },
+  "get_previous_applications": {
+    "applicant_id": 190049,
+    "has_record": true,
+    "prev_n_applications": 4,
+    "prev_n_approved": 4,
+    "prev_n_refused": 0,
+    "prev_n_canceled_or_unused": 0,
+    "prev_refusal_rate": 0.0,
+    "prev_last_status": "Approved",
+    "prev_days_since_last_decision": 439,
+    "prev_n_applications_last_year": 0,
+    "prev_high_interest_share": 0.25,
+    "prev_n_duplicate_submissions": 0,
+    "truncated": false
+  },
+  "get_installment_history": {
+    "applicant_id": 190049,
+    "has_record": true,
+    "inst_n_loans": 4,
+    "inst_n_installments": 29,
+    "inst_n_unpaid": 0,
+    "inst_late_rate": 0.0345,
+    "inst_max_days_late": 8,
+    "inst_mean_days_late": 0.3,
+    "inst_mean_days_early": 20.1,
+    "inst_underpaid_rate": 0.0,
+    "inst_paid_to_due_ratio": 1.0,
+    "inst_n_installments_last_year": 4,
+    "inst_late_rate_last_year": 0.25,
+    "inst_late_rate_change": 0.2155,
+    "truncated": false
+  },
+  "get_credit_card_history": {
+    "applicant_id": 190049,
+    "has_record": false,
+    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
+    "truncated": false
+  },
+  "get_pos_cash_history": {
+    "applicant_id": 190049,
+    "has_record": true,
+    "pos_n_contracts": 4,
+    "pos_n_active_contracts": 0,
+    "pos_months_of_history": 31,
+    "pos_max_days_past_due": 0,
+    "pos_months_past_due": 0,
+    "pos_months_in_debt_demand": 0,
+    "truncated": false
+  },
+  "given_to_the_writer_by_the_system": {
+    "risk_score": 0.0389,
+    "rating": "low",
+    "score_calculation": "Past applicants with a similar external score and 3 other red flags defaulted at a rate of 0.0389. Adjustment: 0 steps (0 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0389 (the average applicant is at 0.0807). Rating: low.",
+    "policy_lines_that_apply": [
+      "Policy line RECENT_ID_CHANGE: years_since_id_change is 1.0 or less.",
+      "Policy line RECENT_PHONE_CHANGE: days_since_phone_change is 30 or less.",
+      "Policy line INST_WORSENING: inst_late_rate_change is above 0.05."
+    ],
+    "sources_with_no_record": [
+      "get_credit_card_history"
+    ],
+    "sources_not_checked": []
+  }
+}
+
+REPORT
+The estimated risk score is 0.0389, which is a low rating compared to the average applicant at 0.0807. The applicant profile shows an external score percentile of 84 and a loan to yearly income ratio of 2.2, but contains two red flags: a recent ID change of 0.044 years and a recent phone change of 0 days. The credit bureau history includes 8 loans with 1 active and an overdue amount of 0, with no red flags. Previous Home Credit applications total 4, all approved with 0 refused, and no red flags. Instalment payments cover 29 instalments with a late rate of 0.0345, but include one red flag for worsening repayment behavior with a late rate change of 0.2155. The credit card source has no record, meaning this history is missing and could not be assessed. POS and cash loans show 4 contracts with a worst days past due of 0, and no red flags. The score calculation indicates that past applicants with a similar external score and 3 other red flags defaulted at a rate of 0.0389, with no adjustment steps applied.
+
+====================================================================================================
+NOTE 5 of 12     SK_ID_CURR 164606, run 1
+====================================================================================================
+TOOL OUTPUTS
+{
+  "get_applicant_profile": {
+    "applicant_id": 164606,
+    "contract_type": "Cash loans",
+    "credit_amount": 167895,
+    "goods_price": 157500,
+    "annuity": 20052,
+    "income_total": 202500,
+    "annuity_to_income": 0.099,
+    "annuity_to_income_percentile": 18,
+    "credit_to_income": 0.83,
+    "credit_to_goods_price": 1.07,
+    "income_type": "Working",
+    "education": "Secondary / secondary special",
+    "occupation": "Cleaning staff",
+    "organization_type": "Business Entity Type 3",
+    "housing_type": "House / apartment",
+    "owns_car": false,
+    "owns_realty": true,
+    "years_employed": 0.721,
+    "years_since_id_change": 1.805,
+    "years_since_registration_change": 13.748,
+    "days_since_phone_change": 458,
+    "external_score_mean": 0.158,
+    "external_score_percentile": 2,
+    "n_external_scores": 2,
+    "bureau_enquiries_last_year": 5,
+    "region_rating": 2,
+    "address_mismatch_count": 0,
+    "social_circle_defaults": 1,
+    "truncated": false
+  },
+  "get_credit_bureau_history": {
+    "applicant_id": 164606,
+    "has_record": true,
+    "bureau_n_loans": 5,
+    "bureau_n_active_loans": 5,
+    "bureau_n_closed_loans": 0,
+    "bureau_active_credit": 1275066,
+    "bureau_active_debt": 975601,
+    "bureau_active_debt_to_credit": 0.7651,
+    "bureau_overdue_amount": 0,
+    "bureau_max_days_overdue_now": 0,
+    "bureau_max_overdue_amount_ever": 12876,
+    "bureau_n_loans_opened_last_year": 2,
+    "bureau_days_since_last_loan_opened": 212,
+    "bureau_mean_loan_age_years": 1.43,
+    "bureau_n_prolonged": 0,
+    "bureau_months_reported": 0,
+    "bureau_months_late": null,
+    "bureau_months_late_last_year": null,
+    "bureau_worst_monthly_status": null,
+    "truncated": false
+  },
+  "get_previous_applications": {
+    "applicant_id": 164606,
+    "has_record": true,
+    "prev_n_applications": 20,
+    "prev_n_approved": 2,
+    "prev_n_refused": 11,
+    "prev_n_canceled_or_unused": 7,
+    "prev_refusal_rate": 0.55,
+    "prev_last_status": "Refused",
+    "prev_days_since_last_decision": 25,
+    "prev_n_applications_last_year": 18,
+    "prev_high_interest_share": 0.5,
+    "prev_n_duplicate_submissions": 0,
+    "truncated": false
+  },
+  "get_installment_history": {
+    "applicant_id": 164606,
+    "has_record": true,
+    "inst_n_loans": 2,
+    "inst_n_installments": 37,
+    "inst_n_unpaid": 0,
+    "inst_late_rate": 0.0811,
+    "inst_max_days_late": 2,
+    "inst_mean_days_late": 0.1,
+    "inst_mean_days_early": 1.1,
+    "inst_underpaid_rate": 0.0,
+    "inst_paid_to_due_ratio": 1.3017,
+    "inst_n_installments_last_year": 34,
+    "inst_late_rate_last_year": 0.0882,
+    "inst_late_rate_change": 0.0072,
+    "truncated": false
+  },
+  "get_credit_card_history": {
+    "applicant_id": 164606,
+    "has_record": true,
+    "card_n_cards": 1,
+    "card_months_of_history": 9,
+    "card_latest_balance": 343230,
+    "card_latest_limit": 337500,
+    "card_latest_utilisation": 1.017,
+    "card_mean_utilisation": 1.0343,
+    "card_months_below_min_payment": 0,
+    "card_cash_share_of_drawings": 0.9009,
+    "card_atm_withdrawals_per_month": 1.78,
+    "card_max_days_past_due": 0,
+    "card_months_past_due": 0,
+    "truncated": false
+  },
+  "get_pos_cash_history": {
+    "applicant_id": 164606,
+    "has_record": true,
+    "pos_n_contracts": 1,
+    "pos_n_active_contracts": 1,
+    "pos_months_of_history": 15,
+    "pos_max_days_past_due": 0,
+    "pos_months_past_due": 0,
+    "pos_months_in_debt_demand": 0,
+    "truncated": false
+  },
+  "given_to_the_writer_by_the_system": {
+    "risk_score": 0.3816,
+    "rating": "high",
+    "score_calculation": "Past applicants with a similar external score and 6 other red flags defaulted at a rate of 0.3816. Adjustment: 0 steps (1 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.3816 (the average applicant is at 0.0807). Rating: high.",
+    "policy_lines_that_apply": [
+      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
+      "Policy line SHORT_EMPLOYMENT: years_employed is below 1.0.",
+      "Policy line PREV_HIGH_REFUSAL: prev_refusal_rate is 0.50 or more.",
+      "Policy line PREV_LAST_REFUSED: prev_last_status is \"Refused\".",
+      "Policy line PREV_HIGH_FREQUENCY: prev_n_applications_last_year is 7 or more.",
+      "Policy line CC_HIGH_UTILISATION: card_latest_utilisation is 0.90 or more.",
+      "Policy line CC_CASH_RELIANCE: card_cash_share_of_drawings is 0.50 or more.",
+      "Policy line RAISE_CARD_CASH_WITHDRAWALS: card_atm_withdrawals_per_month is 1.0 or more.",
+      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
+    ],
+    "sources_with_no_record": [],
+    "sources_not_checked": []
+  }
+}
+
+REPORT
+The estimated risk score is 0.3816, which is high. The applicant profile shows a low external score percentile of 2 and a loan to yearly income ratio of 0.83, with concerns including two red flags and one fact that lowers the risk. The credit bureau history shows five loans on file, all active, with an overdue amount of 0, and no red flags or other policy lines apply. Previous Home Credit applications reveal a total of 20 applications, with 2 approved and 11 refused, raising concerns due to three red flags. Instalment payments cover 37 instalments with a late rate of 0.0811, and no red flags or other policy lines apply. The credit card history spans 9 months with a latest utilisation of 1.017, presenting concerns with two red flags and one fact that raises the risk. POS and cash loans include one contract with a worst days past due of 0, and no red flags or other policy lines apply.
+
+====================================================================================================
+NOTE 6 of 12     SK_ID_CURR 450572, run 1
+====================================================================================================
+TOOL OUTPUTS
+{
+  "get_applicant_profile": {
+    "applicant_id": 450572,
+    "contract_type": "Cash loans",
+    "credit_amount": 835744,
+    "goods_price": 747000,
+    "annuity": 35541,
+    "income_total": 180000,
+    "annuity_to_income": 0.1974,
+    "annuity_to_income_percentile": 65,
+    "credit_to_income": 4.64,
+    "credit_to_goods_price": 1.12,
+    "income_type": "Working",
+    "education": "Secondary / secondary special",
+    "occupation": "High skill tech staff",
+    "organization_type": "Other",
+    "housing_type": "House / apartment",
+    "owns_car": true,
+    "owns_realty": false,
+    "years_employed": 0.296,
+    "years_since_id_change": 6.351,
+    "years_since_registration_change": 23.26,
+    "days_since_phone_change": 884,
+    "external_score_mean": 0.5713,
+    "external_score_percentile": 62,
+    "n_external_scores": 3,
+    "bureau_enquiries_last_year": 0,
+    "region_rating": 1,
+    "address_mismatch_count": 0,
+    "social_circle_defaults": 0,
+    "truncated": false
+  },
+  "get_credit_bureau_history": {
+    "applicant_id": 450572,
+    "has_record": true,
+    "bureau_n_loans": 3,
+    "bureau_n_active_loans": 3,
+    "bureau_n_closed_loans": 0,
+    "bureau_active_credit": 958500,
+    "bureau_active_debt": 659250,
+    "bureau_active_debt_to_credit": 0.6878,
+    "bureau_overdue_amount": 0,
+    "bureau_max_days_overdue_now": 0,
+    "bureau_max_overdue_amount_ever": null,
+    "bureau_n_loans_opened_last_year": 0,
+    "bureau_days_since_last_loan_opened": 433,
+    "bureau_mean_loan_age_years": 1.78,
+    "bureau_n_prolonged": 0,
+    "bureau_months_reported": 33,
+    "bureau_months_late": 0,
+    "bureau_months_late_last_year": 0,
+    "bureau_worst_monthly_status": "never late",
+    "truncated": false
+  },
+  "get_previous_applications": {
+    "applicant_id": 450572,
+    "has_record": true,
+    "prev_n_applications": 1,
+    "prev_n_approved": 1,
+    "prev_n_refused": 0,
+    "prev_n_canceled_or_unused": 0,
+    "prev_refusal_rate": 0.0,
+    "prev_last_status": "Approved",
+    "prev_days_since_last_decision": 884,
+    "prev_n_applications_last_year": 0,
+    "prev_high_interest_share": 1.0,
+    "prev_n_duplicate_submissions": 0,
+    "truncated": false
+  },
+  "get_installment_history": {
+    "applicant_id": 450572,
+    "has_record": true,
+    "inst_n_loans": 1,
+    "inst_n_installments": 5,
+    "inst_n_unpaid": 0,
+    "inst_late_rate": 0.0,
+    "inst_max_days_late": 0,
+    "inst_mean_days_late": 0.0,
+    "inst_mean_days_early": 14.2,
+    "inst_underpaid_rate": 0.0,
+    "inst_paid_to_due_ratio": 1.0,
+    "inst_n_installments_last_year": 0,
+    "inst_late_rate_last_year": null,
+    "inst_late_rate_change": null,
+    "truncated": false
+  },
+  "get_credit_card_history": {
+    "applicant_id": 450572,
+    "has_record": false,
+    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
+    "truncated": false
+  },
+  "get_pos_cash_history": {
+    "applicant_id": 450572,
+    "has_record": true,
+    "pos_n_contracts": 1,
+    "pos_n_active_contracts": 0,
+    "pos_months_of_history": 6,
+    "pos_max_days_past_due": 0,
+    "pos_months_past_due": 0,
+    "pos_months_in_debt_demand": 0,
+    "truncated": false
+  },
+  "given_to_the_writer_by_the_system": {
+    "risk_score": 0.0455,
+    "rating": "low",
+    "score_calculation": "Past applicants with a similar external score and 1 other red flags defaulted at a rate of 0.0364. Adjustment: 1 steps (1 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0455 (the average applicant is at 0.0807). Rating: low.",
+    "policy_lines_that_apply": [
+      "Policy line SHORT_EMPLOYMENT: years_employed is below 1.0.",
+      "Policy line RAISE_HIGH_INTEREST_LOANS: prev_high_interest_share is 0.75 or more."
+    ],
+    "sources_with_no_record": [
+      "get_credit_card_history"
+    ],
+    "sources_not_checked": []
+  }
+}
+
+REPORT
+The estimated risk score is 0.0455, which is a low rating. The applicant profile shows an external score percentile of 62 and a loan to yearly income ratio of 4.64, with one red flag for short employment where years employed is 0.296. The credit bureau history includes three active loans with zero overdue amount and no red flags. Previous Home Credit applications show one approved loan and zero refused, but one fact raises risk as the high interest share is 1.0. Instalment payments cover five instalments with a late rate of 0.0 and no red flags. The credit card source has no record, meaning this history is missing and could not be assessed. POS and cash loans involve one contract with zero worst days past due and no red flags. The score calculation indicates that past applicants with a similar external score and one other red flag defaulted at a rate of 0.0364, with an adjustment of one step resulting in the estimated risk score of 0.0455.
+
+====================================================================================================
+NOTE 7 of 12     SK_ID_CURR 223695, run 1
+====================================================================================================
+TOOL OUTPUTS
+{
+  "get_applicant_profile": {
+    "applicant_id": 223695,
+    "contract_type": "Cash loans",
+    "credit_amount": 148365,
+    "goods_price": 135000,
+    "annuity": 13738,
+    "income_total": 90000,
+    "annuity_to_income": 0.1526,
+    "annuity_to_income_percentile": 45,
+    "credit_to_income": 1.65,
+    "credit_to_goods_price": 1.1,
+    "income_type": "Working",
+    "education": "Incomplete higher",
+    "occupation": "High skill tech staff",
+    "organization_type": "Business Entity Type 2",
+    "housing_type": "House / apartment",
+    "owns_car": false,
+    "owns_realty": true,
+    "years_employed": 3.937,
+    "years_since_id_change": 2.268,
+    "years_since_registration_change": 12.258,
+    "days_since_phone_change": 445,
+    "external_score_mean": 0.4989,
+    "external_score_percentile": 44,
+    "n_external_scores": 2,
+    "bureau_enquiries_last_year": 1,
+    "region_rating": 2,
+    "address_mismatch_count": 0,
+    "social_circle_defaults": 0,
+    "truncated": false
+  },
+  "get_credit_bureau_history": {
+    "applicant_id": 223695,
+    "has_record": true,
+    "bureau_n_loans": 6,
+    "bureau_n_active_loans": 2,
+    "bureau_n_closed_loans": 4,
+    "bureau_active_credit": 157500,
+    "bureau_active_debt": 105800,
+    "bureau_active_debt_to_credit": 0.6717,
+    "bureau_overdue_amount": 0,
+    "bureau_max_days_overdue_now": 0,
+    "bureau_max_overdue_amount_ever": 6895,
+    "bureau_n_loans_opened_last_year": 1,
+    "bureau_days_since_last_loan_opened": 69,
+    "bureau_mean_loan_age_years": 2.06,
+    "bureau_n_prolonged": 0,
+    "bureau_months_reported": 12,
+    "bureau_months_late": 0,
+    "bureau_months_late_last_year": 0,
+    "bureau_worst_monthly_status": "never late",
+    "truncated": false
+  },
+  "get_previous_applications": {
+    "applicant_id": 223695,
+    "has_record": true,
+    "prev_n_applications": 2,
+    "prev_n_approved": 1,
+    "prev_n_refused": 1,
+    "prev_n_canceled_or_unused": 0,
+    "prev_refusal_rate": 0.5,
+    "prev_last_status": "Refused",
+    "prev_days_since_last_decision": 445,
+    "prev_n_applications_last_year": 0,
+    "prev_high_interest_share": 0.0,
+    "prev_n_duplicate_submissions": 0,
+    "truncated": false
+  },
+  "get_installment_history": {
+    "applicant_id": 223695,
+    "has_record": true,
+    "inst_n_loans": 1,
+    "inst_n_installments": 12,
+    "inst_n_unpaid": 0,
+    "inst_late_rate": 0.4167,
+    "inst_max_days_late": 9,
+    "inst_mean_days_late": 2.3,
+    "inst_mean_days_early": 2.6,
+    "inst_underpaid_rate": 0.0,
+    "inst_paid_to_due_ratio": 1.0,
+    "inst_n_installments_last_year": 10,
+    "inst_late_rate_last_year": 0.5,
+    "inst_late_rate_change": 0.0833,
+    "truncated": false
+  },
+  "get_credit_card_history": {
+    "applicant_id": 223695,
+    "has_record": false,
+    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
+    "truncated": false
+  },
+  "get_pos_cash_history": {
+    "applicant_id": 223695,
+    "has_record": true,
+    "pos_n_contracts": 1,
+    "pos_n_active_contracts": 0,
+    "pos_months_of_history": 13,
+    "pos_max_days_past_due": 0,
+    "pos_months_past_due": 0,
+    "pos_months_in_debt_demand": 0,
+    "truncated": false
+  },
+  "given_to_the_writer_by_the_system": {
+    "risk_score": 0.0955,
+    "rating": "medium",
+    "score_calculation": "Past applicants with a similar external score and 4 other red flags defaulted at a rate of 0.1194. Adjustment: -1 steps (0 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0955 (the average applicant is at 0.0807). Rating: medium.",
+    "policy_lines_that_apply": [
+      "Policy line PREV_HIGH_REFUSAL: prev_refusal_rate is 0.50 or more.",
+      "Policy line PREV_LAST_REFUSED: prev_last_status is \"Refused\".",
+      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
+      "Policy line INST_WORSENING: inst_late_rate_change is above 0.05.",
+      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
+    ],
+    "sources_with_no_record": [
+      "get_credit_card_history"
+    ],
+    "sources_not_checked": []
+  }
+}
+
+REPORT
+Estimated risk score is 0.0955, rating: medium. Applicant profile shows an external score percentile of 44 and loan to yearly income of 1.65, with one fact lowering risk as the loan to goods price is 1.10 or less. Credit bureau history holds 6 loans with 2 active and an overdue amount of 0, presenting no red flag. Previous Home Credit applications total 2 with 1 approved and 1 refused, raising two red flags for a refusal rate of 0.50 or more and a last status of Refused. Instalment payments cover 12 instalments with a late rate of 0.4167, raising two red flags for frequent late payments and worsening trends. Credit card history is missing as there is no record. POS and cash loans include 1 contract with worst days past due of 0, showing no red flag. The score calculation indicates past applicants with a similar external score and 4 other red flags defaulted at a rate of 0.1194, adjusted by -1 step due to one fact lowering risk, resulting in an estimated risk score of 0.0955.
+
+====================================================================================================
+NOTE 8 of 12     SK_ID_CURR 426511, run 1
+====================================================================================================
+TOOL OUTPUTS
+{
+  "get_applicant_profile": {
+    "applicant_id": 426511,
+    "contract_type": "Cash loans",
+    "credit_amount": 521280,
+    "goods_price": 450000,
+    "annuity": 35392,
+    "income_total": 144000,
+    "annuity_to_income": 0.2458,
+    "annuity_to_income_percentile": 80,
+    "credit_to_income": 3.62,
+    "credit_to_goods_price": 1.16,
+    "income_type": "Working",
+    "education": "Secondary / secondary special",
+    "occupation": "Laborers",
+    "organization_type": "Industry: type 2",
+    "housing_type": "House / apartment",
+    "owns_car": false,
+    "owns_realty": true,
+    "years_employed": 6.693,
+    "years_since_id_change": 1.529,
+    "years_since_registration_change": 7.414,
+    "days_since_phone_change": 33,
+    "external_score_mean": 0.3141,
+    "external_score_percentile": 11,
+    "n_external_scores": 2,
+    "bureau_enquiries_last_year": 1,
+    "region_rating": 2,
+    "address_mismatch_count": 0,
+    "social_circle_defaults": 0,
+    "truncated": false
+  },
+  "get_credit_bureau_history": {
+    "applicant_id": 426511,
+    "has_record": true,
+    "bureau_n_loans": 1,
+    "bureau_n_active_loans": 1,
+    "bureau_n_closed_loans": 0,
+    "bureau_active_credit": 33066,
+    "bureau_active_debt": 33066,
+    "bureau_active_debt_to_credit": 1.0,
+    "bureau_overdue_amount": 0,
+    "bureau_max_days_overdue_now": 0,
+    "bureau_max_overdue_amount_ever": null,
+    "bureau_n_loans_opened_last_year": 1,
+    "bureau_days_since_last_loan_opened": 33,
+    "bureau_mean_loan_age_years": 0.09,
+    "bureau_n_prolonged": 0,
+    "bureau_months_reported": 0,
+    "bureau_months_late": null,
+    "bureau_months_late_last_year": null,
+    "bureau_worst_monthly_status": null,
+    "truncated": false
+  },
+  "get_previous_applications": {
+    "applicant_id": 426511,
+    "has_record": true,
+    "prev_n_applications": 3,
+    "prev_n_approved": 1,
+    "prev_n_refused": 2,
+    "prev_n_canceled_or_unused": 0,
+    "prev_refusal_rate": 0.6667,
+    "prev_last_status": "Refused",
+    "prev_days_since_last_decision": 296,
+    "prev_n_applications_last_year": 1,
+    "prev_high_interest_share": 0.0,
+    "prev_n_duplicate_submissions": 0,
+    "truncated": false
+  },
+  "get_installment_history": {
+    "applicant_id": 426511,
+    "has_record": true,
+    "inst_n_loans": 1,
+    "inst_n_installments": 19,
+    "inst_n_unpaid": 0,
+    "inst_late_rate": 0.7895,
+    "inst_max_days_late": 99,
+    "inst_mean_days_late": 23.7,
+    "inst_mean_days_early": 1.4,
+    "inst_underpaid_rate": 0.0,
+    "inst_paid_to_due_ratio": 1.0,
+    "inst_n_installments_last_year": 6,
+    "inst_late_rate_last_year": 1.0,
+    "inst_late_rate_change": 0.2105,
+    "truncated": false
+  },
+  "get_credit_card_history": {
+    "applicant_id": 426511,
+    "has_record": false,
+    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
+    "truncated": false
+  },
+  "get_pos_cash_history": {
+    "applicant_id": 426511,
+    "has_record": true,
+    "pos_n_contracts": 1,
+    "pos_n_active_contracts": 0,
+    "pos_months_of_history": 14,
+    "pos_max_days_past_due": 14,
+    "pos_months_past_due": 5,
+    "pos_months_in_debt_demand": 0,
+    "truncated": false
+  },
+  "given_to_the_writer_by_the_system": {
+    "risk_score": 0.2666,
+    "rating": "high",
+    "score_calculation": "Past applicants with a similar external score and 6 other red flags defaulted at a rate of 0.2133. Adjustment: 1 steps (1 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.2666 (the average applicant is at 0.0807). Rating: high.",
+    "policy_lines_that_apply": [
+      "Policy line BUREAU_HIGH_UTILISATION: bureau_active_debt_to_credit is 0.80 or more.",
+      "Policy line PREV_HIGH_REFUSAL: prev_refusal_rate is 0.50 or more.",
+      "Policy line PREV_LAST_REFUSED: prev_last_status is \"Refused\".",
+      "Policy line INST_FREQUENT_LATE: inst_late_rate is 0.10 or more.",
+      "Policy line INST_SEVERE_LATE: inst_max_days_late is 30 or more.",
+      "Policy line INST_WORSENING: inst_late_rate_change is above 0.05.",
+      "Policy line RAISE_YOUNG_BUREAU_LOANS: bureau_mean_loan_age_years is below 1.0."
+    ],
+    "sources_with_no_record": [
+      "get_credit_card_history"
+    ],
+    "sources_not_checked": []
+  }
+}
+
+REPORT
+The estimated risk score is 0.2666, which is high. The applicant profile shows an external score percentile of 11 and a loan to yearly income ratio of 3.62, with no red flags. The credit bureau history reveals one red flag for high utilization of 1.0 and one fact raising risk due to young bureau loans averaging 0.09 years. Previous Home Credit applications show two red flags: a high refusal rate of 0.6667 and a last status of Refused. Instalment payments present three red flags: a late rate of 0.7895, severe lateness of 99 days, and worsening trends with a change of 0.2105. Credit card history is missing as there is no record. POS and cash loans show no red flags with 14 worst days past due. The score calculation indicates that past applicants with a similar external score and 6 other red flags defaulted at a rate of 0.2133, adjusted by one step for one fact raising the risk, resulting in the estimated risk score of 0.2666.
+
+====================================================================================================
+NOTE 9 of 12     SK_ID_CURR 409582, run 1
+====================================================================================================
+TOOL OUTPUTS
+{
+  "get_applicant_profile": {
+    "applicant_id": 409582,
+    "contract_type": "Cash loans",
+    "credit_amount": 521280,
+    "goods_price": 450000,
+    "annuity": 28278,
+    "income_total": 67500,
+    "annuity_to_income": 0.4189,
+    "annuity_to_income_percentile": 98,
+    "credit_to_income": 7.72,
+    "credit_to_goods_price": 1.16,
+    "income_type": "State servant",
+    "education": "Secondary / secondary special",
+    "occupation": "Cooking staff",
+    "organization_type": "School",
+    "housing_type": "House / apartment",
+    "owns_car": false,
+    "owns_realty": false,
+    "years_employed": 3.31,
+    "years_since_id_change": 8.455,
+    "years_since_registration_change": 11.553,
+    "days_since_phone_change": 516,
+    "external_score_mean": 0.0101,
+    "external_score_percentile": 0,
+    "n_external_scores": 1,
+    "bureau_enquiries_last_year": null,
+    "region_rating": 3,
+    "address_mismatch_count": 0,
+    "social_circle_defaults": 0,
+    "truncated": false
+  },
+  "get_credit_bureau_history": {
+    "applicant_id": 409582,
+    "has_record": false,
+    "note": "No credit bureau loans at other lenders on file. This is missing history, not a clean history.",
+    "truncated": false
+  },
+  "get_previous_applications": {
+    "applicant_id": 409582,
+    "has_record": true,
+    "prev_n_applications": 3,
+    "prev_n_approved": 1,
+    "prev_n_refused": 1,
+    "prev_n_canceled_or_unused": 1,
+    "prev_refusal_rate": 0.3333,
+    "prev_last_status": "Canceled",
+    "prev_days_since_last_decision": 250,
+    "prev_n_applications_last_year": 1,
+    "prev_high_interest_share": 0.0,
+    "prev_n_duplicate_submissions": 0,
+    "truncated": false
+  },
+  "get_installment_history": {
+    "applicant_id": 409582,
+    "has_record": true,
+    "inst_n_loans": 1,
+    "inst_n_installments": 12,
+    "inst_n_unpaid": 0,
+    "inst_late_rate": 0.0,
+    "inst_max_days_late": 0,
+    "inst_mean_days_late": 0.0,
+    "inst_mean_days_early": 11.4,
+    "inst_underpaid_rate": 0.0,
+    "inst_paid_to_due_ratio": 1.0,
+    "inst_n_installments_last_year": 8,
+    "inst_late_rate_last_year": 0.0,
+    "inst_late_rate_change": 0.0,
+    "truncated": false
+  },
+  "get_credit_card_history": {
+    "applicant_id": 409582,
+    "has_record": false,
+    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
+    "truncated": false
+  },
+  "get_pos_cash_history": {
+    "applicant_id": 409582,
+    "has_record": true,
+    "pos_n_contracts": 1,
+    "pos_n_active_contracts": 0,
+    "pos_months_of_history": 13,
+    "pos_max_days_past_due": 0,
+    "pos_months_past_due": 0,
+    "pos_months_in_debt_demand": 0,
+    "truncated": false
+  },
+  "given_to_the_writer_by_the_system": {
+    "risk_score": 0.2199,
+    "rating": "high",
+    "score_calculation": "Past applicants with a similar external score and 1 other red flags defaulted at a rate of 0.2199. Adjustment: 0 steps (0 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.2199 (the average applicant is at 0.0807). Rating: high.",
+    "policy_lines_that_apply": [
+      "Policy line HIGH_ANNUITY_TO_INCOME: annuity_to_income is 0.3540 or more (the top 5% of past applicants).",
+      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants)."
+    ],
+    "sources_with_no_record": [
+      "get_credit_bureau_history",
+      "get_credit_card_history"
+    ],
+    "sources_not_checked": []
+  }
+}
+
+REPORT
+Estimated risk score: 0.2199. Rating: high. Applicant profile shows two red flags: annuity to income is 0.4189, exceeding the 0.3540 threshold, and external score mean is 0.0101, below the 0.3044 limit, with an external score percentile of 0 and loan to yearly income of 7.72. Credit bureau history is missing as there is no record. Previous Home Credit applications include 3 total, 1 approved, and 1 refused, with no red flag. Instalment payments show 12 instalments with a late rate of 0.0, with no red flag. Credit card history is missing as there is no record. POS and cash loans show 1 contract with worst days past due of 0, with no red flag. Past applicants with a similar external score and 1 other red flag defaulted at a rate of 0.2199. Adjustment: 0 steps.
+
+====================================================================================================
+NOTE 10 of 12     SK_ID_CURR 151820, run 1
+====================================================================================================
+TOOL OUTPUTS
+{
+  "get_applicant_profile": {
+    "applicant_id": 151820,
+    "contract_type": "Cash loans",
+    "credit_amount": 808650,
+    "goods_price": 675000,
+    "annuity": 29709,
+    "income_total": 225000,
+    "annuity_to_income": 0.132,
+    "annuity_to_income_percentile": 34,
+    "credit_to_income": 3.59,
+    "credit_to_goods_price": 1.2,
+    "income_type": "Commercial associate",
+    "education": "Secondary / secondary special",
+    "occupation": "Laborers",
+    "organization_type": "Business Entity Type 2",
+    "housing_type": "House / apartment",
+    "owns_car": false,
+    "owns_realty": false,
+    "years_employed": 5.775,
+    "years_since_id_change": 7.847,
+    "years_since_registration_change": 24.03,
+    "days_since_phone_change": 697,
+    "external_score_mean": 0.0947,
+    "external_score_percentile": 1,
+    "n_external_scores": 2,
+    "bureau_enquiries_last_year": 3,
+    "region_rating": 1,
+    "address_mismatch_count": 0,
+    "social_circle_defaults": 0,
+    "truncated": false
+  },
+  "get_credit_bureau_history": {
+    "applicant_id": 151820,
+    "has_record": true,
+    "bureau_n_loans": 14,
+    "bureau_n_active_loans": 6,
+    "bureau_n_closed_loans": 8,
+    "bureau_active_credit": 1718960,
+    "bureau_active_debt": 1442961,
+    "bureau_active_debt_to_credit": 0.8394,
+    "bureau_overdue_amount": 0,
+    "bureau_max_days_overdue_now": 0,
+    "bureau_max_overdue_amount_ever": 5130,
+    "bureau_n_loans_opened_last_year": 5,
+    "bureau_days_since_last_loan_opened": 235,
+    "bureau_mean_loan_age_years": 3.3,
+    "bureau_n_prolonged": 0,
+    "bureau_months_reported": 0,
+    "bureau_months_late": null,
+    "bureau_months_late_last_year": null,
+    "bureau_worst_monthly_status": null,
+    "truncated": false
+  },
+  "get_previous_applications": {
+    "applicant_id": 151820,
+    "has_record": true,
+    "prev_n_applications": 6,
+    "prev_n_approved": 3,
+    "prev_n_refused": 1,
+    "prev_n_canceled_or_unused": 2,
+    "prev_refusal_rate": 0.1667,
+    "prev_last_status": "Canceled",
+    "prev_days_since_last_decision": 111,
+    "prev_n_applications_last_year": 2,
+    "prev_high_interest_share": 0.0,
+    "prev_n_duplicate_submissions": 0,
+    "truncated": false
+  },
+  "get_installment_history": {
+    "applicant_id": 151820,
+    "has_record": true,
+    "inst_n_loans": 3,
+    "inst_n_installments": 59,
+    "inst_n_unpaid": 0,
+    "inst_late_rate": 0.0169,
+    "inst_max_days_late": 2,
+    "inst_mean_days_late": 0.0,
+    "inst_mean_days_early": 7.6,
+    "inst_underpaid_rate": 0.0,
+    "inst_paid_to_due_ratio": 1.0553,
+    "inst_n_installments_last_year": 35,
+    "inst_late_rate_last_year": 0.0286,
+    "inst_late_rate_change": 0.0116,
+    "truncated": false
+  },
+  "get_credit_card_history": {
+    "applicant_id": 151820,
+    "has_record": true,
+    "card_n_cards": 1,
+    "card_months_of_history": 16,
+    "card_latest_balance": 0,
+    "card_latest_limit": 0,
+    "card_latest_utilisation": null,
+    "card_mean_utilisation": 0.7677,
+    "card_months_below_min_payment": 5,
+    "card_cash_share_of_drawings": 0.1279,
+    "card_atm_withdrawals_per_month": 0.44,
+    "card_max_days_past_due": 0,
+    "card_months_past_due": 0,
+    "truncated": false
+  },
+  "get_pos_cash_history": {
+    "applicant_id": 151820,
+    "has_record": true,
+    "pos_n_contracts": 2,
+    "pos_n_active_contracts": 0,
+    "pos_months_of_history": 21,
+    "pos_max_days_past_due": 0,
+    "pos_months_past_due": 0,
+    "pos_months_in_debt_demand": 0,
+    "truncated": false
+  },
+  "given_to_the_writer_by_the_system": {
+    "risk_score": 0.4066,
+    "rating": "high",
+    "score_calculation": "Past applicants with a similar external score and 2 other red flags defaulted at a rate of 0.2602. Adjustment: 2 steps (2 facts raise the risk, 0 lower it; one step changes the rate by a quarter). Estimated risk score: 0.4066 (the average applicant is at 0.0807). Rating: high.",
+    "policy_lines_that_apply": [
+      "Policy line LOW_EXT_SCORE: external_score_mean is 0.3044 or less (the bottom 10% of past applicants).",
+      "Policy line BUREAU_HIGH_UTILISATION: bureau_active_debt_to_credit is 0.80 or more.",
+      "Policy line CC_BELOW_MIN_PAYMENT: card_months_below_min_payment is 3 or more.",
+      "Policy line RAISE_LOAN_ABOVE_GOODS_PRICE: credit_to_goods_price is 1.20 or more.",
+      "Policy line RAISE_MANY_NEW_BUREAU_LOANS: bureau_n_loans_opened_last_year is 4 or more."
+    ],
+    "sources_with_no_record": [],
+    "sources_not_checked": []
+  }
+}
+
+REPORT
+The estimated risk score is 0.4066, which is high. The applicant profile shows a very low external score percentile of 1 and a loan to yearly income ratio of 3.59, with one red flag and one fact that raises the risk. The credit bureau history includes 14 loans on file with 6 active and an overdue amount of 0, but presents one red flag and one fact that raises the risk. Previous Home Credit applications total 6 with 3 approved and 1 refused, showing no red flag and no other policy line applies. Instalment payments cover 59 instalments with a late rate of 0.0169, where no red flag applies and no other policy line applies. The credit card history spans 16 months of history with latest utilisation not on file, containing one red flag. POS and cash loans involve 2 contracts with a worst days past due of 0, where no red flag applies and no other policy line applies. The score calculation indicates that past applicants with a similar external score and 2 other red flags defaulted at a rate of 0.2602, with an adjustment of 2 steps resulting in the estimated risk score of 0.4066.
+
+====================================================================================================
+NOTE 11 of 12     SK_ID_CURR 204643, run 1
+====================================================================================================
+TOOL OUTPUTS
+{
+  "get_applicant_profile": {
+    "applicant_id": 204643,
+    "contract_type": "Cash loans",
+    "credit_amount": 988191,
+    "goods_price": 909000,
+    "annuity": 39321,
+    "income_total": 180000,
+    "annuity_to_income": 0.2184,
+    "annuity_to_income_percentile": 72,
+    "credit_to_income": 5.49,
+    "credit_to_goods_price": 1.09,
+    "income_type": "State servant",
+    "education": "Higher education",
+    "occupation": "Core staff",
+    "organization_type": "School",
+    "housing_type": "House / apartment",
+    "owns_car": false,
+    "owns_realty": true,
+    "years_employed": 26.948,
+    "years_since_id_change": 3.641,
+    "years_since_registration_change": 27.233,
+    "days_since_phone_change": 1305,
+    "external_score_mean": 0.6923,
+    "external_score_percentile": 90,
+    "n_external_scores": 3,
+    "bureau_enquiries_last_year": 2,
+    "region_rating": 3,
+    "address_mismatch_count": 2,
+    "social_circle_defaults": 0,
+    "truncated": false
+  },
+  "get_credit_bureau_history": {
+    "applicant_id": 204643,
+    "has_record": true,
+    "bureau_n_loans": 11,
+    "bureau_n_active_loans": 4,
+    "bureau_n_closed_loans": 7,
+    "bureau_active_credit": 2164500,
+    "bureau_active_debt": 1664518,
+    "bureau_active_debt_to_credit": 0.769,
+    "bureau_overdue_amount": 0,
+    "bureau_max_days_overdue_now": 0,
+    "bureau_max_overdue_amount_ever": 0,
+    "bureau_n_loans_opened_last_year": 1,
+    "bureau_days_since_last_loan_opened": 194,
+    "bureau_mean_loan_age_years": 3.22,
+    "bureau_n_prolonged": 0,
+    "bureau_months_reported": 0,
+    "bureau_months_late": null,
+    "bureau_months_late_last_year": null,
+    "bureau_worst_monthly_status": null,
+    "truncated": false
+  },
+  "get_previous_applications": {
+    "applicant_id": 204643,
+    "has_record": true,
+    "prev_n_applications": 4,
+    "prev_n_approved": 3,
+    "prev_n_refused": 1,
+    "prev_n_canceled_or_unused": 0,
+    "prev_refusal_rate": 0.25,
+    "prev_last_status": "Approved",
+    "prev_days_since_last_decision": 318,
+    "prev_n_applications_last_year": 1,
+    "prev_high_interest_share": 0.0,
+    "prev_n_duplicate_submissions": 0,
+    "truncated": false
+  },
+  "get_installment_history": {
+    "applicant_id": 204643,
+    "has_record": true,
+    "inst_n_loans": 3,
+    "inst_n_installments": 28,
+    "inst_n_unpaid": 0,
+    "inst_late_rate": 0.0714,
+    "inst_max_days_late": 10,
+    "inst_mean_days_late": 0.4,
+    "inst_mean_days_early": 8.7,
+    "inst_underpaid_rate": 0.0,
+    "inst_paid_to_due_ratio": 1.0,
+    "inst_n_installments_last_year": 10,
+    "inst_late_rate_last_year": 0.0,
+    "inst_late_rate_change": -0.0714,
+    "truncated": false
+  },
+  "get_credit_card_history": {
+    "applicant_id": 204643,
+    "has_record": false,
+    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
+    "truncated": false
+  },
+  "get_pos_cash_history": {
+    "applicant_id": 204643,
+    "has_record": true,
+    "pos_n_contracts": 3,
+    "pos_n_active_contracts": 1,
+    "pos_months_of_history": 30,
+    "pos_max_days_past_due": 0,
+    "pos_months_past_due": 0,
+    "pos_months_in_debt_demand": 0,
+    "truncated": false
+  },
+  "given_to_the_writer_by_the_system": {
+    "risk_score": 0.0142,
+    "rating": "low",
+    "score_calculation": "Past applicants with a similar external score and 0 other red flags defaulted at a rate of 0.0222. Adjustment: -2 steps (0 facts raise the risk, 3 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0142 (the average applicant is at 0.0807). Rating: low.",
+    "policy_lines_that_apply": [
+      "Policy line LOWER_HIGHER_EDUCATION: education is \"Higher education\" or \"Academic degree\".",
+      "Policy line LOWER_LONG_EMPLOYMENT: years_employed is 10.0 or more.",
+      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
+    ],
+    "sources_with_no_record": [
+      "get_credit_card_history"
+    ],
+    "sources_not_checked": []
+  }
+}
+
+REPORT
+The estimated risk score is 0.0142, which is a low rating. The applicant profile shows a high external score percentile of 90 and a loan to yearly income ratio of 5.49, with no red flags and three facts that lower the risk: higher education, long employment of 26.948 years, and a loan to goods price ratio of 1.09. The credit bureau history includes 11 loans with 4 active and an overdue amount of 0, presenting no red flags or other policy concerns. Previous Home Credit applications total 4 with 3 approved and 1 refused, showing no red flags or other policy concerns. Instalment payments cover 28 instalments with a late rate of 0.0714, presenting no red flags or other policy concerns. The credit card source has no record, meaning this history is missing and could not be assessed. POS and cash loans include 3 contracts with a worst days past due of 0, presenting no red flags or other policy concerns. The score calculation indicates that past applicants with a similar external score and 0 other red flags defaulted at a rate of 0.0222, adjusted by -2 steps due to 0 facts raising the risk and 3 lowering it, resulting in the estimated risk score of 0.0142.
+
+====================================================================================================
+NOTE 12 of 12     SK_ID_CURR 357825, run 1
+====================================================================================================
+TOOL OUTPUTS
+{
+  "get_applicant_profile": {
+    "applicant_id": 357825,
+    "contract_type": "Revolving loans",
+    "credit_amount": 270000,
+    "goods_price": 270000,
+    "annuity": 13500,
+    "income_total": 360000,
+    "annuity_to_income": 0.0375,
+    "annuity_to_income_percentile": 1,
+    "credit_to_income": 0.75,
+    "credit_to_goods_price": 1.0,
+    "income_type": "Working",
+    "education": "Secondary / secondary special",
+    "occupation": "Laborers",
+    "organization_type": "Business Entity Type 2",
+    "housing_type": "House / apartment",
+    "owns_car": true,
+    "owns_realty": true,
+    "years_employed": 3.367,
+    "years_since_id_change": 12.471,
+    "years_since_registration_change": 17.342,
+    "days_since_phone_change": 3118,
+    "external_score_mean": 0.5118,
+    "external_score_percentile": 47,
+    "n_external_scores": 2,
+    "bureau_enquiries_last_year": 1,
+    "region_rating": 1,
+    "address_mismatch_count": 2,
+    "social_circle_defaults": 1,
+    "truncated": false
+  },
+  "get_credit_bureau_history": {
+    "applicant_id": 357825,
+    "has_record": true,
+    "bureau_n_loans": 5,
+    "bureau_n_active_loans": 4,
+    "bureau_n_closed_loans": 1,
+    "bureau_active_credit": 1610550,
+    "bureau_active_debt": 1043496,
+    "bureau_active_debt_to_credit": 0.6479,
+    "bureau_overdue_amount": 0,
+    "bureau_max_days_overdue_now": 0,
+    "bureau_max_overdue_amount_ever": null,
+    "bureau_n_loans_opened_last_year": 1,
+    "bureau_days_since_last_loan_opened": 138,
+    "bureau_mean_loan_age_years": 3.17,
+    "bureau_n_prolonged": 0,
+    "bureau_months_reported": 0,
+    "bureau_months_late": null,
+    "bureau_months_late_last_year": null,
+    "bureau_worst_monthly_status": null,
+    "truncated": false
+  },
+  "get_previous_applications": {
+    "applicant_id": 357825,
+    "has_record": true,
+    "prev_n_applications": 1,
+    "prev_n_approved": 1,
+    "prev_n_refused": 0,
+    "prev_n_canceled_or_unused": 0,
+    "prev_refusal_rate": 0.0,
+    "prev_last_status": "Approved",
+    "prev_days_since_last_decision": 132,
+    "prev_n_applications_last_year": 1,
+    "prev_high_interest_share": 0.0,
+    "prev_n_duplicate_submissions": 0,
+    "truncated": false
+  },
+  "get_installment_history": {
+    "applicant_id": 357825,
+    "has_record": true,
+    "inst_n_loans": 2,
+    "inst_n_installments": 9,
+    "inst_n_unpaid": 0,
+    "inst_late_rate": 0.0,
+    "inst_max_days_late": 0,
+    "inst_mean_days_late": 0.0,
+    "inst_mean_days_early": 7.2,
+    "inst_underpaid_rate": 0.0,
+    "inst_paid_to_due_ratio": 1.0,
+    "inst_n_installments_last_year": 4,
+    "inst_late_rate_last_year": 0.0,
+    "inst_late_rate_change": 0.0,
+    "truncated": false
+  },
+  "get_credit_card_history": {
+    "applicant_id": 357825,
+    "has_record": false,
+    "note": "No Home Credit credit card on file. This is missing history, not a clean history.",
+    "truncated": false
+  },
+  "get_pos_cash_history": {
+    "applicant_id": 357825,
+    "has_record": true,
+    "pos_n_contracts": 2,
+    "pos_n_active_contracts": 1,
+    "pos_months_of_history": 10,
+    "pos_max_days_past_due": 0,
+    "pos_months_past_due": 0,
+    "pos_months_in_debt_demand": 0,
+    "truncated": false
+  },
+  "given_to_the_writer_by_the_system": {
+    "risk_score": 0.0426,
+    "rating": "low",
+    "score_calculation": "Past applicants with a similar external score and 0 other red flags defaulted at a rate of 0.0532. Adjustment: -1 steps (0 facts raise the risk, 1 lower it; one step changes the rate by a quarter). Estimated risk score: 0.0426 (the average applicant is at 0.0807). Rating: low.",
+    "policy_lines_that_apply": [
+      "Policy line LOWER_LOAN_NEAR_GOODS_PRICE: credit_to_goods_price is 1.10 or less."
+    ],
+    "sources_with_no_record": [
+      "get_credit_card_history"
+    ],
+    "sources_not_checked": []
+  }
+}
+
+REPORT
+The estimated risk score is 0.0426, which is a low rating. The applicant profile shows an external score percentile of 47 and a loan to yearly income ratio of 0.75, with one fact lowering the risk as the loan amount matches the goods price. The credit bureau history includes five loans with four active and zero overdue amount, presenting no red flags. Previous Home Credit applications consist of one total application that was approved with zero refused, showing no red flags. Instalment payments cover nine instalments with a late rate of 0.0, indicating no red flags. The credit card source has no record, meaning this history is missing and could not be assessed. POS and cash loans involve two contracts with a worst days past due of 0, showing no red flags. The score calculation is based on past applicants with a similar external score and zero other red flags defaulting at a rate of 0.0532, adjusted by one step for one fact lowering the risk and zero facts raising it.

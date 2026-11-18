@@ -2,8 +2,8 @@
   "cohort": {
     "applicants": 200,
     "runs": 600,
-    "default_rate": 0.285,
-    "flagged_share": 0.53
+    "default_rate": 0.31,
+    "flagged_share": 0.545
   },
   "process": {
     "tool_recall": 1.0,
@@ -15,109 +15,109 @@
     "completeness": 1.0,
     "uncertainty_honesty": 1.0,
     "same_rating_all_runs_share": 1.0,
-    "evidence_jaccard": 0.9824656084656084,
-    "risk_score_std": 5.872038966181492e-18
+    "evidence_jaccard": 0.9804867724867725,
+    "risk_score_std": 6.4184768611141866e-18
   },
   "output (judge)": {
-    "grounding_mean": 1.27,
-    "hedging_mean": 1.475,
-    "completeness_mean": 1.295,
-    "pass_rate": 0.89,
+    "grounding_mean": 1.26,
+    "hedging_mean": 1.465,
+    "completeness_mean": 1.305,
+    "pass_rate": 0.9,
     "vs_human_n": 20,
-    "vs_human_grounding_agreement": 0.2,
-    "vs_human_grounding_kappa": 0.0,
-    "vs_human_hedging_agreement": 0.2,
-    "vs_human_hedging_kappa": -0.18518518518518512,
-    "vs_human_completeness_agreement": 0.2,
-    "vs_human_completeness_kappa": 0.11214953271028028
+    "vs_human_grounding_agreement": 0.35,
+    "vs_human_grounding_kappa": -0.0646387832699622,
+    "vs_human_hedging_agreement": 0.45,
+    "vs_human_hedging_kappa": -0.03773584905660354,
+    "vs_human_completeness_agreement": 0.4,
+    "vs_human_completeness_kappa": 0.1573033707865169
   },
   "outcome": {
     "flagged group (main)": {
       "applicants": 100,
-      "default_rate": 0.52,
+      "default_rate": 0.53,
       "pr_auc": {
-        "value": 0.5636553808464367,
-        "ci_low": 0.4394061337435871,
-        "ci_high": 0.7017841247182623
+        "value": 0.5401059062056506,
+        "ci_low": 0.41910628067603356,
+        "ci_high": 0.6789481867232592
       },
       "roc_auc": {
-        "value": 0.5360576923076923,
-        "ci_low": 0.4173921130952381,
-        "ci_high": 0.6491256868131866
+        "value": 0.5014050582095544,
+        "ci_low": 0.38362159688335745,
+        "ci_high": 0.6203382004163256
       },
       "precision of 'high'": {
-        "value": 0.5204081632653061,
-        "ci_low": 0.41836734693877553,
-        "ci_high": 0.6161616161616161
+        "value": 0.5353535353535354,
+        "ci_low": 0.439969387755102,
+        "ci_high": 0.63
       },
       "recall of 'high'": {
-        "value": 0.9807692307692307,
-        "ci_low": 0.9361355226641999,
+        "value": 1.0,
+        "ci_low": 1.0,
         "ci_high": 1.0
       },
       "f1 of 'high'": {
-        "value": 0.68,
-        "ci_low": 0.5815602836879432,
-        "ci_high": 0.7625
+        "value": 0.6973684210526315,
+        "ci_low": 0.611081560283688,
+        "ci_high": 0.7730061349693251
       },
       "agent vs Exp1": {
         "pr_auc": {
-          "delta": -0.14666503173807133,
-          "ci_low": -0.2714978316594883,
-          "ci_high": -0.01609875196688078,
-          "p_bootstrap": 0.02,
+          "delta": -0.13658487290661026,
+          "ci_low": -0.26339980706604144,
+          "ci_high": -0.015918460875456574,
+          "p_bootstrap": 0.024,
           "n": 100
         },
         "roc_auc": {
-          "delta": -0.11378205128205143,
-          "ci_low": -0.2645662299444064,
-          "ci_high": 0.03462499999999994,
-          "p_bootstrap": 0.156,
+          "delta": -0.1268566840626254,
+          "ci_low": -0.26522003050828485,
+          "ci_high": 0.0048485394157662615,
+          "p_bootstrap": 0.056,
           "n": 100
         }
       }
     },
     "control group": {
       "applicants": 100,
-      "default_rate": 0.05,
-      "rated_high_share": 0.08,
-      "false_positive_rate": 0.07368421052631578
+      "default_rate": 0.09,
+      "rated_high_share": 0.1,
+      "false_positive_rate": 0.0989010989010989
     },
     "whole cohort (secondary)": {
       "pr_auc": {
-        "value": 0.5430919123411739,
-        "ci_low": 0.41271735857408176,
-        "ci_high": 0.6604895583500755
+        "value": 0.5172705582691978,
+        "ci_low": 0.40486747894426706,
+        "ci_high": 0.6372774997176739
       },
       "roc_auc": {
-        "value": 0.795301190038032,
-        "ci_low": 0.7302715366826954,
-        "ci_high": 0.8553863359913503
+        "value": 0.7589995324918185,
+        "ci_low": 0.6805187855016155,
+        "ci_high": 0.8263440951620459
       },
       "precision of 'high'": {
-        "value": 0.49056603773584906,
-        "ci_low": 0.3854142775229358,
-        "ci_high": 0.5833333333333334
+        "value": 0.4954128440366973,
+        "ci_low": 0.4056603773584906,
+        "ci_high": 0.580958485958486
       },
       "recall of 'high'": {
-        "value": 0.9122807017543859,
-        "ci_low": 0.8305084745762712,
-        "ci_high": 0.9811408106219427
+        "value": 0.8709677419354839,
+        "ci_low": 0.78328125,
+        "ci_high": 0.9500204918032786
       },
       "f1 of 'high'": {
-        "value": 0.6380368098159509,
-        "ci_low": 0.5362318840579711,
-        "ci_high": 0.7142857142857143
+        "value": 0.631578947368421,
+        "ci_low": 0.5490136298421808,
+        "ci_high": 0.7045454545454546
       }
     },
     "calibration": {
-      "brier": 0.16354934485,
-      "ece": 0.10064449999999997
+      "brier": 0.1869135848,
+      "ece": 0.134818
     },
     "cost per run": {
-      "input_tokens": 15040.91,
-      "output_tokens": 1766.2883333333332,
-      "latency_s": 108.52590000000001
+      "input_tokens": 15044.095,
+      "output_tokens": 1767.84,
+      "latency_s": 71.03540000000001
     }
   }
 }
