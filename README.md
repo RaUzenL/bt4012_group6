@@ -12,6 +12,8 @@ The project contains three experiments:
 - **Experiment 2 — Temporal credit-risk modelling:** test whether handcrafted temporal features and LSTM-derived risk scores add information beyond aggregated historical features, including robustness and history-richness analyses.
 - **Experiment 3 — Agent-assisted investigation:** use a tool-calling LLM to retrieve applicant evidence and produce cited investigation notes; evaluate evidence quality, consistency and risk discrimination.
 
+**The `outputs/` folder contains the shared data-preprocessing steps—applicant sampling, data cleaning and train/validation/test splitting—in [`data_cleaning.ipynb`](outputs/data_cleaning.ipynb).**
+
 ## How to Reproduce Results
 
 ### Experiment 1: Multi-Source Feature Engineering
