@@ -1,0 +1,12 @@
+# Environment used for the reported Exp1 results: Python 3.13.1
+# Install from the repository root: pip install -r Exp_1/requirements.txt
+numpy==2.3.2
+pandas==2.3.2
+scipy==1.16.1
+scikit-learn==1.7.1
+matplotlib==3.10.5
+pyarrow==26.0.1
+
+# Notebook interface and kernel
+jupyterlab==4.4.6
+ipykernel==6.30.1
