@@ -62,4 +62,48 @@ Open [Exp_1/exp1.ipynb](Exp_1/exp1.ipynb) to inspect the original tuning code an
 
 ### Experiment 2
 
-### Experiment 3
+### Experiment 3: Agent-Assisted Investigation
+
+#### Setup
+
+1. Use **Python 3.13** and install the shared and Exp3 dependencies from the repository root:
+
+   ```bash
+   pip install -r outputs/outputs/requirements.txt -r Exp_3/requirements.txt
+   ```
+
+2. Select the Python environment containing these packages as the notebook kernel.
+
+Keep the supplied files in `outputs/outputs/clean_data/`, `Exp_1/exp1_outputs/` and `Exp_3/` (`data/`, `prompts/`, `runs/`) in their existing locations. [Exp_3/runs/agent_runs.jsonl](Exp_3/runs/agent_runs.jsonl) holds the 600 saved investigations (200 test applicants, 3 runs each) that all results are computed from.
+
+#### Reproduce the final results (no API key needed)
+
+Open [Exp_3/evaluate_exp3.ipynb](Exp_3/evaluate_exp3.ipynb) and **Run All** with these default settings:
+
+```python
+N_BOOT = 1000
+SAVE = True
+```
+
+The notebook scores the saved investigations with the team's evaluation file ([Exp_3/eval_exp3.py](Exp_3/eval_exp3.py)): process metrics (tool recall, faithfulness, red-flag completeness, consistency), the LLM judge's and a person's grades of the case notes, and risk discrimination in the flagged group (main result), the control group and the whole cohort, with calibration and a fairness audit. It calls no LLM and takes about a minute.
+
+| Output | Contents |
+| --- | --- |
+| [exp3_summary.json](Exp_3/results/exp3_summary.json) | All metrics, with 95% bootstrap confidence intervals and the paired comparison with the Exp1 score |
+| [exp3_per_applicant.csv](Exp_3/results/exp3_per_applicant.csv) | One row per applicant, averaged over the three runs |
+| [exp3_calibration.csv](Exp_3/results/exp3_calibration.csv) | Reliability table of the agent's risk score |
+| [exp3_fairness.csv](Exp_3/results/exp3_fairness.csv) | Flag rate and false-positive rate by gender and age band |
+
+#### Inspect or re-run the agent
+
+Open [Exp_3/exp3.ipynb](Exp_3/exp3.ipynb) to inspect the six tools, the written red-flag policy, the agent, one full investigation with its audit log, the extra checks, the earlier agent versions and the choice of LLM. Running it needs a key for the NUS SoC LLM service (SoCLaaS), saved in `project/.env` as `SOCLAAS_API_KEY=...` (this file is git-ignored).
+
+- **Run All** reuses the saved runs and grades: finished investigations are skipped, so the only LLM call is one demonstration investigation. It takes about 5 minutes, mostly a check of the scoring rule on 3,000 applicants.
+- To repeat the investigations from scratch, move the `agent_*` files out of `Exp_3/runs/` first. The full run (600 investigations) takes about an hour when the service is quiet and several hours when it is busy, the judge grades the new notes again, and the 20 human grades must be redone. LLM output is not fully repeatable, even at temperature 0.
+- Run `exp3.ipynb` before `evaluate_exp3.ipynb`: its last section writes the judge's grades and the two maps the evaluation reads.
+
+The agent's safety checks are tested without any API call (62 tests, about 10 seconds):
+
+```bash
+python Exp_3/test_agent.py
+```

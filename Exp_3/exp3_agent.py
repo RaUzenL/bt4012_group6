@@ -100,7 +100,7 @@ POLICY_BY_ID = {}
 for policy_line in POLICY:
     POLICY_BY_ID[policy_line["id"]] = policy_line
 
-# The scoring table: default rates of TRAIN applicants. It is built once by exp3_eval.build_score_table().
+# The scoring table: default rates of TRAIN applicants. It is built once by exp3_checks.build_score_table().
 PERCENTILE_BANDS = [5, 10, 20, 30, 50, 70, 100]     # upper edge of each external-score percentile band (the rows)
 FLAG_BAND_LABELS = ["0-1", "2-3", "4+"]             # number of other red flags (the columns)
 SCORE_TABLE_FILE = HERE / "data" / "score_table.json"
@@ -523,7 +523,7 @@ def table_column(n_other_flags):
 def base_rate(external_score_percentile, n_other_flags):
     """Default rate of TRAIN applicants with the same external-score band and number of red flags."""
     if SCORE_TABLE is None:
-        raise RuntimeError("data/score_table.json is missing. Build it with: python Exp_3/exp3_eval.py score-table")
+        raise RuntimeError("data/score_table.json is missing. Build it with: python Exp_3/exp3_checks.py score-table")
     if external_score_percentile is None:
         return SCORE_TABLE["no_external_score_rate"]
     return SCORE_TABLE["default_rates"][table_row(external_score_percentile)][table_column(n_other_flags)]

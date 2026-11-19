@@ -15,9 +15,9 @@ Parts 3 and 5 read TARGET. That is fine here: this is grading and set-up.
 The agent (exp3_agent.py) and the tools (exp3_tools.py) never read it.
 
 Command line:
-    python Exp_3/exp3_eval.py tool-check 3000      tools against the answer key on 3,000 random applicants
-    python Exp_3/exp3_eval.py score-table          rebuild data/score_table.json
-    python Exp_3/exp3_eval.py team-fields          add the team's fields to runs saved before they were asked for
+    python Exp_3/exp3_checks.py tool-check 3000      tools against the answer key on 3,000 random applicants
+    python Exp_3/exp3_checks.py score-table          rebuild data/score_table.json
+    python Exp_3/exp3_checks.py team-fields          add the team's fields to runs saved before they were asked for
 """
 import copy
 import json
@@ -825,4 +825,4 @@ if __name__ == "__main__":
             if runs_file.exists():
                 print("{0}: the team's fields were added to {1} runs".format(file_name, update_saved_runs(runs_file)))
     else:
-        print("Usage: python exp3_eval.py tool-check [sample size] | score-table | team-fields")
+        print("Usage: python exp3_checks.py tool-check [sample size] | score-table | team-fields")
