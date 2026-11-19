@@ -1,0 +1,149 @@
+[
+  {
+    "id": "HIGH_ANNUITY_TO_INCOME",
+    "source_table": "application",
+    "concept": "repayment burden",
+    "rule": "annuity / income in top 5% (train)",
+    "threshold": 0.35403332114219666
+  },
+  {
+    "id": "LOW_EXT_SCORE",
+    "source_table": "application",
+    "concept": "external credit score",
+    "rule": "mean EXT_SOURCE in bottom 10% (train)",
+    "threshold": 0.3043842315673828
+  },
+  {
+    "id": "RECENT_ID_CHANGE",
+    "source_table": "application",
+    "concept": "identity change",
+    "rule": "ID document changed within 1 year",
+    "threshold": null
+  },
+  {
+    "id": "RECENT_PHONE_CHANGE",
+    "source_table": "application",
+    "concept": "identity change",
+    "rule": "phone changed within 30 days",
+    "threshold": null
+  },
+  {
+    "id": "SHORT_EMPLOYMENT",
+    "source_table": "application",
+    "concept": "employment",
+    "rule": "employed less than 1 year",
+    "threshold": null
+  },
+  {
+    "id": "MANY_ENQUIRIES",
+    "source_table": "application",
+    "concept": "credit enquiries",
+    "rule": "bureau enquiries last year in top 5% (train)",
+    "threshold": 6.0
+  },
+  {
+    "id": "BUREAU_CURRENT_OVERDUE",
+    "source_table": "bureau",
+    "concept": "current overdue debt",
+    "rule": "overdue amount at another lender > 0",
+    "threshold": null
+  },
+  {
+    "id": "BUREAU_SEVERE_DELINQUENCY",
+    "source_table": "bureau_balance",
+    "concept": "past delinquency",
+    "rule": "worst monthly status 31+ days past due",
+    "threshold": null
+  },
+  {
+    "id": "BUREAU_HIGH_UTILISATION",
+    "source_table": "bureau",
+    "concept": "debt burden",
+    "rule": "active debt >= 80% of active credit",
+    "threshold": null
+  },
+  {
+    "id": "PREV_HIGH_REFUSAL",
+    "source_table": "previous_application",
+    "concept": "rejection history",
+    "rule": "half or more of past applications refused",
+    "threshold": null
+  },
+  {
+    "id": "PREV_LAST_REFUSED",
+    "source_table": "previous_application",
+    "concept": "rejection history",
+    "rule": "most recent application refused",
+    "threshold": null
+  },
+  {
+    "id": "PREV_HIGH_FREQUENCY",
+    "source_table": "previous_application",
+    "concept": "application frequency",
+    "rule": "applications in last year in top 5% (train)",
+    "threshold": 7.0
+  },
+  {
+    "id": "INST_FREQUENT_LATE",
+    "source_table": "installments",
+    "concept": "late payments",
+    "rule": "10%+ of instalments paid late",
+    "threshold": null
+  },
+  {
+    "id": "INST_SEVERE_LATE",
+    "source_table": "installments",
+    "concept": "late payments",
+    "rule": "an instalment paid 30+ days late",
+    "threshold": null
+  },
+  {
+    "id": "INST_UNDERPAYMENT",
+    "source_table": "installments",
+    "concept": "underpayment",
+    "rule": "5%+ of instalments underpaid",
+    "threshold": null
+  },
+  {
+    "id": "INST_WORSENING",
+    "source_table": "installments",
+    "concept": "worsening trend",
+    "rule": "late rate in last year > overall late rate + 5pp",
+    "threshold": null
+  },
+  {
+    "id": "CC_HIGH_UTILISATION",
+    "source_table": "credit_card",
+    "concept": "card utilisation",
+    "rule": "latest month balance >= 90% of limit",
+    "threshold": null
+  },
+  {
+    "id": "CC_BELOW_MIN_PAYMENT",
+    "source_table": "credit_card",
+    "concept": "minimum payments",
+    "rule": "3+ months paid below the minimum",
+    "threshold": null
+  },
+  {
+    "id": "CC_CASH_RELIANCE",
+    "source_table": "credit_card",
+    "concept": "cash withdrawals",
+    "rule": "half or more of card drawings are cash",
+    "threshold": null
+  },
+  {
+    "id": "POS_DELINQUENT",
+    "source_table": "pos_cash",
+    "concept": "POS/cash delinquency",
+    "rule": "POS/cash loan 30+ days past due",
+    "threshold": null
+  },
+  {
+    "id": "POS_DEBT_DEMAND",
+    "source_table": "pos_cash",
+    "concept": "debt collection",
+    "rule": "a contract escalated to debt demand",
+    "threshold": null
+  }
+]

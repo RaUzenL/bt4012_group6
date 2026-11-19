@@ -122,7 +122,7 @@ def read_prompt(file_name):
 
 def policy_thresholds():
     """The four cut-offs that the team's rules take from TRAIN percentiles (red_flag_rules.json)."""
-    rules = json.loads((tools.find_shared_folder() / "exp3" / "red_flag_rules.json").read_text())
+    rules = json.loads((HERE / "data" / "red_flag_rules.json").read_text())
     by_name = {rule["id"]: rule["threshold"] for rule in rules}
     return {
         "HIGH_ANNUITY_TO_INCOME": "{0:.4f}".format(by_name["HIGH_ANNUITY_TO_INCOME"]),

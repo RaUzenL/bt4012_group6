@@ -264,7 +264,7 @@ check("rating bands", agent.rating_for(0.079) == "low" and agent.rating_for(0.08
 
 # 16. The policy, the evaluation's field map and the rule code agree with each other
 flag_map = grading.flag_map()
-rule_names = [rule["id"] for rule in json.loads((tools.find_shared_folder() / "exp3" / "red_flag_rules.json").read_text())]
+rule_names = [rule["id"] for rule in json.loads((agent.HERE / "data" / "red_flag_rules.json").read_text())]
 red_flag_lines = [line for line in agent.POLICY if line["kind"] == "red_flag"]
 check("the policy has the team's 21 red flags", sorted(line["id"] for line in red_flag_lines) == sorted(rule_names))
 check("every red-flag line cites a field the evaluation accepts", all(line["field"] in flag_map[line["id"]]["fields"] for line in red_flag_lines))
@@ -286,7 +286,6 @@ except ValueError:
     check("a judge score outside 0-2 is rejected", True)
 
 # 18. The team's evaluation file accepts a run as it is saved
-sys.path.insert(0, str(tools.find_shared_folder() / "exp3"))
 import eval_exp3 as ev
 
 run = agent.investigate(APPLICANT, ScriptedModel([tool_calls(ALL_TOOLS), findings(), REPORT]))

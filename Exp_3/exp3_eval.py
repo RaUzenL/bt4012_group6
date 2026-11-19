@@ -66,7 +66,7 @@ def load_thresholds(shared_folder=None):
     """The cut-offs of the team's rules that come from TRAIN percentiles (red_flag_rules.json)."""
     if shared_folder is None:
         shared_folder = tools.find_shared_folder()
-    rules = json.loads((Path(shared_folder) / "exp3" / "red_flag_rules.json").read_text())
+    rules = json.loads((agent.HERE / "data" / "red_flag_rules.json").read_text())
     return {rule["id"]: rule["threshold"] for rule in rules}
 
 
@@ -190,7 +190,7 @@ def tool_check(applicant_ids, shared_folder=None):
     shared_folder = Path(shared_folder)
     tools.load_data(shared_folder)
     thresholds = load_thresholds(shared_folder)
-    answer_key = pd.read_parquet(shared_folder / "exp3" / "red_flags.parquet").set_index("SK_ID_CURR")
+    answer_key = pd.read_parquet(agent.HERE / "data" / "red_flags.parquet").set_index("SK_ID_CURR")
 
     from_tools = {}
     for applicant_id in applicant_ids:
@@ -747,7 +747,7 @@ def build_score_table(shared_folder=None):
     train = application[application["SK_ID_CURR"].isin(train_ids)].set_index("SK_ID_CURR")
 
     # The red flags of the TRAIN applicants (the team's 21 rules)
-    red_flags = pd.read_parquet(shared_folder / "exp3" / "red_flags.parquet").set_index("SK_ID_CURR")
+    red_flags = pd.read_parquet(agent.HERE / "data" / "red_flags.parquet").set_index("SK_ID_CURR")
     flag_columns = [column for column in red_flags.columns if column not in ["N_RED_FLAGS", "LOW_EXT_SCORE"]]
     train["n_other_flags"] = red_flags.loc[train.index, flag_columns].sum(axis=1)
 
