@@ -33,6 +33,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Union
 
+import openai
 from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
@@ -46,7 +47,8 @@ HERE = Path(__file__).resolve().parent
 # Settings
 # ----------------------------------------------------------------------------------------------
 BASE_URL = "https://soclaas-api.comp.nus.edu.sg/v1"   # NUS SoC LLM service (OpenAI-compatible)
-MODEL = "qwen3.6:35b"          # the model "default" pointed to on 13 Nov 2026; pinned so runs can be repeated
+MODEL = "qwen3.6:35b"          # the model "default" pointed to on 13 Nov 2026; pinned so every run uses the same model
+                               # (the output is still not fully repeatable, even at temperature 0)
 TEMPERATURE = 0
 MAX_EVIDENCE_TURNS = 4         # budget of model calls in step 1 (evidence)
 MAX_FINDINGS_ATTEMPTS = 2      # first draft + one repair
@@ -120,10 +122,15 @@ def read_prompt(file_name):
     return (PROMPT_FOLDER / file_name).read_text(encoding="utf-8")
 
 
-def policy_thresholds():
-    """The four cut-offs that the team's rules take from TRAIN percentiles (red_flag_rules.json)."""
+def team_thresholds():
+    """The cut-off of every team rule, by rule name (red_flag_rules.json). None where the rule has a fixed cut-off."""
     rules = json.loads((HERE / "data" / "red_flag_rules.json").read_text())
-    by_name = {rule["id"]: rule["threshold"] for rule in rules}
+    return {rule["id"]: rule["threshold"] for rule in rules}
+
+
+def policy_thresholds():
+    """The four cut-offs that the team's rules take from TRAIN percentiles, written as the policy shows them."""
+    by_name = team_thresholds()
     return {
         "HIGH_ANNUITY_TO_INCOME": "{0:.4f}".format(by_name["HIGH_ANNUITY_TO_INCOME"]),
         "LOW_EXT_SCORE": "{0:.4f}".format(by_name["LOW_EXT_SCORE"]),
@@ -813,9 +820,21 @@ def read_runs(path):
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
-def server_error(error_text):
-    """True when a run failed because of the LLM service (busy, timed out, unreachable), not because of the model."""
-    return error_text.startswith("OpenAI")
+# Errors that mean the service, not the model, is the problem (server error, rate limit, no connection, timeout).
+# langchain re-raises them as its own subclasses (OpenAIAPIError, ...), which are caught by the same check.
+# APITimeoutError is a kind of APIConnectionError.
+SERVICE_ERROR_TYPES = (openai.InternalServerError, openai.RateLimitError, openai.APIConnectionError)
+# Their names, for failure files saved before the "service_error" field was added (langchain's names, then openai's)
+SERVICE_ERROR_NAMES = {"OpenAIAPIError", "OpenAIRateLimitError", "OpenAIConnectionError", "OpenAITimeoutError",
+                       "InternalServerError", "RateLimitError", "APIConnectionError", "APITimeoutError"}
+
+
+def server_error(failure):
+    """True when a saved failed run failed because of the LLM service (busy, timed out, unreachable),
+    not because of the model. failure is one line of a *_failed.jsonl file."""
+    if "service_error" in failure:
+        return failure["service_error"]
+    return failure["error"].split(":")[0].strip() in SERVICE_ERROR_NAMES
 
 
 def run_batch(applicant_ids, llm, runs_per_applicant, output_file, workers=4, retry_model_failures=True):
@@ -833,16 +852,20 @@ def run_batch(applicant_ids, llm, runs_per_applicant, output_file, workers=4, re
             raise RuntimeError("{0} holds runs made with another prompt, code version or model. "
                                "Use a new file name so that versions are not mixed.".format(output_file.name))
     done = {(record["SK_ID_CURR"], record["run"]) for record in saved}
+    n_saved = len(done)
     if not retry_model_failures:
         for failure in read_runs(failed_file):
-            if not server_error(failure["error"]):
+            if not server_error(failure):
                 done.add((failure["SK_ID_CURR"], failure["run"]))
     todo = []
     for run in range(1, runs_per_applicant + 1):        # run 1 for everyone first, then run 2, ...
         for applicant_id in applicant_ids:
             if (int(applicant_id), run) not in done:
                 todo.append((int(applicant_id), run))
-    print("{0} runs already saved, {1} to do".format(len(done), len(todo)))
+    message = "{0} runs already saved".format(n_saved)
+    if len(done) > n_saved:
+        message += ", {0} model failures not tried again".format(len(done) - n_saved)
+    print("{0}, {1} to do".format(message, len(todo)))
 
     lock = threading.Lock()
     counts = {"saved": 0, "failed": 0}
@@ -854,7 +877,8 @@ def run_batch(applicant_ids, llm, runs_per_applicant, output_file, workers=4, re
             record = investigate(applicant_id, llm, run)
             target, line, kind = output_file, json.dumps(record), "saved"
         except Exception as problem:                    # a failed run is recorded, never silently dropped
-            failure = {"SK_ID_CURR": applicant_id, "run": run, "error": "{0}: {1}".format(type(problem).__name__, problem)}
+            failure = {"SK_ID_CURR": applicant_id, "run": run, "error": "{0}: {1}".format(type(problem).__name__, problem),
+                       "service_error": isinstance(problem, SERVICE_ERROR_TYPES)}
             target, line, kind = failed_file, json.dumps(failure), "failed"
         with lock:
             with open(target, "a") as handle:

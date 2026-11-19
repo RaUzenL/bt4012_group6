@@ -75,7 +75,7 @@ TRAIN = {}   # sorted values of TRAIN applicants, used for the percentile fields
 # Loading
 # ----------------------------------------------------------------------------------------------
 def find_shared_folder():
-    """Return the shared folder that holds clean_data/ and exp3/."""
+    """Return the shared folder that holds clean_data/ (the team's cleaned tables)."""
     for folder in SHARED_CANDIDATES:
         if (folder / "clean_data" / "splits.csv").exists():
             return folder

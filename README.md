@@ -102,7 +102,7 @@ Open [Exp_3/exp3.ipynb](Exp_3/exp3.ipynb) to inspect the six tools, the written 
 - To repeat the investigations from scratch, move the `agent_*` files out of `Exp_3/runs/` first. The full run (600 investigations) takes about an hour when the service is quiet and several hours when it is busy, the judge grades the new notes again, and the 20 human grades must be redone. LLM output is not fully repeatable, even at temperature 0.
 - Run `exp3.ipynb` before `evaluate_exp3.ipynb`: its last section writes the judge's grades and the two maps the evaluation reads.
 
-The agent's safety checks are tested without any API call (62 tests, about 10 seconds):
+The agent's safety checks are tested without any API call (66 tests, about 10 seconds):
 
 ```bash
 python Exp_3/test_agent.py

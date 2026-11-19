@@ -4,9 +4,9 @@ uncertainty, consistency), the output (LLM-as-judge rubric) and the outcome (dis
 Usage
 -----
 1. Pick who to investigate (test applicants only): the riskiest by the Exp1 model plus a random control group.
-       python Exp_3/eval_exp3.py --make-cohort exp1_test_scores.csv      # writes cohort.csv
+       python Exp_3/eval_exp3.py --make-cohort exp1_test_scores.csv      # writes data/cohort.csv
 2. Map each red flag to the field names, and each data source to the tool names, YOUR agent uses (done once).
-       python Exp_3/eval_exp3.py --flag-map-template --tool-map-template  # writes flag_to_fields.json, tool_map.json
+       python Exp_3/eval_exp3.py --flag-map-template --tool-map-template  # writes data/flag_to_fields.json, data/tool_map.json
 3. Run the agent (e.g. 3 runs per applicant) and save one JSON object per line (agent_runs.jsonl):
        {"SK_ID_CURR": 100054, "run": 1, "risk_score": 0.82, "rating": "high", "escalated": true,
         "citations": [{"tool": "get_installment_history", "field": "late_rate", "value": 0.21}, ...],
@@ -23,7 +23,7 @@ Usage
 5. Evaluate:
        python Exp_3/eval_exp3.py agent_runs.jsonl --flag-map flag_to_fields.json --tool-map tool_map.json \
            --judge judge_scores.csv --human human_scores.csv
-   cohort.csv from step 1 is picked up automatically: it gives the flagged/control groups and the Exp1 baseline score.
+   data/cohort.csv from step 1 is picked up automatically: it gives the flagged/control groups and the Exp1 baseline score.
 
 Metrics (lecture 12: process correct != result correct, so both are measured)
   Process

@@ -109,7 +109,8 @@ check("every citation was checked against the tool output", all(c["check"] == "m
 check("the external score is always cited", "external_score_mean" in [c["field"] for c in run["citations"]])
 check("no action is executed and a human decision is required", run["action_executed"] == False and run["human_decision_required"] == True)
 
-check("the whole case is one conversation with one system prompt", run["n_messages"] == 13)
+check("the whole case is one conversation (system prompt, case, 3 replies, 6 tool results, 2 step messages)",
+      run["n_messages"] == 13)
 
 # 1a. The fields the team's evaluation file reads are logged with every run
 check("every tool call is logged with the applicant's SK_ID_CURR",
@@ -240,6 +241,37 @@ check("a finished run is not repeated", second == {"saved": 0, "failed": 0})
 third = agent.run_batch([100047, 100048, 100049], HalfBroken([]), 1, folder / "runs.jsonl", workers=1,
                         retry_model_failures=False)
 check("a model failure is not retried, a service failure is", third == {"saved": 1, "failed": 0})
+
+# The service errors as the agent really gets them: langchain re-raises the openai errors as its own subclasses
+import httpx
+from langchain_openai.chat_models.base import OpenAIAPIError, OpenAIConnectionError, OpenAIRateLimitError, OpenAITimeoutError
+
+request = httpx.Request("POST", agent.BASE_URL)
+service_problems = [
+    OpenAIAPIError(message="busy", response=httpx.Response(503, request=request), body=None),
+    OpenAIRateLimitError(message="slow down", response=httpx.Response(429, request=request), body=None),
+    OpenAIConnectionError(message="no connection", request=request),
+    OpenAITimeoutError(request),
+]
+check("langchain's service errors count as service errors", all(isinstance(problem, agent.SERVICE_ERROR_TYPES) for problem in service_problems))
+old_style = [{"error": "{0}: {1}".format(type(problem).__name__, problem)} for problem in service_problems]
+check("failure files without the service_error field are read by the error name", all(agent.server_error(failure) for failure in old_style))
+check("a failure of the model itself is not a service error",
+      not agent.server_error({"error": "RuntimeError: The agent kept calling tools in the findings step instead of answering."}))
+
+
+class TimesOut(HalfBroken):
+    """The service times out for applicant 100050, the way langchain reports it."""
+    def invoke(self, messages):
+        if "100050" in str(messages[1].content):
+            raise OpenAITimeoutError(request)
+        return HalfBroken.invoke(self, messages)
+
+fourth = agent.run_batch([100050], TimesOut([]), 1, folder / "runs.jsonl", workers=1, retry_model_failures=False)
+saved_failure = [json.loads(line) for line in (folder / "runs_failed.jsonl").read_text().splitlines()][-1]
+fifth = agent.run_batch([100050], HalfBroken([]), 1, folder / "runs.jsonl", workers=1, retry_model_failures=False)
+check("a timeout in a batch is saved as a service error and tried again",
+      saved_failure["service_error"] == True and fourth == {"saved": 0, "failed": 1} and fifth == {"saved": 1, "failed": 0})
 
 # 14. Runs from another version are never mixed into the same file
 record = json.loads((folder / "runs.jsonl").read_text().splitlines()[0])

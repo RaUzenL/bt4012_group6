@@ -30,7 +30,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage
 from pydantic import BaseModel, Field, ValidationError
 from sklearn.metrics import roc_auc_score
 
@@ -62,12 +62,9 @@ def less_than(value, threshold):
     return value is not None and value < threshold
 
 
-def load_thresholds(shared_folder=None):
-    """The cut-offs of the team's rules that come from TRAIN percentiles (red_flag_rules.json)."""
-    if shared_folder is None:
-        shared_folder = tools.find_shared_folder()
-    rules = json.loads((agent.HERE / "data" / "red_flag_rules.json").read_text())
-    return {rule["id"]: rule["threshold"] for rule in rules}
+def load_thresholds():
+    """The cut-offs of the team's rules (red_flag_rules.json), read the same way the agent reads them."""
+    return agent.team_thresholds()
 
 
 def flags_from_tools(outputs, thresholds):
@@ -189,7 +186,7 @@ def tool_check(applicant_ids, shared_folder=None):
         shared_folder = tools.find_shared_folder()
     shared_folder = Path(shared_folder)
     tools.load_data(shared_folder)
-    thresholds = load_thresholds(shared_folder)
+    thresholds = load_thresholds()
     answer_key = pd.read_parquet(agent.HERE / "data" / "red_flags.parquet").set_index("SK_ID_CURR")
 
     from_tools = {}
@@ -269,7 +266,7 @@ def first_draft_faithfulness(runs, faithfulness_function):
     return float(np.nanmean(scores))
 
 
-def policy_verdict_table(runs, shared_folder=None):
+def policy_verdict_table(runs):
     """Compare the agent's verdict on every policy line with the rule worked out in code.
 
     truly_applies   runs where the line really applies (policy_truth on the tool outputs)
@@ -277,10 +274,10 @@ def policy_verdict_table(runs, shared_folder=None):
     model_said      runs where the agent said the line applies
     correct_share   of those, the share where it really applies (precision)
     """
-    thresholds = load_thresholds(shared_folder)
+    thresholds = load_thresholds()
     counts = {}
     for policy_line in agent.POLICY:
-        counts[policy_line["id"]] = {"kind": policy_line["kind"], "truly_applies": 0, "model_said": 0, "both": 0}
+        counts[policy_line["id"]] = {"kind": policy_line["kind"], "truly_applies": 0, "model_said": 0, "both": 0, "wrong": 0}
 
     for run in runs:
         truth = policy_truth(tool_outputs_of(run), thresholds)
@@ -294,6 +291,8 @@ def policy_verdict_table(runs, shared_folder=None):
                 counts[line_name]["model_said"] += 1
             if truth[line_name] and said.get(line_name, False):
                 counts[line_name]["both"] += 1
+            if bool(truth[line_name]) != bool(said.get(line_name, False)):
+                counts[line_name]["wrong"] += 1
 
     rows = []
     for line_name, count in counts.items():
@@ -312,6 +311,7 @@ def policy_verdict_table(runs, shared_folder=None):
     total_both = sum(count["both"] for count in counts.values())
     overall = {
         "verdicts": len(runs) * len(agent.POLICY),
+        "wrong": sum(count["wrong"] for count in counts.values()),     # a missed line or a line called wrongly
         "recall": total_both / total_true if total_true > 0 else np.nan,
         "precision": total_both / total_said if total_said > 0 else np.nan,
     }
@@ -405,7 +405,7 @@ def model_failures(runs_file):
     Runs that failed because the service was busy were run again, so they are not counted."""
     runs_file = Path(runs_file)
     failed = agent.read_runs(runs_file.with_name(runs_file.stem + "_failed.jsonl"))
-    return len(set((f["SK_ID_CURR"], f["run"]) for f in failed if not agent.server_error(f["error"])))
+    return len(set((f["SK_ID_CURR"], f["run"]) for f in failed if not agent.server_error(f)))
 
 
 def with_interval(numbers):
@@ -436,6 +436,7 @@ def model_comparison(models, evaluate, cohort, flag_map, tool_map, answer_key, r
             "completeness (red flags cited)": round(process["completeness"], 3),
             "policy verdicts: recall": round(verdicts["recall"], 3),
             "policy verdicts: precision": round(verdicts["precision"], 3),
+            "policy verdicts wrong (of all)": "{0} of {1}".format(verdicts["wrong"], verdicts["verdicts"]),
             "red flags: precision against the key": round(flags["precision"], 3),
             "first drafts rejected": sum(len(run["problems_first_draft"]) > 0 for run in runs),
             "notes that name all six sources": sum(len(sources_named(run["report"])) == 6 for run in runs),
@@ -463,7 +464,7 @@ def score_rule_table(applicant_ids, shared_folder=None):
     if shared_folder is None:
         shared_folder = tools.find_shared_folder()
     tools.load_data(shared_folder)
-    thresholds = load_thresholds(shared_folder)
+    thresholds = load_thresholds()
     rows = []
     for applicant_id in applicant_ids:
         outputs = call_all_tools(applicant_id)
@@ -471,8 +472,31 @@ def score_rule_table(applicant_ids, shared_folder=None):
         lines_that_apply = [line_name for line_name, applies in truth.items() if applies]
         percentile = outputs["get_applicant_profile"].get("external_score_percentile")
         risk_score, basis = agent.score_from_lines(percentile, lines_that_apply)
-        rows.append({"SK_ID_CURR": int(applicant_id), "rule_score": risk_score, "rating": agent.rating_for(risk_score)})
+        row = {"SK_ID_CURR": int(applicant_id), "rule_score": risk_score, "rating": agent.rating_for(risk_score),
+               "base_rate": basis["base_rate"]}
+        for line_name, applies in truth.items():
+            row[line_name] = bool(applies)
+        rows.append(row)
     return pd.DataFrame(rows)
+
+
+def fact_check_table(scored):
+    """Do the 12 facts that raise or lower the risk do what the policy says? For the applicants a fact applies to,
+    the observed default rate is compared with the base rate the scoring table gives them (external score and
+    red flags only, before any adjustment). A ratio above 1 means more defaults than the table expects.
+    scored is score_rule_table output with TARGET added."""
+    rows = []
+    for policy_line in agent.POLICY:
+        if policy_line["kind"] not in ["raises_risk", "lowers_risk"]:
+            continue
+        part = scored[scored[policy_line["id"]]]
+        observed = part["TARGET"].mean() if len(part) > 0 else np.nan
+        expected = part["base_rate"].mean() if len(part) > 0 else np.nan
+        rows.append({"policy_line": policy_line["id"], "kind": policy_line["kind"], "applicants": len(part),
+                     "observed_default_rate": round(float(observed), 3),
+                     "expected_from_table": round(float(expected), 3),
+                     "ratio": round(float(observed / expected), 2) if expected and expected > 0 else np.nan})
+    return pd.DataFrame(rows).set_index("policy_line")
 
 
 # ==============================================================================================
