@@ -1,2 +1,2 @@
-# Experiment 3 needs these on top of outputs/outputs/requirements.txt (same version as the L9 lab)
+# Experiment 3 needs these on top of the root requirements.txt (same version as the L9 lab)
 langchain-openai==1.6.1

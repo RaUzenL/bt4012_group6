@@ -21,11 +21,9 @@ import pandas as pd
 
 HERE = Path(__file__).resolve().parent
 
-# Places where the shared folder (made by data_cleaning.ipynb) may be, depending on whose laptop this is.
+# The project root holds clean_data/ (made by data_cleaning.ipynb).
 SHARED_CANDIDATES = [
-    HERE.parent / "outputs" / "outputs",
-    HERE.parent / "hongwei_outputs" / "outputs",
-    HERE.parent / "outputs",
+    HERE.parent,
 ]
 
 # Only these columns are read. Protected attributes and TARGET are not in the lists.

@@ -4,7 +4,7 @@ Usage
 -----
 Save one predictions CSV per model with columns SK_ID_CURR, score (val + test applicants; higher = riskier):
 
-    python outputs/exp2/eval_exp2.py aggregated_mlp.csv sequence_gru.csv --labels Aggregated Sequence
+    python Exp_2/eval_exp2.py aggregated_mlp.csv sequence_gru.csv --labels Aggregated Sequence
 
 The first file is the baseline. Prints overall test metrics, paired significance tests vs the baseline, the same
 metrics for each history segment (default groups in history_segments.parquet), and paired tests vs the baseline
@@ -332,7 +332,7 @@ def main(argv=None):
     ap = _predictions_cli("Exp2: aggregated vs sequence models, overall and per history segment.",
                           "Example:\n  python eval_exp2.py aggregated.csv sequence.csv --labels Aggregated Sequence")
     ap.add_argument("--segments", help="optional CSV with your own groups: SK_ID_CURR, segment")
-    ap.add_argument("--out", default=str(HERE / "exp2"), help="output file prefix (default outputs/exp2/exp2)")
+    ap.add_argument("--out", default=str(HERE / "exp2"), help="output file prefix (default Exp_2/exp2)")
     a = ap.parse_args(argv)
     table, comps, preds = compare_prediction_files(a.predictions, a.labels, a.n_boot)
     _print_model_table(table, comps)

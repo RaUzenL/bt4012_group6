@@ -1,15 +1,15 @@
-"""Exp2 evaluation: aggregated vs temporal (sequence) models, overall and by history segment (RQ2.1 + RQ2.2).
+"""Exp1 evaluation: application-only vs multi-source models (ablation), all on the shared test set.
 
 Usage
 -----
 Save one predictions CSV per model with columns SK_ID_CURR, score (val + test applicants; higher = riskier):
 
-    python outputs/exp2/eval_exp2.py aggregated_mlp.csv sequence_gru.csv --labels Aggregated Sequence
+    python Exp_1/eval_exp1.py app_only.csv app_bureau.csv app_prev.csv app_repay.csv all_sources.csv \
+        --labels App +Bureau +Prev +Repayment All
 
-The first file is the baseline. Prints overall test metrics, paired significance tests vs the baseline, the same
-metrics for each history segment (default groups in history_segments.parquet), and paired tests vs the baseline
-inside each segment. To use your own groups, pass --segments my_groups.csv with columns SK_ID_CURR, segment.
-Saves exp2_metrics.csv, exp2_comparisons.csv, exp2_by_segment.csv and exp2_segment_comparisons.csv next to this file.
+The first file is the baseline. Prints test metrics for every model and paired significance tests vs the baseline,
+and saves exp1_metrics.csv and exp1_comparisons.csv next to this file.
+In Python:  import eval_exp1 as ev;  ev.evaluate(y_test, p_test, y_val=y_val, s_val=p_val)
 """
 # ============================================================================================
 # COMMON METRICS (identical in eval_exp1.py, eval_exp2.py and eval_exp3.py, so each file runs on its own)
@@ -219,125 +219,18 @@ def _predictions_cli(description, epilog):
 
 
 # ============================================================================================
-# EXP2: HISTORY SEGMENTS (RQ2.2)
-# ============================================================================================
-SEGMENTS_FILE = HERE / "history_segments.parquet"
-
-
-def history_segments(clean_dir=CLEAN_DIR):
-    """Default RQ2.2 groups per applicant.
-    HISTORY_SEGMENT: internal (Home Credit records) and/or external (credit bureau) history, or none.
-    INTERNAL_RICHNESS: quartile of the number of internal records (cut-points from TRAIN applicants), or 'none'."""
-    d = Path(clean_dir)
-    sp = load_splits(d)
-    ids = sp["SK_ID_CURR"]
-    internal = sum(pd.read_parquet(d / f"{t}.parquet", columns=["SK_ID_CURR"])["SK_ID_CURR"].value_counts()
-                   .reindex(ids, fill_value=0).to_numpy()
-                   for t in ["previous_application", "installments", "pos_cash", "credit_card"])
-    has_bureau = ids.isin(pd.read_parquet(d / "bureau.parquet", columns=["SK_ID_CURR"])["SK_ID_CURR"]).to_numpy()
-    seg = pd.DataFrame({"SK_ID_CURR": ids, "split": sp["split"], "N_INTERNAL_RECORDS": internal,
-                        "HAS_INTERNAL": internal > 0, "HAS_EXTERNAL": has_bureau})
-    seg["HISTORY_SEGMENT"] = np.select(
-        [seg.HAS_INTERNAL & seg.HAS_EXTERNAL, seg.HAS_INTERNAL, seg.HAS_EXTERNAL],
-        ["internal+external", "internal_only", "external_only"], default="no_history")
-    cuts = seg.loc[(seg.split == "train") & seg.HAS_INTERNAL, "N_INTERNAL_RECORDS"].quantile([.25, .5, .75]).to_numpy()
-    q = np.searchsorted(cuts, seg["N_INTERNAL_RECORDS"], side="right") + 1
-    seg["INTERNAL_RICHNESS"] = np.where(seg.HAS_INTERNAL, np.char.add("Q", q.astype(str)), "none")
-    return seg.drop(columns="split")
-
-
-def load_segments(custom_csv=None):
-    """Default groups from history_segments.parquet (built if missing), or your own CSV (SK_ID_CURR, segment)."""
-    if custom_csv:
-        s = pd.read_csv(custom_csv)
-        return s[["SK_ID_CURR", "segment"]].rename(columns={"segment": "CUSTOM_SEGMENT"})
-    if not SEGMENTS_FILE.exists():
-        history_segments().to_parquet(SEGMENTS_FILE, index=False)
-    return pd.read_parquet(SEGMENTS_FILE)
-
-
-def evaluate_by_segment(y, s, segment, threshold, min_positives=20):
-    """Metrics per segment at one fixed threshold (chosen on validation). Segments with < min_positives defaulters
-    get only n and default rate, because AUC on a handful of positives is meaningless."""
-    df = pd.DataFrame({"y": np.asarray(y).astype(int), "s": np.asarray(s, float), "seg": np.asarray(segment)})
-    rows = {}
-    for g, part in df.groupby("seg"):
-        rows[g] = {"n": len(part), "defaulters": int(part.y.sum()), "default_rate": part.y.mean()}
-        if min_positives <= part.y.sum() < len(part):
-            rows[g].update(_metrics(part.y.to_numpy(), part.s.to_numpy(), threshold))
-    return pd.DataFrame(rows).T
-
-
-def segment_table(preds, segments, columns):
-    """Per model x segment metrics on the test set, each model at its own validation threshold."""
-    out = []
-    for model, p in preds.items():
-        te = p["test"].merge(segments, on="SK_ID_CURR", how="left")
-        for col in columns:
-            t = evaluate_by_segment(te.TARGET, te.score, te[col].fillna("unknown"), p["threshold"])
-            out.append(t.assign(model=model, grouping=col).rename_axis("segment").reset_index())
-    return pd.concat(out, ignore_index=True)
-
-
-def segment_pivot(by_seg, metric="roc_auc"):
-    """One row per segment, one column per model, for a chosen metric (plus segment size and default rate)."""
-    base = by_seg.drop_duplicates(["grouping", "segment"]).set_index(["grouping", "segment"])[["n", "defaulters", "default_rate"]]
-    piv = by_seg.pivot_table(index=["grouping", "segment"], columns="model", values=metric, sort=False)
-    return base.join(piv.add_prefix(f"{metric} | "))
-
-
-def segment_comparisons(preds, segments, columns, n_boot=1000, min_positives=20):
-    """RQ2.2: inside each segment, paired difference of each model vs the baseline (first model) in PR-AUC and
-    ROC-AUC, with bootstrap 95% CI. p_holm adjusts across ALL segment tests, because many are run at once.
-    Segments with < min_positives defaulters are skipped."""
-    labels = list(preds)
-    te = preds[labels[0]]["test"].merge(segments, on="SK_ID_CURR", how="left")   # every model's test rows share this order
-    y = te.TARGET.to_numpy()
-    rows = []
-    for col in columns:
-        seg = te[col].fillna("unknown").to_numpy()
-        for g in sorted(set(seg)):
-            mask = seg == g
-            if not min_positives <= y[mask].sum() < mask.sum():
-                continue
-            for lab in labels[1:]:
-                for metric in ("pr_auc", "roc_auc"):
-                    c = compare_models(y[mask], preds[lab]["test"]["score"].to_numpy()[mask],
-                                       preds[labels[0]]["test"]["score"].to_numpy()[mask], metric, n_boot)
-                    rows.append({"grouping": col, "segment": g, "n": int(mask.sum()), "defaulters": int(y[mask].sum()),
-                                 "model": lab, "vs_baseline": labels[0], "metric": metric, "delta": c["delta"],
-                                 "ci_low": c["ci_low"], "ci_high": c["ci_high"], "p_bootstrap": c["p_bootstrap"],
-                                 "p_delong": c["delong_roc_auc"]["p_value"] if metric == "roc_auc" else np.nan})
-    return _add_p_values(pd.DataFrame(rows))
-
-
-# ============================================================================================
-# EXP2 COMMAND LINE
+# EXP1 COMMAND LINE
 # ============================================================================================
 def main(argv=None):
-    ap = _predictions_cli("Exp2: aggregated vs sequence models, overall and per history segment.",
-                          "Example:\n  python eval_exp2.py aggregated.csv sequence.csv --labels Aggregated Sequence")
-    ap.add_argument("--segments", help="optional CSV with your own groups: SK_ID_CURR, segment")
-    ap.add_argument("--out", default=str(HERE / "exp2"), help="output file prefix (default outputs/exp2/exp2)")
+    ap = _predictions_cli("Exp1: compare application-only vs multi-source models on the shared test set.",
+                          "Example:\n  python eval_exp1.py app_only.csv all_sources.csv --labels App All")
+    ap.add_argument("--out", default=str(HERE / "exp1"), help="output file prefix (default Exp_1/exp1)")
     a = ap.parse_args(argv)
-    table, comps, preds = compare_prediction_files(a.predictions, a.labels, a.n_boot)
+    table, comps, _ = compare_prediction_files(a.predictions, a.labels, a.n_boot)
     _print_model_table(table, comps)
-    seg = load_segments(a.segments)
-    cols = ["CUSTOM_SEGMENT"] if a.segments else ["HISTORY_SEGMENT", "INTERNAL_RICHNESS"]
-    by_seg = segment_table(preds, seg, cols)
-    show = ["grouping", "segment", "model", "n", "defaulters", "default_rate", "roc_auc", "pr_auc", "recall"]
-    print("\nTest-set metrics by segment")
-    print(by_seg[[c for c in show if c in by_seg]].round(4).to_string(index=False))
-    seg_comps = segment_comparisons(preds, seg, cols, a.n_boot) if len(preds) > 1 else pd.DataFrame()
-    if len(seg_comps):
-        print("\nPaired comparison vs baseline inside each segment (Holm-adjusted across all segment tests)")
-        print(pretty_comparisons(seg_comps).to_string(index=False))
     table.to_csv(f"{a.out}_metrics.csv")
     comps.to_csv(f"{a.out}_comparisons.csv", index=False)
-    by_seg.to_csv(f"{a.out}_by_segment.csv", index=False)
-    seg_comps.to_csv(f"{a.out}_segment_comparisons.csv", index=False)
-    print(f"\nSaved {a.out}_metrics.csv, {a.out}_comparisons.csv, {a.out}_by_segment.csv and "
-          f"{a.out}_segment_comparisons.csv")
+    print(f"\nSaved {a.out}_metrics.csv and {a.out}_comparisons.csv")
 
 
 if __name__ == "__main__":

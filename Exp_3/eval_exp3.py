@@ -70,7 +70,7 @@ from sklearn.metrics import (average_precision_score, f1_score, precision_recall
                              recall_score, roc_auc_score)
 
 HERE = Path(__file__).resolve().parent
-CLEAN_DIR = HERE.parent / "outputs" / "outputs" / "clean_data"   # the team's shared cleaned data
+CLEAN_DIR = HERE.parent / "clean_data"   # the team's shared cleaned data
 SHOW = ["pr_auc", "roc_auc", "precision", "recall", "f1"]
 
 
