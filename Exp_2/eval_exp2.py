@@ -29,7 +29,7 @@ from sklearn.metrics import (average_precision_score, f1_score, precision_recall
 
 HERE = Path(__file__).resolve().parent
 CLEAN_DIR = HERE.parent / "clean_data"
-SHOW = ["pr_auc", "roc_auc", "precision", "recall", "f1"]
+SHOW = ["pr_auc", "roc_auc", "precision", "recall", "f1", "precision@top5%", "recall@top5%", "precision@top10%", "recall@top10%"]
 
 
 def load_splits(clean_dir=CLEAN_DIR):
@@ -51,11 +51,25 @@ def best_f1_threshold(y_val, s_val):
     return float(t[np.nanargmax(f1[:-1])])
 
 
+def _at_k_metrics(y, s):
+    total_pos = y.sum()
+    out = {}
+    for pct, label in [(0.05, "5"), (0.10, "10")]:
+        k = max(1, int(len(y) * pct))
+        top_k = np.argsort(s)[::-1][:k]
+        hits = y[top_k].sum()
+        out[f"precision@top{label}%"] = hits / k
+        out[f"recall@top{label}%"] = hits / total_pos if total_pos > 0 else 0.0
+    return out
+
+
 def _metrics(y, s, thr):
     yhat = (s >= thr).astype(int)
-    return {"pr_auc": average_precision_score(y, s), "roc_auc": roc_auc_score(y, s),
-            "precision": precision_score(y, yhat, zero_division=0), "recall": recall_score(y, yhat),
-            "f1": f1_score(y, yhat)}
+    m = {"pr_auc": average_precision_score(y, s), "roc_auc": roc_auc_score(y, s),
+         "precision": precision_score(y, yhat, zero_division=0), "recall": recall_score(y, yhat),
+         "f1": f1_score(y, yhat)}
+    m.update(_at_k_metrics(y, s))
+    return m
 
 
 def evaluate(y_test, s_test, y_val=None, s_val=None, threshold=None, n_boot=1000, seed=42):
